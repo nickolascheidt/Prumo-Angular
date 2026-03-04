@@ -1,0 +1,58 @@
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards';
+import { LayoutComponent } from './shared/components/layout/layout.component';
+import { LoginComponent } from './modules/auth/login/login.component';
+import { DashboardComponent } from './modules/dashboard/dashboard.component';
+import { EmployeesComponent } from './modules/employees/employees.component';
+import { WorklogsComponent } from './modules/worklogs/worklogs.component';
+import { PaymentsComponent } from './modules/payments/payments.component';
+import { ProductsComponent } from './modules/products/products.component';
+import { CustomersComponent } from './modules/customers/customers.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent
+      }
+    ]
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
+      {
+        path: 'employees',
+        component: EmployeesComponent
+      },
+      {
+        path: 'worklogs',
+        component: WorklogsComponent
+      },
+      {
+        path: 'payments',
+        component: PaymentsComponent
+      },
+      {
+        path: 'products',
+        component: ProductsComponent
+      },
+      {
+        path: 'customers',
+        component: CustomersComponent
+      }
+    ]
+  }
+];

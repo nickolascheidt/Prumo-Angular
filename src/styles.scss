@@ -1,0 +1,117 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+body {
+  margin: 0;
+}
+
+/* Material Theme Override */
+::ng-deep {
+  .mat-toolbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .mat-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  .mat-button,
+  .mat-raised-button {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+
+  /* Table Styling */
+  .mat-table {
+    background-color: white;
+    border-radius: 4px;
+  }
+
+  .mat-header-cell {
+    font-weight: 600;
+    background-color: #f5f5f5;
+    color: #666;
+  }
+
+  .mat-cell {
+    padding: 12px 16px;
+  }
+
+  .mat-row:hover {
+    background-color: #fafafa;
+  }
+
+  /* Pagination */
+  .mat-paginator {
+    background-color: white;
+    border-radius: 4px;
+  }
+
+  /* Spinner */
+  .mat-progress-spinner circle,
+  .mat-spinner circle {
+    stroke: #673ab7 !important;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Utility Classes */
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.gap-20 {
+  gap: 20px;
+}

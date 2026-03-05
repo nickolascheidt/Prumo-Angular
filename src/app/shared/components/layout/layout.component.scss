@@ -52,12 +52,12 @@
     }
 
     &.active {
-      background-color: rgba(103, 58, 183, 0.1);
-      border-left-color: #673ab7;
+      background-color: rgba(46, 125, 50, 0.1);
+      border-left-color: #2e7d32;
 
       mat-icon,
       span {
-        color: #673ab7;
+        color: #2e7d32;
         font-weight: 500;
       }
     }

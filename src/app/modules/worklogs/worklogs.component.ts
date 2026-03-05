@@ -5,8 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '@core/services';
 import { WorkLog } from '@core/models';
+import { WorklogFormDialogComponent } from './worklog-form-dialog.component';
 
 @Component({
   selector: 'app-worklogs',
@@ -17,7 +19,8 @@ import { WorkLog } from '@core/models';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   template: `
     <div class="worklogs-container">
@@ -26,7 +29,7 @@ import { WorkLog } from '@core/models';
           <mat-card-title>Horas Trabalhadas</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <button mat-raised-button color="primary">
+          <button mat-raised-button color="primary" (click)="onNewWorklog()">
             <mat-icon>add</mat-icon>
             Registrar Horas
           </button>
@@ -60,6 +63,18 @@ import { WorkLog } from '@core/models';
               <td mat-cell *matCellDef="let element">R$ {{ element.totalAmount | number: '1.2-2' }}</td>
             </ng-container>
 
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="onEdit(element)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="onDelete(element.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
@@ -82,11 +97,130 @@ import { WorkLog } from '@core/models';
 export class WorklogsComponent implements OnInit {
   workLogs: WorkLog[] = [];
   isLoading = false;
-  displayedColumns = ['employeeName', 'workDate', 'hoursWorked', 'totalAmount'];
+  displayedColumns = ['employeeName', 'workDate', 'hoursWorked', 'totalAmount', 'actions'];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    // TODO: Load work logs
+    this.loadWorkLogs();
+  }
+
+  private loadWorkLogs(): void {
+    this.isLoading = true;
+    this.workLogs = [];
+    
+    // Carrega worklogs dos últimos 30 dias
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+
+    console.log('📅 Carregando worklogs de:', startDate.toLocaleDateString(), 'até', endDate.toLocaleDateString());
+
+    // Carrega todos os funcionários ativos e seus worklogs
+    this.apiService.getEmployees(false).subscribe({
+      next: (employees) => {
+        console.log('👥 Total de funcionários carregados:', employees.length);
+        
+        if (employees.length === 0) {
+          console.warn('⚠️ Nenhum funcionário encontrado');
+          this.isLoading = false;
+          return;
+        }
+
+        let completedRequests = 0;
+        const allWorkLogs: WorkLog[] = [];
+
+        // Carrega worklogs de cada funcionário
+        employees.forEach(employee => {
+          this.apiService.getWorkLogsByEmployee(
+            employee.id,
+            startDate.toISOString(),
+            endDate.toISOString()
+          ).subscribe({
+            next: (data) => {
+              console.log(`📊 ${employee.fullName}: ${data.length} registro(s) de horas`);
+              if (data.length > 0) {
+                data.forEach((log, index) => {
+                  console.log(`  [${index + 1}] Data: ${log.workDate}, Horas: ${log.hoursWorked}h, ID: ${log.id}`);
+                });
+              }
+              allWorkLogs.push(...data);
+              completedRequests++;
+              
+              // Quando todas as requisições terminarem
+              if (completedRequests === employees.length) {
+                console.log('✅ Total de registros agregados:', allWorkLogs.length);
+                // Ordena por data (mais recente primeiro)
+                this.workLogs = allWorkLogs.sort((a, b) => 
+                  new Date(b.workDate).getTime() - new Date(a.workDate).getTime()
+                );
+                console.log('📋 Worklogs finais exibidos:', this.workLogs.length);
+                this.isLoading = false;
+              }
+            },
+            error: (error) => {
+              console.error(`❌ Erro ao carregar worklogs do funcionário ${employee.fullName}:`, error);
+              completedRequests++;
+              
+              if (completedRequests === employees.length) {
+                console.log('⚠️ Total de registros aggregados (com erros):', allWorkLogs.length);
+                this.workLogs = allWorkLogs.sort((a, b) => 
+                  new Date(b.workDate).getTime() - new Date(a.workDate).getTime()
+                );
+                console.log('📋 Worklogs finais exibidos:', this.workLogs.length);
+                this.isLoading = false;
+              }
+            }
+          });
+        });
+      },
+      error: (error) => {
+        console.error('❌ Erro ao carregar funcionários:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onNewWorklog(): void {
+    const dialogRef = this.dialog.open(WorklogFormDialogComponent, {
+      width: '600px',
+      data: null
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadWorkLogs();
+      }
+    });
+  }
+
+  onEdit(worklog: WorkLog): void {
+    const dialogRef = this.dialog.open(WorklogFormDialogComponent, {
+      width: '600px',
+      data: worklog
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadWorkLogs();
+      }
+    });
+  }
+
+  onDelete(id: string): void {
+    if (confirm('Tem certeza que deseja deletar este registro?')) {
+      this.apiService.deleteWorkLog(id).subscribe({
+        next: () => {
+          this.loadWorkLogs();
+        },
+        error: (error) => {
+          console.error('Erro ao deletar registro:', error);
+          alert('Erro ao deletar registro');
+        }
+      });
+    }
   }
 }

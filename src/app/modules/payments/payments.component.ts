@@ -5,8 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '@core/services';
 import { Payment } from '@core/models';
+import { PaymentFormDialogComponent } from './payment-form-dialog.component';
+import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-dialog.component';
 
 @Component({
   selector: 'app-payments',
@@ -17,7 +20,8 @@ import { Payment } from '@core/models';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   template: `
     <div class="payments-container">
@@ -26,10 +30,16 @@ import { Payment } from '@core/models';
           <mat-card-title>Pagamentos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <button mat-raised-button color="primary">
-            <mat-icon>add</mat-icon>
-            Novo Pagamento
-          </button>
+          <div class="button-group">
+            <button mat-raised-button color="accent" (click)="onGeneratePeriod()">
+              <mat-icon>event_note</mat-icon>
+              Gerar Período
+            </button>
+            <button mat-raised-button color="primary" (click)="onNewPayment()">
+              <mat-icon>add</mat-icon>
+              Novo Pagamento
+            </button>
+          </div>
         </mat-card-content>
       </mat-card>
 
@@ -60,6 +70,15 @@ import { Payment } from '@core/models';
               <td mat-cell *matCellDef="let element">{{ element.paymentMethod }}</td>
             </ng-container>
 
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="warn" (click)="onDelete(element.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
@@ -71,6 +90,17 @@ import { Payment } from '@core/models';
     .payments-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
     .header-card { margin-bottom: 20px; }
     mat-card-header { padding: 16px; border-bottom: 1px solid #eee; }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button-group button {
+      flex: 0 1 auto;
+    }
+
     table { width: 100%; }
     th { background-color: #f5f5f5; font-weight: 600; color: #666; }
     td { padding: 12px 16px; }
@@ -82,11 +112,70 @@ import { Payment } from '@core/models';
 export class PaymentsComponent implements OnInit {
   payments: Payment[] = [];
   isLoading = false;
-  displayedColumns = ['employeeName', 'amount', 'paymentDate', 'paymentMethod'];
+  displayedColumns = ['employeeName', 'amount', 'paymentDate', 'paymentMethod', 'actions'];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    // TODO: Load payments
+    this.loadPayments();
+  }
+
+  private loadPayments(): void {
+    this.isLoading = true;
+    this.apiService.getRecentPayments(50).subscribe({
+      next: (data) => {
+        this.payments = data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar pagamentos:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onNewPayment(): void {
+    const dialogRef = this.dialog.open(PaymentFormDialogComponent, {
+      width: '600px',
+      data: null
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadPayments();
+      }
+    });
+  }
+
+  onGeneratePeriod(): void {
+    console.log('🗓️ Abrindo modal de geração de período de pagamento');
+    const dialogRef = this.dialog.open(GeneratePaymentPeriodDialogComponent, {
+      width: '600px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        console.log('✅ Período gerado com sucesso, recarregando pagamentos');
+        this.loadPayments();
+      }
+    });
+  }
+
+  onDelete(id: string): void {
+    if (confirm('Tem certeza que deseja deletar este pagamento?')) {
+      this.apiService.deletePayment(id).subscribe({
+        next: () => {
+          this.loadPayments();
+        },
+        error: (error) => {
+          console.error('Erro ao deletar pagamento:', error);
+          alert('Erro ao deletar pagamento');
+        }
+      });
+    }
   }
 }

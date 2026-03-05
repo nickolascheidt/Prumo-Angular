@@ -22,36 +22,59 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav [opened]="sidenavOpened" mode="side" class="app-sidenav">
+  <mat-sidenav 
+    #sidenav 
+    [opened]="sidenavOpened" 
+    [mode]="isMobile ? 'over' : 'side'" 
+    class="app-sidenav"
+    (openedChange)="sidenavOpened = $event">
     <mat-nav-list>
       <h2 matSubheader>Menu Principal</h2>
-      <mat-list-item routerLink="/dashboard" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/dashboard" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <span matListItemTitle>Dashboard</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="/employees" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/employees" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Funcionários</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="/worklogs" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/worklogs" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>schedule</mat-icon>
         <span matListItemTitle>Horas Trabalhadas</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="/payments" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/payments" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>payment</mat-icon>
         <span matListItemTitle>Pagamentos</span>
       </mat-list-item>
 
       <h2 matSubheader>Produtos e Serviços</h2>
-      <mat-list-item routerLink="/products" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/products" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>inventory_2</mat-icon>
         <span matListItemTitle>Produtos</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="/customers" routerLinkActive="active">
+      <mat-list-item 
+        routerLink="/customers" 
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
         <mat-icon matListItemIcon>business</mat-icon>
         <span matListItemTitle>Clientes</span>
       </mat-list-item>

@@ -8,9 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '@core/services';
 import { Employee } from '@core/models';
 import { Router } from '@angular/router';
+import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
 
 @Component({
   selector: 'app-employees',
@@ -24,7 +26,8 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   template: `
     <div class="employees-container">
@@ -159,7 +162,8 @@ export class EmployeesComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -182,11 +186,29 @@ export class EmployeesComponent implements OnInit {
   }
 
   onNewEmployee(): void {
-    // TODO: Navigate to create employee form
+    const dialogRef = this.dialog.open(EmployeeFormDialogComponent, {
+      width: '500px',
+      data: null
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadEmployees();
+      }
+    });
   }
 
   onEdit(employee: Employee): void {
-    // TODO: Navigate to edit employee form
+    const dialogRef = this.dialog.open(EmployeeFormDialogComponent, {
+      width: '500px',
+      data: employee
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadEmployees();
+      }
+    });
   }
 
   onDelete(id: string): void {

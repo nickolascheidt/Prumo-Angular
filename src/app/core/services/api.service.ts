@@ -83,7 +83,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/worklogs/${id}`);
   }
 
-  // Payment Period Endpoints
+  // Payment Period Endpoints -> Create getAllPeriodsSum 
   getPaymentPeriodsByEmployee(employeeId: string): Observable<PaymentPeriod[]> {
     return this.http.get<PaymentPeriod[]>(`${this.apiUrl}/paymentperiods/employee/${employeeId}`);
   }

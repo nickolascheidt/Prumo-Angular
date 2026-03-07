@@ -1,17 +1,26 @@
 .app-toolbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100vw;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
 }
 
 .sidenav-toggle {
   margin-right: 20px;
+  flex-shrink: 0;
 }
 
 .app-title {
   font-size: 20px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .spacer {
@@ -19,18 +28,22 @@
 }
 
 .user-menu-btn {
-  display: flex;
+  display: flex !important;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  flex-shrink: 0;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .user-name {
-  font-size: 14px;
-  margin-left: 10px;
+  display: none;
 }
 
 .sidenav-container {
   height: calc(100vh - 64px);
+  margin-top: 64px;
+  width: 100%;
 }
 
 .app-sidenav {

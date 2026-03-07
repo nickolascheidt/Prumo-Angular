@@ -2,12 +2,10 @@
   <button mat-icon-button (click)="toggleSidenav()" class="sidenav-toggle">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class="spacer"></span>
   <span class="app-title">BiomePampa ERP</span>
   <span class="spacer"></span>
   <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
     <mat-icon>person</mat-icon>
-    <span class="user-name" *ngIf="currentUser$ | async as user">{{ user.fullName }}</span>
   </button>
   <mat-menu #userMenu="matMenu">
     <button mat-menu-item>

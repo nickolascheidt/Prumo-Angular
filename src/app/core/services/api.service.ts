@@ -92,6 +92,25 @@ export class ApiService {
     return this.http.get<PaymentPeriod[]>(`${this.apiUrl}/paymentperiods/status/${status}`);
   }
 
+  getMonthlyHours(): Observable<WorkLog[]> {
+    const currentDate = new Date();
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    const params = new HttpParams()
+      .set('startDate', this.formatDateParam(startOfMonth))
+      .set('endDate', this.formatDateParam(endOfMonth));
+
+    return this.http.get<WorkLog[]>(`${this.apiUrl}/worklogs`, { params });
+  }
+
+  private formatDateParam(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   generatePaymentPeriod(employeeId: string, startDate: string, endDate: string): Observable<PaymentPeriod> {
     const params = new HttpParams()
       .set('employeeId', employeeId)

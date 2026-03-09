@@ -76,6 +76,15 @@
         <mat-icon matListItemIcon>business</mat-icon>
         <span matListItemTitle>Clientes</span>
       </mat-list-item>
+
+      <h2 matSubheader>Administracao</h2>
+      <mat-list-item
+        routerLink="/admin"
+        routerLinkActive="active"
+        (click)="onNavItemClick()">
+        <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+        <span matListItemTitle>Painel Admin</span>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
 

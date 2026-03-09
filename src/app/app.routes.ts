@@ -8,6 +8,7 @@ import { WorklogsComponent } from './modules/worklogs/worklogs.component';
 import { PaymentsComponent } from './modules/payments/payments.component';
 import { ProductsComponent } from './modules/products/products.component';
 import { CustomersComponent } from './modules/customers/customers.component';
+import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,10 @@ export const routes: Routes = [
       {
         path: 'customers',
         component: CustomersComponent
+      },
+      {
+        path: 'admin',
+        component: AdminPanelComponent
       }
     ]
   }

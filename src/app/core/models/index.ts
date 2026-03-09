@@ -20,6 +20,61 @@ export interface User {
   lastLoginAt?: string;
 }
 
+// Permission Models
+export interface PermissionItem {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface RolePermissionsResponse {
+  roleName: string;
+  permissions: PermissionItem[];
+}
+
+export interface GrantPermissionRequest {
+  permissionName: string;
+  reason?: string;
+}
+
+export interface PermissionActionResponse {
+  message: string;
+}
+
+export interface PermissionAuditLog {
+  id: string;
+  roleName: string;
+  permissionName: string;
+  action: 'GRANTED' | 'REVOKED';
+  performedByUserEmail: string;
+  performedAt: string;
+  reason?: string;
+}
+
+export type PermissionCatalog = Record<string, Record<string, string>>;
+
+// Role Management Models
+export interface AppUserSummary {
+  id: string;
+  email: string;
+  fullName: string;
+  roles: string[];
+  createdAt?: string;
+  lastLoginAt?: string;
+}
+
+export interface AssignUserRoleRequest {
+  roleName: string;
+  email: string;
+}
+
+export interface UserRolesResponse {
+  userId: string;
+  email: string;
+  fullName: string;
+  roles: string[];
+}
+
 // Employee Models
 export interface Employee {
   id: string;

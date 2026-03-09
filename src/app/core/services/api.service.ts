@@ -13,7 +13,16 @@ import {
   CreateProductRequest,
   CreateCustomerRequest,
   LoginRequest,
-  AuthResponse
+  AuthResponse,
+  PermissionItem,
+  RolePermissionsResponse,
+  GrantPermissionRequest,
+  PermissionActionResponse,
+  PermissionAuditLog,
+  PermissionCatalog,
+  AppUserSummary,
+  AssignUserRoleRequest,
+  UserRolesResponse
 } from '../models';
 
 @Injectable({
@@ -35,6 +44,60 @@ export class ApiService {
 
   getCurrentUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/auth/me`);
+  }
+
+  getUsers(): Observable<AppUserSummary[]> {
+    return this.http.get<AppUserSummary[]>(`${this.apiUrl}/auth/users`);
+  }
+
+  getUserRoles(userId: string): Observable<UserRolesResponse> {
+    return this.http.get<UserRolesResponse>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}/roles`);
+  }
+
+  assignRoleToUser(userId: string, data: AssignUserRoleRequest): Observable<PermissionActionResponse> {
+    return this.http.post<PermissionActionResponse>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}/roles`, data);
+  }
+
+  removeRoleFromUser(userId: string, roleName: string): Observable<PermissionActionResponse> {
+    return this.http.delete<PermissionActionResponse>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}/roles/${encodeURIComponent(roleName)}`);
+  }
+
+  // Permission Endpoints
+  getPermissions(): Observable<PermissionItem[]> {
+    return this.http.get<PermissionItem[]>(`${this.apiUrl}/permissions`);
+  }
+
+  getPermissionCatalog(): Observable<PermissionCatalog> {
+    return this.http.get<PermissionCatalog>(`${this.apiUrl}/permissions/catalog`);
+  }
+
+  getRolePermissions(roleName: string): Observable<RolePermissionsResponse> {
+    return this.http.get<RolePermissionsResponse>(`${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}`);
+  }
+
+  grantPermissionToRole(roleName: string, data: GrantPermissionRequest): Observable<PermissionActionResponse> {
+    return this.http.post<PermissionActionResponse>(`${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}/grant`, data);
+  }
+
+  revokePermissionFromRole(roleName: string, permissionName: string, reason?: string): Observable<PermissionActionResponse> {
+    let params = new HttpParams();
+    if (reason?.trim()) {
+      params = params.set('reason', reason.trim());
+    }
+
+    return this.http.delete<PermissionActionResponse>(
+      `${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}/revoke/${encodeURIComponent(permissionName)}`,
+      { params }
+    );
+  }
+
+  getPermissionAudit(roleName?: string, take: number = 100): Observable<PermissionAuditLog[]> {
+    let params = new HttpParams().set('take', take);
+    if (roleName?.trim()) {
+      params = params.set('roleName', roleName.trim());
+    }
+
+    return this.http.get<PermissionAuditLog[]>(`${this.apiUrl}/permissions/audit`, { params });
   }
 
   // Employee Endpoints

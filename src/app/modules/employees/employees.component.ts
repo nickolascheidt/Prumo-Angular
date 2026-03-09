@@ -59,9 +59,9 @@ import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
               <td mat-cell *matCellDef="let element">{{ element.cpf }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef>Email</th>
-              <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef>Telefone</th>
+              <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
             </ng-container>
 
             <ng-container matColumnDef="hourlyRate">
@@ -158,7 +158,7 @@ import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
 export class EmployeesComponent implements OnInit {
   employees: Employee[] = [];
   isLoading = false;
-  displayedColumns = ['fullName', 'cpf', 'email', 'hourlyRate', 'isActive', 'actions'];
+  displayedColumns = ['fullName', 'cpf', 'phone', 'hourlyRate', 'isActive', 'actions'];
 
   constructor(
     private apiService: ApiService,

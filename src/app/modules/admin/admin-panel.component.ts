@@ -39,18 +39,26 @@ import { RouterModule } from '@angular/router';
 
       <mat-card class="next-steps-card">
         <mat-card-header>
-          <mat-card-title>Proximos passos recomendados</mat-card-title>
+          <mat-card-title>Acoes administrativas</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <ul>
-            <li>Criar endpoint de listagem de usuarios e papeis administrativos.</li>
-            <li>Implementar endpoint para atualizar permissoes e status de acesso.</li>
-            <li>Adicionar auditoria para acoes criticas do painel.</li>
-          </ul>
-          <button mat-raised-button color="primary" routerLink="/dashboard">
-            <mat-icon>arrow_back</mat-icon>
-            Voltar ao Dashboard
-          </button>
+          <p>Use as ferramentas abaixo para administrar permissoes e navegar entre as configuracoes.</p>
+          <div class="action-buttons">
+            <button mat-raised-button color="accent" routerLink="/admin/permissions">
+              <mat-icon>security</mat-icon>
+              Gerenciar permissoes por role
+            </button>
+
+            <button mat-raised-button color="primary" routerLink="/admin/users-roles">
+              <mat-icon>manage_accounts</mat-icon>
+              Gerenciar roles por usuario
+            </button>
+
+            <button mat-raised-button color="primary" routerLink="/dashboard">
+              <mat-icon>arrow_back</mat-icon>
+              Voltar ao Dashboard
+            </button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
@@ -98,11 +106,16 @@ import { RouterModule } from '@angular/router';
       line-height: 1.5;
     }
 
-    .next-steps-card ul {
+    .next-steps-card p {
       margin: 0 0 16px;
-      padding-left: 18px;
       color: #424242;
       line-height: 1.6;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     @media (max-width: 768px) {

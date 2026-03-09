@@ -9,6 +9,8 @@ import { PaymentsComponent } from './modules/payments/payments.component';
 import { ProductsComponent } from './modules/products/products.component';
 import { CustomersComponent } from './modules/customers/customers.component';
 import { AdminPanelComponent } from './modules/admin/admin-panel.component';
+import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
+import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 
 export const routes: Routes = [
   {
@@ -56,7 +58,18 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        component: AdminPanelComponent
+        component: AdminPanelComponent,
+        data: { roles: ['Administrador'] }
+      },
+      {
+        path: 'admin/permissions',
+        component: PermissionsManagementComponent,
+        data: { roles: ['Administrador'] }
+      },
+      {
+        path: 'admin/users-roles',
+        component: UsersRolesManagementComponent,
+        data: { roles: ['Administrador'] }
       }
     ]
   }

@@ -85,6 +85,24 @@
         <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
         <span matListItemTitle>Painel Admin</span>
       </mat-list-item>
+
+      <mat-list-item
+        routerLink="/admin/permissions"
+        routerLinkActive="active"
+        *ngIf="(currentUser$ | async)?.roles?.includes('Administrador')"
+        (click)="onNavItemClick()">
+        <mat-icon matListItemIcon>security</mat-icon>
+        <span matListItemTitle>Permissoes por Role</span>
+      </mat-list-item>
+
+      <mat-list-item
+        routerLink="/admin/users-roles"
+        routerLinkActive="active"
+        *ngIf="(currentUser$ | async)?.roles?.includes('Administrador')"
+        (click)="onNavItemClick()">
+        <mat-icon matListItemIcon>manage_accounts</mat-icon>
+        <span matListItemTitle>Roles por Usuario</span>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
 

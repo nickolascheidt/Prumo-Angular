@@ -236,7 +236,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/products/${id}`);
   }
 
-  // Customer Endpoints
+  // Customer Endpoints.
   getCustomers(): Observable<Customer[]> {
     return this.http.get<Customer[]>(`${this.apiUrl}/customers`);
   }

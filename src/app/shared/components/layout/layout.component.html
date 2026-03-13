@@ -27,82 +27,24 @@
     class="app-sidenav"
     (openedChange)="sidenavOpened = $event">
     <mat-nav-list>
-      <h2 matSubheader>Menu Principal</h2>
-      <mat-list-item 
-        routerLink="/dashboard" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
-      </mat-list-item>
+      <ng-container *ngIf="currentUser$ | async as currentUser">
+        <ng-container *ngFor="let section of menuSections">
+          <ng-container *ngIf="hasVisibleItems(section, currentUser)">
+            <h2 matSubheader>{{ section.title }}</h2>
 
-      <mat-list-item 
-        routerLink="/employees" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>people</mat-icon>
-        <span matListItemTitle>Funcionários</span>
-      </mat-list-item>
-
-      <mat-list-item 
-        routerLink="/worklogs" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>schedule</mat-icon>
-        <span matListItemTitle>Horas Trabalhadas</span>
-      </mat-list-item>
-
-      <mat-list-item 
-        routerLink="/payments" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>payment</mat-icon>
-        <span matListItemTitle>Pagamentos</span>
-      </mat-list-item>
-
-      <h2 matSubheader>Produtos e Serviços</h2>
-      <mat-list-item 
-        routerLink="/products" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>inventory_2</mat-icon>
-        <span matListItemTitle>Produtos</span>
-      </mat-list-item>
-
-      <mat-list-item 
-        routerLink="/customers" 
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>business</mat-icon>
-        <span matListItemTitle>Clientes</span>
-      </mat-list-item>
-
-      <h2 matSubheader>Administracao</h2>
-      <mat-list-item
-        routerLink="/admin"
-        routerLinkActive="active"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
-        <span matListItemTitle>Painel Admin</span>
-      </mat-list-item>
-
-      <mat-list-item
-        routerLink="/admin/permissions"
-        routerLinkActive="active"
-        *ngIf="(currentUser$ | async)?.roles?.includes('Administrador')"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>security</mat-icon>
-        <span matListItemTitle>Permissoes por Role</span>
-      </mat-list-item>
-
-      <mat-list-item
-        routerLink="/admin/users-roles"
-        routerLinkActive="active"
-        *ngIf="(currentUser$ | async)?.roles?.includes('Administrador')"
-        (click)="onNavItemClick()">
-        <mat-icon matListItemIcon>manage_accounts</mat-icon>
-        <span matListItemTitle>Roles por Usuario</span>
-      </mat-list-item>
+            <ng-container *ngFor="let item of section.items">
+              <mat-list-item
+                *ngIf="hasAccess(item.roles, currentUser)"
+                [routerLink]="item.route"
+                routerLinkActive="active"
+                (click)="onNavItemClick()">
+                <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+                <span matListItemTitle>{{ item.label }}</span>
+              </mat-list-item>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </mat-nav-list>
   </mat-sidenav>
 

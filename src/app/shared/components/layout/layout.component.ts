@@ -15,6 +15,18 @@ import { User } from '@core/models';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil } from 'rxjs/operators';
 
+interface NavigationItem {
+  label: string;
+  icon: string;
+  route: string;
+  roles?: string[];
+}
+
+interface NavigationSection {
+  title: string;
+  items: NavigationItem[];
+}
+
 @Component({
   selector: 'app-layout',
   standalone: true,
@@ -38,6 +50,47 @@ export class LayoutComponent implements OnInit, OnDestroy {
   currentUser$: Observable<User | null>;
   sidenavOpened = false;
   isMobile = false;
+  readonly menuSections: NavigationSection[] = [
+    {
+      title: 'Menu Principal',
+      items: [
+        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+        { label: 'Funcionarios', icon: 'people', route: '/employees' },
+        { label: 'Horas Trabalhadas', icon: 'schedule', route: '/worklogs' },
+        { label: 'Pagamentos', icon: 'payment', route: '/payments' }
+      ]
+    },
+    {
+      title: 'Produtos e Servicos',
+      items: [
+        { label: 'Produtos', icon: 'inventory_2', route: '/products' },
+        { label: 'Clientes', icon: 'business', route: '/customers' }
+      ]
+    },
+    {
+      title: 'Administracao',
+      items: [
+        {
+          label: 'Painel Admin',
+          icon: 'admin_panel_settings',
+          route: '/admin',
+          roles: ['Administrador']
+        },
+        {
+          label: 'Permissoes por Role',
+          icon: 'security',
+          route: '/admin/permissions',
+          roles: ['Administrador']
+        },
+        {
+          label: 'Roles por Usuario',
+          icon: 'manage_accounts',
+          route: '/admin/users-roles',
+          roles: ['Administrador']
+        }
+      ]
+    }
+  ];
   
   private destroy$ = new Subject<void>();
 
@@ -87,5 +140,18 @@ export class LayoutComponent implements OnInit, OnDestroy {
     if (this.isMobile && this.sidenav) {
       this.sidenav.close();
     }
+  }
+
+  hasAccess(requiredRoles: string[] | undefined, user: User | null): boolean {
+    if (!requiredRoles?.length) {
+      return true;
+    }
+
+    const userRoles = user?.roles ?? [];
+    return requiredRoles.some(role => userRoles.includes(role));
+  }
+
+  hasVisibleItems(section: NavigationSection, user: User | null): boolean {
+    return section.items.some(item => this.hasAccess(item.roles, user));
   }
 }

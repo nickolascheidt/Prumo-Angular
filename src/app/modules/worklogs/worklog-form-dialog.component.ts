@@ -65,32 +65,37 @@ import { Employee, WorkLog, CreateWorkLogRequest } from '@core/models';
         <div class="form-section">
           <mat-form-field appearance="fill">
             <mat-label>Data do Trabalho *</mat-label>
-            <input matInput formControlName="workDate" [matDatepicker]="picker">
+            <input matInput formControlName="date" [matDatepicker]="picker">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="form.get('workDate')?.invalid">
+            <mat-error *ngIf="form.get('date')?.invalid">
               Data do trabalho é obrigatória
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>Horas Trabalhadas *</mat-label>
+            <mat-label>Horário de Entrada *</mat-label>
             <input 
               matInput 
-              formControlName="hoursWorked" 
-              type="number" 
-              step="0.5" 
-              placeholder="8.0"
+              formControlName="clockIn" 
+              type="time"
+              placeholder="08:00"
               (input)="calculateAmount()">
-            <mat-hint>Use decimais para minutos (ex: 8.5 = 8h30min)</mat-hint>
-            <mat-error *ngIf="form.get('hoursWorked')?.hasError('required')">
-              Horas trabalhadas é obrigatório
+            <mat-error *ngIf="form.get('clockIn')?.invalid">
+              Horário de entrada é obrigatório
             </mat-error>
-            <mat-error *ngIf="form.get('hoursWorked')?.hasError('min')">
-              Deve ser maior que 0
-            </mat-error>
-            <mat-error *ngIf="form.get('hoursWorked')?.hasError('max')">
-              Máximo 24 horas por dia
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Horário de Saída *</mat-label>
+            <input 
+              matInput 
+              formControlName="clockOut" 
+              type="time"
+              placeholder="17:00"
+              (input)="calculateAmount()">
+            <mat-error *ngIf="form.get('clockOut')?.invalid">
+              Horário de saída é obrigatório
             </mat-error>
           </mat-form-field>
         </div>
@@ -112,9 +117,9 @@ import { Employee, WorkLog, CreateWorkLogRequest } from '@core/models';
         <div class="summary-box" *ngIf="calculatedAmount > 0">
           <h4>Resumo</h4>
           <div class="summary-item">
-            <span>{{ form.get('hoursWorked')?.value }}h</span>
+            <span>{{ form.get('clockIn')?.value }} - {{ form.get('clockOut')?.value }}</span>
             <span>×</span>
-            <span>R$ {{ selectedEmployee?.hourlyRate | number: '1.2-2' }}</span>
+            <span>R$ {{ selectedEmployee?.hourlyRate | number: '1.2-2' }}/h</span>
             <span>=</span>
             <span class="total">R$ {{ calculatedAmount | number: '1.2-2' }}</span>
           </div>
@@ -242,8 +247,9 @@ export class WorklogFormDialogComponent implements OnInit {
       this.isEditing = true;
       this.form.patchValue({
         employeeId: this.data.employeeId,
-        workDate: new Date(this.data.workDate),
-        hoursWorked: this.data.hoursWorked,
+        date: new Date(this.data.date),
+        clockIn: this.data.clockIn || '08:00',
+        clockOut: this.data.clockOut || '17:00',
         notes: this.data.notes
       });
     }
@@ -252,13 +258,17 @@ export class WorklogFormDialogComponent implements OnInit {
   private createForm(): void {
     this.form = this.fb.group({
       employeeId: ['', [Validators.required]],
-      workDate: [new Date(), [Validators.required]],
-      hoursWorked: [0, [Validators.required, Validators.min(0.5), Validators.max(24)]],
+      date: [new Date(), [Validators.required]],
+      clockIn: ['08:00', [Validators.required]],
+      clockOut: ['17:00', [Validators.required]],
       notes: ['']
     });
 
-    // Recalcula ao mudar horas
-    this.form.get('hoursWorked')?.valueChanges.subscribe(() => {
+    // Recalcula ao mudar horários
+    this.form.get('clockIn')?.valueChanges.subscribe(() => {
+      this.calculateAmount();
+    });
+    this.form.get('clockOut')?.valueChanges.subscribe(() => {
       this.calculateAmount();
     });
   }
@@ -287,9 +297,26 @@ export class WorklogFormDialogComponent implements OnInit {
   }
 
   calculateAmount(): void {
-    const hours = this.form.get('hoursWorked')?.value || 0;
-    const rate = this.selectedEmployee?.hourlyRate || 0;
-    this.calculatedAmount = hours * rate;
+    const clockIn = this.form.get('clockIn')?.value;
+    const clockOut = this.form.get('clockOut')?.value;
+    
+    if (!clockIn || !clockOut || !this.selectedEmployee) {
+      this.calculatedAmount = 0;
+      return;
+    }
+
+    try {
+      const [inHour, inMin] = clockIn.split(':').map(Number);
+      const [outHour, outMin] = clockOut.split(':').map(Number);
+      
+      const inMinutes = inHour * 60 + inMin;
+      const outMinutes = outHour * 60 + outMin;
+      
+      const hoursWorked = (outMinutes - inMinutes) / 60;
+      this.calculatedAmount = hoursWorked * this.selectedEmployee.hourlyRate;
+    } catch {
+      this.calculatedAmount = 0;
+    }
   }
 
   onSave(): void {
@@ -301,8 +328,9 @@ export class WorklogFormDialogComponent implements OnInit {
     this.isSaving = true;
     const worklogData: CreateWorkLogRequest = {
       employeeId: this.form.value.employeeId,
-      workDate: this.form.value.workDate.toISOString(),
-      hoursWorked: this.form.value.hoursWorked,
+      date: this.form.value.date.toISOString(),
+      clockIn: this.form.value.clockIn,
+      clockOut: this.form.value.clockOut,
       notes: this.form.value.notes || undefined
     };
 

@@ -144,7 +144,7 @@ export class WorklogsComponent implements OnInit {
               console.log(`📊 ${employee.fullName}: ${data.length} registro(s) de horas`);
               if (data.length > 0) {
                 data.forEach((log, index) => {
-                  console.log(`  [${index + 1}] Data: ${log.workDate}, Horas: ${log.hoursWorked}h, ID: ${log.id}`);
+                  console.log(`  [${index + 1}] Data: ${log.date}, Horas: ${log.hoursWorked}h, ID: ${log.id}`);
                 });
               }
               allWorkLogs.push(...data);
@@ -155,7 +155,7 @@ export class WorklogsComponent implements OnInit {
                 console.log('✅ Total de registros agregados:', allWorkLogs.length);
                 // Ordena por data (mais recente primeiro)
                 this.workLogs = allWorkLogs.sort((a, b) => 
-                  new Date(b.workDate).getTime() - new Date(a.workDate).getTime()
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
                 );
                 console.log('📋 Worklogs finais exibidos:', this.workLogs.length);
                 this.isLoading = false;
@@ -168,7 +168,7 @@ export class WorklogsComponent implements OnInit {
               if (completedRequests === employees.length) {
                 console.log('⚠️ Total de registros aggregados (com erros):', allWorkLogs.length);
                 this.workLogs = allWorkLogs.sort((a, b) => 
-                  new Date(b.workDate).getTime() - new Date(a.workDate).getTime()
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
                 );
                 console.log('📋 Worklogs finais exibidos:', this.workLogs.length);
                 this.isLoading = false;

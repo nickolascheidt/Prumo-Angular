@@ -61,13 +61,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Produtos e Servicos',
-      items: [
-        { label: 'Produtos', icon: 'inventory_2', route: '/products' },
-        { label: 'Clientes', icon: 'business', route: '/customers' }
-      ]
-    },
-    {
       title: 'Administracao',
       items: [
         {

@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '@core/services';
-import { Payment } from '@core/models';
+import { Payment, RecentPayment } from '@core/models';
 import { PaymentFormDialogComponent } from './payment-form-dialog.component';
 import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-dialog.component';
 
@@ -110,7 +110,7 @@ import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-
   `]
 })
 export class PaymentsComponent implements OnInit {
-  payments: Payment[] = [];
+  payments: (Payment | RecentPayment)[] = [];
   isLoading = false;
   displayedColumns = ['employeeName', 'amount', 'paymentDate', 'paymentMethod', 'actions'];
 

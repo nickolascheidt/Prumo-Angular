@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '@core/services';
-import { Employee, Payment, WorkLog } from '@core/models';
+import { Employee, RecentPayment, WorkLog } from '@core/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +27,7 @@ import { Employee, Payment, WorkLog } from '@core/models';
 export class DashboardComponent implements OnInit {
   isLoading = false;
   employees: Employee[] = [];
-  recentPayments: Payment[] = [];
+  recentPayments: RecentPayment[] = [];
   totalEmployees = 0;
   totalPaymentsThisMonth = 0;
   totalHoursThisMonth = 0;
@@ -41,45 +41,40 @@ export class DashboardComponent implements OnInit {
 
   private loadDashboardData(): void {
     this.isLoading = true;
-    
+
+    // Load employees
     this.apiService.getEmployees().subscribe({
       next: (data) => {
         this.employees = data;
         this.totalEmployees = data.length;
-        this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Erro ao carregar funcionários:', err);
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });
 
+    // Load recent payments
     this.apiService.getRecentPayments(5).subscribe({
       next: (data) => {
         this.recentPayments = data;
         this.totalPaymentsThisMonth = data.reduce((sum, p) => sum + p.amount, 0);
       },
-      error: () => {}
-    });
-
-        this.apiService.getEmployees().subscribe({
-      next: (data) => {
-        this.employees = data;
-        this.totalEmployees = data.length;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
+      error: (err) => {
+        console.error('Erro ao carregar pagamentos recentes:', err);
       }
     });
 
-        this.apiService.getMonthlyHours().subscribe({
+    // Load monthly hours
+    this.apiService.getMonthlyHours().subscribe({
       next: (data) => {
         this.totalHoursThisMonth = data.reduce((sum, w) => sum + w.hoursWorked, 0);
       },
-      error: () => {
-        this.isLoading = false;
+      error: (err) => {
+        console.error('Erro ao carregar horas do mês:', err);
       }
     });
-
   }
 }

@@ -16,6 +16,7 @@ export interface User {
   fullName: string;
   phoneNumber?: string;
   roles: string[];
+  permissions?: string[];
   createdAt: string;
   lastLoginAt?: string;
 }
@@ -101,16 +102,24 @@ export interface Employee {
 
 export enum ContractType {
   CLT = 1,
-  Frio = 2,
-  Temporario = 3,
-  Estagiario = 4
+  Temporary = 2,
+  Daily = 3
 }
 
 export enum PaymentMethod {
-  Dinheiro = 1,
+  Cash = 1,
   Pix = 2,
-  TransferenciaBancaria = 3,
-  Cheque = 4
+  BankTransfer = 3
+}
+
+// Employee Summary Models
+export interface EmployeeSummary {
+  id: string;
+  fullName: string;
+  cpf: string;
+  isActive: boolean;
+  contractType: ContractType;
+  hourlyRate: number;
 }
 
 // WorkLog Models
@@ -118,19 +127,24 @@ export interface WorkLog {
   id: string;
   employeeId: string;
   employeeName: string;
-  workDate: string;
+  date: string;
+  clockIn: string;
+  clockOut: string;
   hoursWorked: number;
-  hourlyRateAtTime: number;
-  totalAmount: number;
   notes?: string;
-  paymentPeriodId?: string;
+  paymentPeriodId?: string | null;
   createdAt: string;
+}
+
+export interface UnassignedWorkLog extends WorkLog {
+  paymentPeriodId: null;
 }
 
 export interface CreateWorkLogRequest {
   employeeId: string;
-  workDate: string;
-  hoursWorked: number;
+  date: string;
+  clockIn: string;
+  clockOut: string;
   notes?: string;
 }
 
@@ -152,8 +166,7 @@ export interface PaymentPeriod {
 export enum PaymentStatus {
   Pendente = 1,
   Pago = 2,
-  Cancelado = 3,
-  Atrasado = 4
+  Cancelado = 3
 }
 
 // Payment Models
@@ -166,68 +179,31 @@ export interface Payment {
   amount: number;
   paymentMethod: PaymentMethod;
   paymentProof?: string;
+  status: PaymentStatus;
   notes?: string;
   paidByUserId: string;
   paidByUserName: string;
   createdAt: string;
 }
 
-export interface CreatePaymentRequest {
-  paymentPeriodId: string;
+export interface RecentPayment {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  amount: number;
   paymentDate: string;
   paymentMethod: PaymentMethod;
-  paymentProof?: string;
+  status: PaymentStatus;
+}
+
+export interface CreatePaymentRequest {
+  employeeId: string;
+  paymentPeriodId: string;
+  amount: number;
+  paymentDate: string;
+  paymentMethod: PaymentMethod;
+  status: PaymentStatus;
   notes?: string;
-}
-
-// Product Models
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  sku: string;
-  category: string;
-  unit: string;
-  unitPrice: number;
-  minimumStock: number;
-  isActive: boolean;
-  createdAt: string;
-}
-
-export interface CreateProductRequest {
-  name: string;
-  description?: string;
-  sku: string;
-  category: string;
-  unit: string;
-  unitPrice: number;
-  minimumStock: number;
-}
-
-// Customer Models
-export interface Customer {
-  id: string;
-  name: string;
-  document: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  isActive: boolean;
-  createdAt: string;
-}
-
-export interface CreateCustomerRequest {
-  name: string;
-  document: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
 }
 
 // API Response Models

@@ -3,15 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   Employee,
+  EmployeeSummary,
   WorkLog,
+  UnassignedWorkLog,
   PaymentPeriod,
   Payment,
-  Product,
-  Customer,
+  RecentPayment,
   CreateWorkLogRequest,
   CreatePaymentRequest,
-  CreateProductRequest,
-  CreateCustomerRequest,
   LoginRequest,
   AuthResponse,
   PermissionItem,
@@ -44,6 +43,10 @@ export class ApiService {
 
   getCurrentUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/auth/me`);
+  }
+
+  getCurrentUserDetails(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/auth/me`);
   }
 
   getUsers(): Observable<AppUserSummary[]> {
@@ -106,8 +109,17 @@ export class ApiService {
     return this.http.get<Employee[]>(`${this.apiUrl}/employees`, { params });
   }
 
+  getEmployeeSummaries(includeInactive: boolean = false): Observable<EmployeeSummary[]> {
+    const params = new HttpParams().set('includeInactive', includeInactive);
+    return this.http.get<EmployeeSummary[]>(`${this.apiUrl}/employees/summaries`, { params });
+  }
+
   getEmployeeById(id: string): Observable<Employee> {
     return this.http.get<Employee>(`${this.apiUrl}/employees/${id}`);
+  }
+
+  getEmployeeByCpf(cpf: string): Observable<Employee> {
+    return this.http.get<Employee>(`${this.apiUrl}/employees/cpf/${cpf}`);
   }
 
   createEmployee(data: Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>): Observable<Employee> {
@@ -130,8 +142,8 @@ export class ApiService {
     return this.http.get<WorkLog[]>(`${this.apiUrl}/worklogs/employee/${employeeId}`, { params });
   }
 
-  getUnassignedWorkLogs(employeeId: string): Observable<WorkLog[]> {
-    return this.http.get<WorkLog[]>(`${this.apiUrl}/worklogs/employee/${employeeId}/unassigned`);
+  getUnassignedWorkLogs(employeeId: string): Observable<UnassignedWorkLog[]> {
+    return this.http.get<UnassignedWorkLog[]>(`${this.apiUrl}/worklogs/employee/${employeeId}/unassigned`);
   }
 
   createWorkLog(data: CreateWorkLogRequest): Observable<WorkLog> {
@@ -146,7 +158,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/worklogs/${id}`);
   }
 
-  // Payment Period Endpoints -> Create getAllPeriodsSum 
+  // Payment Period Endpoints
   getPaymentPeriodsByEmployee(employeeId: string): Observable<PaymentPeriod[]> {
     return this.http.get<PaymentPeriod[]>(`${this.apiUrl}/paymentperiods/employee/${employeeId}`);
   }
@@ -202,9 +214,9 @@ export class ApiService {
     return this.http.get<Payment[]>(`${this.apiUrl}/payments/period`, { params });
   }
 
-  getRecentPayments(count: number = 10): Observable<Payment[]> {
+  getRecentPayments(count: number = 10): Observable<RecentPayment[]> {
     const params = new HttpParams().set('count', count);
-    return this.http.get<Payment[]>(`${this.apiUrl}/payments/recent`, { params });
+    return this.http.get<RecentPayment[]>(`${this.apiUrl}/payments/recent`, { params });
   }
 
   createPayment(data: CreatePaymentRequest): Observable<Payment> {
@@ -213,47 +225,5 @@ export class ApiService {
 
   deletePayment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/payments/${id}`);
-  }
-
-  // Product Endpoints
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products`);
-  }
-
-  getProductById(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
-  }
-
-  createProduct(data: CreateProductRequest): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/products`, data);
-  }
-
-  updateProduct(id: string, data: Partial<CreateProductRequest>): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/products/${id}`, data);
-  }
-
-  deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/products/${id}`);
-  }
-
-  // Customer Endpoints.
-  getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.apiUrl}/customers`);
-  }
-
-  getCustomerById(id: string): Observable<Customer> {
-    return this.http.get<Customer>(`${this.apiUrl}/customers/${id}`);
-  }
-
-  createCustomer(data: CreateCustomerRequest): Observable<Customer> {
-    return this.http.post<Customer>(`${this.apiUrl}/customers`, data);
-  }
-
-  updateCustomer(id: string, data: Partial<CreateCustomerRequest>): Observable<Customer> {
-    return this.http.put<Customer>(`${this.apiUrl}/customers/${id}`, data);
-  }
-
-  deleteCustomer(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/customers/${id}`);
   }
 }

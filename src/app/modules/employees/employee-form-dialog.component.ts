@@ -81,8 +81,8 @@ import { Employee, ContractType, PaymentMethod } from '@core/models';
             <mat-label>Tipo de Contrato *</mat-label>
             <mat-select formControlName="contractType">
               <mat-option [value]="contractTypes.CLT">CLT</mat-option>
-              <mat-option [value]="contractTypes.Frio">Frio</mat-option>
-              <mat-option [value]="contractTypes.Temporario">Temporário</mat-option>
+              <mat-option [value]="contractTypes.Temporary">Temporário</mat-option>
+              <mat-option [value]="contractTypes.Daily">Diária</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('contractType')?.invalid">
               Tipo de contrato é obrigatório
@@ -102,10 +102,9 @@ import { Employee, ContractType, PaymentMethod } from '@core/models';
           <mat-form-field appearance="fill">
             <mat-label>Forma de Pagamento Preferida *</mat-label>
             <mat-select formControlName="preferredPaymentMethod">
-              <mat-option [value]="paymentMethods.TransferenciaBancaria">Transferência Bancária</mat-option>
+              <mat-option [value]="paymentMethods.BankTransfer">Transferência Bancária</mat-option>
               <mat-option [value]="paymentMethods.Pix">PIX</mat-option>
-              <mat-option [value]="paymentMethods.Cheque">Cheque</mat-option>
-              <mat-option [value]="paymentMethods.Dinheiro">Dinheiro</mat-option>
+              <mat-option [value]="paymentMethods.Cash">Dinheiro</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('preferredPaymentMethod')?.invalid">
               Forma de pagamento é obrigatória
@@ -118,19 +117,19 @@ import { Employee, ContractType, PaymentMethod } from '@core/models';
           </mat-form-field>
 
           <mat-form-field appearance="fill" 
-            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.TransferenciaBancaria">
+            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.BankTransfer">
             <mat-label>Nome do Banco</mat-label>
             <input matInput formControlName="bankName" placeholder="bradesco">
           </mat-form-field>
 
           <mat-form-field appearance="fill"
-            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.TransferenciaBancaria">
+            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.BankTransfer">
             <mat-label>Agência</mat-label>
             <input matInput formControlName="bankAgency" placeholder="0001">
           </mat-form-field>
 
           <mat-form-field appearance="fill"
-            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.TransferenciaBancaria">
+            *ngIf="form.get('preferredPaymentMethod')?.value === paymentMethods.BankTransfer">
             <mat-label>Número da Conta</mat-label>
             <input matInput formControlName="bankAccountNumber" placeholder="123456-7">
           </mat-form-field>
@@ -225,7 +224,7 @@ export class EmployeeFormDialogComponent implements OnInit {
       contractType: [ContractType.CLT, [Validators.required]],
       hourlyRate: [0, [Validators.required, Validators.min(0)]],
       isActive: [true],
-      preferredPaymentMethod: [PaymentMethod.TransferenciaBancaria, [Validators.required]],
+      preferredPaymentMethod: [PaymentMethod.BankTransfer, [Validators.required]],
       pixKey: [''],
       bankName: [''],
       bankAgency: [''],

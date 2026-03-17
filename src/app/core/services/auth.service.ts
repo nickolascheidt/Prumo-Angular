@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest, AuthResponse, User } from '../models';
 import { ApiService } from './api.service';
+import { PermissionService } from './permission.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +11,14 @@ import { ApiService } from './api.service';
 export class AuthService {
   private readonly tokenKey = 'biomepampa_token';
   private readonly userKey = 'biomepampa_user';
+  private readonly permissionsKey = 'biomepampa_permissions';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private permissionService: PermissionService
   ) {
     this.loadStoredUser();
   }
@@ -29,6 +32,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.permissionsKey);
     this.currentUserSubject.next(null);
   }
 
@@ -54,6 +58,35 @@ export class AuthService {
     return roles.some(role => user?.roles.includes(role)) ?? false;
   }
 
+  /**
+   * Get user permissions
+   */
+  getPermissions(): string[] {
+    const permsJson = localStorage.getItem(this.permissionsKey);
+    return permsJson ? JSON.parse(permsJson) : [];
+  }
+
+  /**
+   * Check if user has a specific permission
+   */
+  hasPermission(permission: string): boolean {
+    return this.permissionService.userHasPermission(permission);
+  }
+
+  /**
+   * Check if user has any of the provided permissions
+   */
+  hasAnyPermission(permissions: string[]): boolean {
+    return this.permissionService.userHasAnyPermission(permissions);
+  }
+
+  /**
+   * Check if user has all of the provided permissions
+   */
+  hasAllPermissions(permissions: string[]): boolean {
+    return this.permissionService.userHasAllPermissions(permissions);
+  }
+
   private handleAuthSuccess(response: AuthResponse): void {
     const token = response.token;
     const user = response.user;
@@ -64,6 +97,13 @@ export class AuthService {
 
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));
+
+    // Store permissions if available
+    if (user.permissions) {
+      localStorage.setItem(this.permissionsKey, JSON.stringify(user.permissions));
+      this.permissionService.setUserPermissions(user.permissions);
+    }
+
     this.currentUserSubject.next(user);
   }
 
@@ -76,6 +116,11 @@ export class AuthService {
     const user = this.getUserFromStorage();
     if (user) {
       this.currentUserSubject.next(user);
+      // Load stored permissions
+      const permissions = this.getPermissions();
+      if (permissions.length > 0) {
+        this.permissionService.setUserPermissions(permissions);
+      }
     }
   }
 }

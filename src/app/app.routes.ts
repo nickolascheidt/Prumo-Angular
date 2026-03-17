@@ -6,8 +6,6 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { EmployeesComponent } from './modules/employees/employees.component';
 import { WorklogsComponent } from './modules/worklogs/worklogs.component';
 import { PaymentsComponent } from './modules/payments/payments.component';
-import { ProductsComponent } from './modules/products/products.component';
-import { CustomersComponent } from './modules/customers/customers.component';
 import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
@@ -47,14 +45,6 @@ export const routes: Routes = [
       {
         path: 'payments',
         component: PaymentsComponent
-      },
-      {
-        path: 'products',
-        component: ProductsComponent
-      },
-      {
-        path: 'customers',
-        component: CustomersComponent
       },
       {
         path: 'admin',

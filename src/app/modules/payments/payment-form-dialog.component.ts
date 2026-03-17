@@ -115,19 +115,13 @@ import { Employee, PaymentPeriod, PaymentMethod, CreatePaymentRequest } from '@c
           <mat-form-field appearance="fill">
             <mat-label>Método de Pagamento *</mat-label>
             <mat-select formControlName="paymentMethod">
-              <mat-option [value]="paymentMethods.Dinheiro">Dinheiro</mat-option>
+              <mat-option [value]="paymentMethods.Cash">Dinheiro</mat-option>
               <mat-option [value]="paymentMethods.Pix">PIX</mat-option>
-              <mat-option [value]="paymentMethods.TransferenciaBancaria">Transferência Bancária</mat-option>
-              <mat-option [value]="paymentMethods.Cheque">Cheque</mat-option>
+              <mat-option [value]="paymentMethods.BankTransfer">Transferência Bancária</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('paymentMethod')?.invalid">
               Selecione o método de pagamento
             </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>Comprovante (opcional)</mat-label>
-            <input matInput formControlName="paymentProof" placeholder="Link ou número do comprovante">
           </mat-form-field>
 
           <mat-form-field appearance="fill">
@@ -319,9 +313,8 @@ export class PaymentFormDialogComponent implements OnInit {
       next: (data) => {
         console.log('📊 Períodos recebidos da API:', data);
         
-        // Filtra apenas períodos pendentes ou aprovados (não pagos)
-        // Status: 1 = Pending, 2 = Approved, 3 = Paid, 4 = Cancelled
-        this.paymentPeriods = data.filter(p => p.status === 1 || p.status === 2);
+        // Filtra apenas períodos pendentes (status 1)
+        this.paymentPeriods = data.filter(p => p.status === 1);
         
         console.log('✅ Períodos disponíveis para pagamento:', this.paymentPeriods);
         
@@ -365,10 +358,12 @@ export class PaymentFormDialogComponent implements OnInit {
 
     this.isSaving = true;
     const paymentData: CreatePaymentRequest = {
+      employeeId: this.form.value.employeeId,
       paymentPeriodId: this.form.value.paymentPeriodId,
+      amount: this.form.value.amount,
       paymentDate: this.form.value.paymentDate.toISOString(),
       paymentMethod: this.form.value.paymentMethod,
-      paymentProof: this.form.value.paymentProof || undefined,
+      status: 2, // Pago
       notes: this.form.value.notes || undefined
     };
 

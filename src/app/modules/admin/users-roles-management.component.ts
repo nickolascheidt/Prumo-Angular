@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '@core/services';
 import { AppUserSummary } from '@core/models';
 
@@ -26,7 +27,8 @@ import { AppUserSummary } from '@core/models';
     MatSelectModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   template: `
     <div class="users-roles-container">
@@ -81,6 +83,9 @@ import { AppUserSummary } from '@core/models';
               <td mat-cell *matCellDef="let user">
                 <button mat-button color="primary" (click)="selectUser(user)">
                   Selecionar
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Desativar usuario">
+                  <mat-icon>person_off</mat-icon>
                 </button>
               </td>
             </ng-container>
@@ -307,6 +312,32 @@ export class UsersRolesManagementComponent implements OnInit {
         console.error('[Users Roles] Status:', error.status);
         console.error('[Users Roles] Response Body:', error.error);
         this.showError('Nao foi possivel atribuir role', error);
+      }
+    });
+  }
+
+  deleteUser(user: AppUserSummary): void {
+    const confirmed = confirm(`Deseja desativar o usuario "${user.fullName}" (${user.email})?\n\nO usuario perdera acesso ao sistema.`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.apiService.deleteUser(user.id).subscribe({
+      next: () => {
+        this.users = this.users.filter(u => u.id !== user.id);
+        this.applyFilter();
+        if (this.selectedUser?.id === user.id) {
+          this.selectedUser = null;
+          this.selectedUserRoles = [];
+        }
+        this.showSuccess(`Usuario "${user.fullName}" desativado com sucesso.`);
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          this.showErrorMessage('Nao e possivel desativar o proprio usuario.');
+        } else {
+          this.showError('Nao foi possivel desativar o usuario', error);
+        }
       }
     });
   }

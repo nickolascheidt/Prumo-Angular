@@ -21,7 +21,13 @@ import {
   PermissionCatalog,
   AppUserSummary,
   AssignUserRoleRequest,
-  UserRolesResponse
+  UserRolesResponse,
+  Resource,
+  ResourcePermission,
+  UserResourcePermissions,
+  AssignResourcePermissionRequest,
+  CreateResourceRequest,
+  UpdateResourceRequest
 } from '../models';
 
 @Injectable({
@@ -63,6 +69,10 @@ export class ApiService {
 
   removeRoleFromUser(userId: string, roleName: string): Observable<PermissionActionResponse> {
     return this.http.delete<PermissionActionResponse>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}/roles/${encodeURIComponent(roleName)}`);
+  }
+
+  deleteUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}`);
   }
 
   // Permission Endpoints
@@ -225,5 +235,45 @@ export class ApiService {
 
   deletePayment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/payments/${id}`);
+  }
+
+  // Resource Endpoints
+  getResources(): Observable<Resource[]> {
+    return this.http.get<Resource[]>(`${this.apiUrl}/resources`);
+  }
+
+  getResourceById(id: string): Observable<Resource> {
+    return this.http.get<Resource>(`${this.apiUrl}/resources/${id}`);
+  }
+
+  createResource(data: CreateResourceRequest): Observable<Resource> {
+    return this.http.post<Resource>(`${this.apiUrl}/resources`, data);
+  }
+
+  updateResource(id: string, data: UpdateResourceRequest): Observable<Resource> {
+    return this.http.put<Resource>(`${this.apiUrl}/resources/${id}`, data);
+  }
+
+  deleteResource(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/resources/${id}`);
+  }
+
+  // Resource Permission Endpoints
+  getUserResourcePermissions(): Observable<UserResourcePermissions> {
+    return this.http.get<UserResourcePermissions>(`${this.apiUrl}/resources/my-permissions`);
+  }
+
+  getRoleResourcePermissions(roleId: string): Observable<ResourcePermission[]> {
+    return this.http.get<ResourcePermission[]>(`${this.apiUrl}/resources/roles/${roleId}/permissions`);
+  }
+
+  assignResourcePermission(data: AssignResourcePermissionRequest): Observable<ResourcePermission> {
+    return this.http.post<ResourcePermission>(`${this.apiUrl}/resources/permissions`, data);
+  }
+
+  removeResourcePermission(roleId: string, resourceId: string): Observable<PermissionActionResponse> {
+    return this.http.delete<PermissionActionResponse>(
+      `${this.apiUrl}/resources/roles/${roleId}/resources/${resourceId}`
+    );
   }
 }

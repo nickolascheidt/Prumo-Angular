@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { LoginRequest, AuthResponse, User } from '../models';
+import { LoginRequest, AuthResponse, User, UserResourcePermissions, PermissionLevel } from '../models';
 import { ApiService } from './api.service';
 import { PermissionService } from './permission.service';
 
@@ -12,8 +12,11 @@ export class AuthService {
   private readonly tokenKey = 'biomepampa_token';
   private readonly userKey = 'biomepampa_user';
   private readonly permissionsKey = 'biomepampa_permissions';
+  private readonly resourcePermissionsKey = 'biomepampa_resource_permissions';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
+  private userResourcePermissionsSubject = new BehaviorSubject<UserResourcePermissions | null>(null);
+  public userResourcePermissions$ = this.userResourcePermissionsSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -33,7 +36,9 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.permissionsKey);
+    localStorage.removeItem(this.resourcePermissionsKey);
     this.currentUserSubject.next(null);
+    this.userResourcePermissionsSubject.next(null);
   }
 
   getToken(): string | null {
@@ -87,6 +92,56 @@ export class AuthService {
     return this.permissionService.userHasAllPermissions(permissions);
   }
 
+  /**
+   * Get user resource permissions (granular access control)
+   */
+  getUserResourcePermissions(): UserResourcePermissions | null {
+    const stored = localStorage.getItem(this.resourcePermissionsKey);
+    return stored ? JSON.parse(stored) : null;
+  }
+
+  /**
+   * Load user resource permissions from the server
+   */
+  loadUserResourcePermissions(): Observable<UserResourcePermissions> {
+    return this.apiService.getUserResourcePermissions().pipe(
+      tap(resourcePerms => this.storeResourcePermissions(resourcePerms))
+    );
+  }
+
+  /**
+   * Check if user can access a specific resource with minimum permission level
+   */
+  canAccessResource(resourceCode: string, minLevel: PermissionLevel = PermissionLevel.Read): boolean {
+    return this.permissionService.userCanAccessResource(resourceCode, minLevel);
+  }
+
+  /**
+   * Get permission level for a specific resource
+   */
+  getResourcePermissionLevel(resourceCode: string): PermissionLevel {
+    return this.permissionService.getUserResourcePermissionLevel(resourceCode);
+  }
+
+  /**
+   * Refresh current user data including permissions from server
+   */
+  refreshCurrentUser(): Observable<any> {
+    return this.apiService.getCurrentUserDetails().pipe(
+      tap(response => {
+        if (response && response.user) {
+          const user = response.user;
+          localStorage.setItem(this.userKey, JSON.stringify(user));
+          if (user.permissions) {
+            localStorage.setItem(this.permissionsKey, JSON.stringify(user.permissions));
+            this.permissionService.setUserPermissions(user.permissions);
+          }
+          this.currentUserSubject.next(user);
+        }
+      })
+    );
+  }
+
   private handleAuthSuccess(response: AuthResponse): void {
     const token = response.token;
     const user = response.user;
@@ -107,6 +162,12 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
 
+  private storeResourcePermissions(resourcePerms: UserResourcePermissions): void {
+    localStorage.setItem(this.resourcePermissionsKey, JSON.stringify(resourcePerms));
+    this.userResourcePermissionsSubject.next(resourcePerms);
+    this.permissionService.setUserResourcePermissions(resourcePerms);
+  }
+
   private getUserFromStorage(): User | null {
     const userJson = localStorage.getItem(this.userKey);
     return userJson ? JSON.parse(userJson) : null;
@@ -120,6 +181,12 @@ export class AuthService {
       const permissions = this.getPermissions();
       if (permissions.length > 0) {
         this.permissionService.setUserPermissions(permissions);
+      }
+      // Load stored resource permissions
+      const resourcePerms = this.getUserResourcePermissions();
+      if (resourcePerms) {
+        this.userResourcePermissionsSubject.next(resourcePerms);
+        this.permissionService.setUserResourcePermissions(resourcePerms);
       }
     }
   }

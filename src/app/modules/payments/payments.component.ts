@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '@core/services';
-import { Payment, RecentPayment } from '@core/models';
+import { Payment, PaymentMethod, RecentPayment } from '@core/models';
 import { PaymentFormDialogComponent } from './payment-form-dialog.component';
 import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-dialog.component';
 
@@ -67,7 +67,7 @@ import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-
 
             <ng-container matColumnDef="paymentMethod">
               <th mat-header-cell *matHeaderCellDef>Método</th>
-              <td mat-cell *matCellDef="let element">{{ element.paymentMethod }}</td>
+              <td mat-cell *matCellDef="let element">{{ getPaymentMethodLabel(element.paymentMethod) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
@@ -163,6 +163,15 @@ export class PaymentsComponent implements OnInit {
         this.loadPayments();
       }
     });
+  }
+
+  getPaymentMethodLabel(method: PaymentMethod): string {
+    const labels: Record<number, string> = {
+      [PaymentMethod.Cash]: 'Dinheiro',
+      [PaymentMethod.Pix]: 'Pix',
+      [PaymentMethod.BankTransfer]: 'Transferência Bancária'
+    };
+    return labels[method] ?? String(method);
   }
 
   onDelete(id: string): void {

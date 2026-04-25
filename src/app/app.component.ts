@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   styles: []
 })
 export class AppComponent {
-  title = 'BiomePampa ERP';
+  title = 'SaaS_BasePlatform ERP';
 }

@@ -1,7 +1,7 @@
 {
-  "name": "biomepampa-erp",
+  "name": "saas-baseplatform-erp",
   "version": "1.0.0",
-  "description": "ERP Frontend para BiomePampa - Sistema de Gestão de Funcionários, Horas e Pagamentos",
+  "description": "ERP Frontend para SaaS_BasePlatform - Sistema de Gestão de Funcionários, Horas e Pagamentos",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

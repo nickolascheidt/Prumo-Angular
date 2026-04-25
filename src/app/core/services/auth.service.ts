@@ -9,10 +9,10 @@ import { PermissionService } from './permission.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly tokenKey = 'biomepampa_token';
-  private readonly userKey = 'biomepampa_user';
-  private readonly permissionsKey = 'biomepampa_permissions';
-  private readonly resourcePermissionsKey = 'biomepampa_resource_permissions';
+  private readonly tokenKey = 'saas_baseplatform_token';
+  private readonly userKey = 'saas_baseplatform_user';
+  private readonly permissionsKey = 'saas_baseplatform_permissions';
+  private readonly resourcePermissionsKey = 'saas_baseplatform_resource_permissions';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
   private userResourcePermissionsSubject = new BehaviorSubject<UserResourcePermissions | null>(null);

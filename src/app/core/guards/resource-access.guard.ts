@@ -49,11 +49,11 @@ export class ResourceAccessGuard {
  *
  * Usage in routes:
  * {
- *   path: 'employees',
- *   component: EmployeesComponent,
+ *   path: 'reports',
+ *   component: ReportsComponent,
  *   canActivate: [resourceAccessGuard],
  *   data: {
- *     resource: 'employees',
+ *     resource: 'reports',
  *     requiredLevel: PermissionLevel.Read  // or Write, Full
  *   }
  * }

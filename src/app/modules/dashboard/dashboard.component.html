@@ -1,94 +1,32 @@
 <div class="dashboard-container">
-  <h1>Dashboard</h1>
+  <ng-container *ngIf="currentUser$ | async as user">
+    <h1>Bem-vindo, {{ user.fullName }}</h1>
+    <p class="subtitle">{{ user.email }}</p>
 
-  <div class="stats-grid">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-icon employees">
-          <mat-icon>people</mat-icon>
-        </div>
-        <div class="stat-info">
-          <h3>Funcionários</h3>
-          <p class="stat-value">{{ totalEmployees }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="cards-grid">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>badge</mat-icon>
+          <mat-card-title>Suas Roles</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="roles-list">
+            <li *ngFor="let role of user.roles">{{ role }}</li>
+            <li *ngIf="!user.roles?.length" class="empty">Nenhuma role atribuída</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-icon payments">
-          <mat-icon>payment</mat-icon>
-        </div>
-        <div class="stat-info">
-          <h3>Pagamentos este mês</h3>
-          <p class="stat-value">R$ {{ totalPaymentsThisMonth | number: '1.2-2' }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-icon worklogs">
-          <mat-icon>schedule</mat-icon>
-        </div>
-        <div class="stat-info">
-          <h3>Horas este mês</h3>
-          <p class="stat-value">{{ totalHoursThisMonth }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="content-grid">
-    <mat-card class="recent-payments">
-      <mat-card-header>
-        <mat-card-title>Pagamentos Recentes</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div *ngIf="isLoading" class="loading">
-          <mat-spinner diameter="40"></mat-spinner>
-        </div>
-        <table mat-table [dataSource]="recentPayments" *ngIf="!isLoading">
-          <ng-container matColumnDef="employeeName">
-            <th mat-header-cell *matHeaderCellDef>Funcionário</th>
-            <td mat-cell *matCellDef="let element">{{ element.employeeName }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef>Valor</th>
-            <td mat-cell *matCellDef="let element">R$ {{ element.amount | number: '1.2-2' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="paymentDate">
-            <th mat-header-cell *matHeaderCellDef>Data</th>
-            <td mat-cell *matCellDef="let element">{{ element.paymentDate | date: 'dd/MM/yyyy' }}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <p *ngIf="!isLoading && recentPayments.length === 0" class="no-data">Nenhum pagamento recente</p>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="quick-actions">
-      <mat-card-header>
-        <mat-card-title>Ações Rápidas</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="primary" routerLink="/employees" class="action-btn">
-          <mat-icon>add</mat-icon>
-          Novo Funcionário
-        </button>
-        <button mat-raised-button color="accent" routerLink="/worklogs" class="action-btn">
-          <mat-icon>add</mat-icon>
-          Registrar Horas
-        </button>
-        <button mat-raised-button color="warn" routerLink="/payments" class="action-btn">
-          <mat-icon>add</mat-icon>
-          Novo Pagamento
-        </button>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      <mat-card class="info-card" *ngIf="user.roles?.includes('Administrador')">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>admin_panel_settings</mat-icon>
+          <mat-card-title>Administração</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Acesse o painel para gerenciar usuários, roles, permissões e recursos.</p>
+          <a mat-stroked-button color="primary" routerLink="/admin">Abrir Painel Admin</a>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-container>
 </div>

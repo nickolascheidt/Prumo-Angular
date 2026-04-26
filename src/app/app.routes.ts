@@ -3,9 +3,6 @@ import { authGuard } from './core/guards';
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
-import { EmployeesComponent } from './modules/employees/employees.component';
-import { WorklogsComponent } from './modules/worklogs/worklogs.component';
-import { PaymentsComponent } from './modules/payments/payments.component';
 import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
@@ -33,18 +30,6 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent
-      },
-      {
-        path: 'employees',
-        component: EmployeesComponent
-      },
-      {
-        path: 'worklogs',
-        component: WorklogsComponent
-      },
-      {
-        path: 'payments',
-        component: PaymentsComponent
       },
       {
         path: 'admin',

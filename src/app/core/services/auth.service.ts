@@ -127,17 +127,24 @@ export class AuthService {
    * Refresh current user data including permissions from server
    */
   refreshCurrentUser(): Observable<any> {
-    return this.apiService.getCurrentUserDetails().pipe(
-      tap(response => {
-        if (response && response.user) {
-          const user = response.user;
-          localStorage.setItem(this.userKey, JSON.stringify(user));
-          if (user.permissions) {
-            localStorage.setItem(this.permissionsKey, JSON.stringify(user.permissions));
-            this.permissionService.setUserPermissions(user.permissions);
-          }
-          this.currentUserSubject.next(user);
+    return this.apiService.getCurrentUser().pipe(
+      tap((dto: any) => {
+        if (!dto) return;
+        const user = {
+          id: dto.userId ?? dto.id,
+          email: dto.email,
+          fullName: dto.fullName,
+          roles: dto.roles ?? [],
+          permissions: dto.permissions,
+          createdAt: dto.createdAt,
+          lastLoginAt: dto.lastLoginAt
+        };
+        localStorage.setItem(this.userKey, JSON.stringify(user));
+        if (user.permissions) {
+          localStorage.setItem(this.permissionsKey, JSON.stringify(user.permissions));
+          this.permissionService.setUserPermissions(user.permissions);
         }
+        this.currentUserSubject.next(user as any);
       })
     );
   }

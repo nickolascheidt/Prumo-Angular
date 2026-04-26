@@ -64,12 +64,12 @@ export enum PermissionLevel {
 
 export interface Resource {
   id: string;
-  code: string;                    // Ex: "employees", "worklogs", "payments"
+  code: string;
   name: string;
   description?: string;
-  module: string;                  // Ex: "HR", "Finance", "Admin"
-  frontendRoute?: string;           // Ex: "/admin/employees"
-  icon?: string;                    // Material icon name
+  module: string;
+  frontendRoute?: string;
+  icon?: string;
   displayOrder: number;
   createdAt: string;
   updatedAt?: string;
@@ -81,7 +81,7 @@ export interface ResourcePermission {
   roleName: string;
   resourceCode: string;
   resourceName: string;
-  level: PermissionLevel;           // Read, Write, Full
+  level: PermissionLevel;
   createdAt: string;
   updatedAt?: string;
   createdByUserEmail?: string;
@@ -144,136 +144,6 @@ export interface UserRolesResponse {
   email: string;
   fullName: string;
   roles: string[];
-}
-
-// Employee Models
-export interface Employee {
-  id: string;
-  fullName: string;
-  cpf: string;
-  phone: string;
-  email: string;
-  hireDate: string;
-  terminationDate?: string;
-  isActive: boolean;
-  contractType: ContractType;
-  hourlyRate: number;
-  preferredPaymentMethod: PaymentMethod;
-  pixKey?: string;
-  bankName?: string;
-  bankAccountNumber?: string;
-  bankAgency?: string;
-  hasSignedContract: boolean;
-  contractSignedDate?: string;
-  applicationUserId?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export enum ContractType {
-  CLT = 1,
-  Temporary = 2,
-  Daily = 3
-}
-
-export enum PaymentMethod {
-  Cash = 1,
-  Pix = 2,
-  BankTransfer = 3
-}
-
-// Employee Summary Models
-export interface EmployeeSummary {
-  id: string;
-  fullName: string;
-  cpf: string;
-  isActive: boolean;
-  contractType: ContractType;
-  hourlyRate: number;
-}
-
-// WorkLog Models
-export interface WorkLog {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  date: string;
-  clockIn: string;
-  clockOut: string;
-  hoursWorked: number;
-  notes?: string;
-  paymentPeriodId?: string | null;
-  createdAt: string;
-}
-
-export interface UnassignedWorkLog extends WorkLog {
-  paymentPeriodId: null;
-}
-
-export interface CreateWorkLogRequest {
-  employeeId: string;
-  date: string;
-  clockIn: string;
-  clockOut: string;
-  notes?: string;
-}
-
-// PaymentPeriod Models
-export interface PaymentPeriod {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  startDate: string;
-  endDate: string;
-  totalHours: number;
-  totalAmount: number;
-  status: PaymentStatus;
-  payment?: Payment;
-  workLogs: WorkLog[];
-  createdAt: string;
-}
-
-export enum PaymentStatus {
-  Pendente = 1,
-  Pago = 2,
-  Cancelado = 3
-}
-
-// Payment Models
-export interface Payment {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  paymentPeriodId: string;
-  paymentDate: string;
-  amount: number;
-  paymentMethod: PaymentMethod;
-  paymentProof?: string;
-  status: PaymentStatus;
-  notes?: string;
-  paidByUserId: string;
-  paidByUserName: string;
-  createdAt: string;
-}
-
-export interface RecentPayment {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  amount: number;
-  paymentDate: string;
-  paymentMethod: PaymentMethod;
-  status: PaymentStatus;
-}
-
-export interface CreatePaymentRequest {
-  employeeId: string;
-  paymentPeriodId: string;
-  amount: number;
-  paymentDate: string;
-  paymentMethod: PaymentMethod;
-  status: PaymentStatus;
-  notes?: string;
 }
 
 // API Response Models

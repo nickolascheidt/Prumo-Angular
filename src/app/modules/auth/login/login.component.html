@@ -1,37 +1,41 @@
-<div class="login-container">
+<div class="login-page">
+  <div class="login-page__bg-orb login-page__bg-orb--1"></div>
+  <div class="login-page__bg-orb login-page__bg-orb--2"></div>
+
   <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>
-        <h1>SaaS_BasePlatform ERP</h1>
-        <p>Sistema de Gestão de Funcionários</p>
-      </mat-card-title>
-    </mat-card-header>
+    <div class="login-card__brand">
+      <div class="login-card__logo">
+        <mat-icon>hub</mat-icon>
+      </div>
+      <h1>SaaS_BasePlatform ERP</h1>
+      <p>Sistema de Gestão de Funcionários</p>
+    </div>
 
-    <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="seu@email.com">
-          <mat-error>Email inválido</mat-error>
-        </mat-form-field>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix>mail_outline</mat-icon>
+        <input matInput formControlName="email" type="email" placeholder="seu@email.com" autocomplete="email">
+        <mat-error>Email inválido</mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Senha</mat-label>
-          <input matInput formControlName="password" type="password" placeholder="Sua senha">
-          <mat-error>Senha obrigatória (mínimo 6 caracteres)</mat-error>
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <mat-icon matPrefix>lock_outline</mat-icon>
+        <input matInput formControlName="password" type="password" placeholder="Sua senha" autocomplete="current-password">
+        <mat-error>Senha obrigatória (mínimo 6 caracteres)</mat-error>
+      </mat-form-field>
 
-        <button 
-          mat-raised-button 
-          color="primary" 
-          class="full-width login-btn"
-          [disabled]="isLoading || loginForm.invalid"
-        >
-          <mat-spinner *ngIf="isLoading" diameter="20" color="accent"></mat-spinner>
-          <span *ngIf="!isLoading">Entrar</span>
-        </button>
-      </form>
+      <button
+        mat-flat-button
+        color="primary"
+        class="login-btn"
+        [disabled]="isLoading || loginForm.invalid">
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        <span *ngIf="!isLoading">Entrar</span>
+      </button>
+    </form>
 
-    </mat-card-content>
+    <p class="login-card__footer">© 2026 SaaS BasePlatform</p>
   </mat-card>
 </div>

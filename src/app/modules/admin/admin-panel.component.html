@@ -1,0 +1,39 @@
+<div class="admin-panel">
+  <section class="page-header">
+    <div class="page-header__icon"><mat-icon>admin_panel_settings</mat-icon></div>
+    <div>
+      <h1>Painel Admin</h1>
+      <p>Configurações administrativas e controles avançados do sistema.</p>
+    </div>
+  </section>
+
+  <mat-card class="status-card">
+    <div class="status-card__icon"><mat-icon>pending_actions</mat-icon></div>
+    <div class="status-card__body">
+      <h3>Integração com backend pendente</h3>
+      <p>
+        A interface do painel admin já está disponível no frontend.
+        Os endpoints de backend ainda precisam ser implementados para habilitar todas as funções.
+      </p>
+    </div>
+  </mat-card>
+
+  <mat-card class="actions-card">
+    <h3>Ações administrativas</h3>
+    <p>Use as ferramentas abaixo para administrar permissões e navegar entre as configurações.</p>
+    <div class="actions">
+      <a mat-flat-button color="primary" routerLink="/admin/permissions">
+        <mat-icon>security</mat-icon>
+        Permissões por role
+      </a>
+      <a mat-flat-button color="accent" routerLink="/admin/users-roles">
+        <mat-icon>manage_accounts</mat-icon>
+        Roles por usuário
+      </a>
+      <a mat-stroked-button routerLink="/dashboard">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar ao Dashboard
+      </a>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk 'NR<=32 || NR>=232' src/app/modules/admin/users-roles-management.component.ts)",
+      "Bash(mv /tmp/ur.ts src/app/modules/admin/users-roles-management.component.ts)"
+    ]
+  }
+}

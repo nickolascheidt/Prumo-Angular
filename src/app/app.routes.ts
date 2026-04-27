@@ -10,6 +10,8 @@ import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
+import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
+import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -68,6 +70,21 @@ export const routes: Routes = [
       {
         path: 'admin/tenant',
         component: TenantManagementComponent
+      },
+      {
+        path: 'accounts-payable',
+        component: AccountsPayableListComponent,
+        data: { roles: ['Administrador', 'Funcionario'] }
+      },
+      {
+        path: 'accounts-payable/new',
+        component: AccountsPayableFormComponent,
+        data: { roles: ['Administrador', 'Funcionario'] }
+      },
+      {
+        path: 'accounts-payable/:id/edit',
+        component: AccountsPayableFormComponent,
+        data: { roles: ['Administrador', 'Funcionario'] }
       }
     ]
   }

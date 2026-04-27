@@ -54,7 +54,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
     {
       title: 'Menu Principal',
       items: [
-        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' }
+        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+        {
+          label: 'Contas a Pagar',
+          icon: 'request_quote',
+          route: '/accounts-payable',
+          roles: ['Administrador', 'Funcionario']
+        }
       ]
     },
     {

@@ -238,3 +238,130 @@ export interface PaginatedResponse<T> {
   page: number;
   pageSize: number;
 }
+
+// Accounts Payable Models
+export type AccountsPayableStatus = 'Pending' | 'Paid' | 'Cancelled';
+
+export type PaymentMethod =
+  | 'Cash'
+  | 'BankTransfer'
+  | 'CreditCard'
+  | 'DebitCard'
+  | 'Pix'
+  | 'Boleto'
+  | 'Other';
+
+export interface AccountsPayableCategory {
+  id: string;
+  tenantId: string;
+  name: string;
+  color?: string | null;
+  description?: string | null;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateAccountsPayableCategoryRequest {
+  name: string;
+  color?: string | null;
+  description?: string | null;
+}
+
+export interface UpdateAccountsPayableCategoryRequest {
+  name: string;
+  color?: string | null;
+  description?: string | null;
+  isActive: boolean;
+}
+
+export interface AccountsPayableEntry {
+  id: string;
+  tenantId: string;
+  description: string;
+  amount: number;
+  dueDate: string;
+  categoryId: string;
+  categoryName?: string | null;
+  supplierName?: string | null;
+  paymentMethod?: PaymentMethod | null;
+  status: AccountsPayableStatus;
+  paidAt?: string | null;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateAccountsPayableEntryRequest {
+  description: string;
+  amount: number;
+  dueDate: string;
+  categoryId: string;
+  supplierName?: string | null;
+  paymentMethod?: PaymentMethod | null;
+  notes?: string | null;
+}
+
+export interface UpdateAccountsPayableEntryRequest {
+  description?: string;
+  amount?: number;
+  dueDate?: string;
+  categoryId?: string;
+  supplierName?: string | null;
+  paymentMethod?: PaymentMethod | null;
+  notes?: string | null;
+}
+
+export interface MarkAccountsPayablePaidRequest {
+  paidAt: string;
+  paymentMethod?: PaymentMethod | null;
+  notes?: string | null;
+}
+
+export interface CancelAccountsPayableRequest {
+  reason?: string | null;
+}
+
+export interface BulkCreateAccountsPayableRequest {
+  entries: CreateAccountsPayableEntryRequest[];
+}
+
+export interface BulkCreateAccountsPayableResponse {
+  created: number;
+  failed: number;
+  errors?: { index: number; message: string }[];
+}
+
+export interface AccountsPayableListParams {
+  from?: string;
+  to?: string;
+  status?: AccountsPayableStatus;
+  categoryId?: string;
+  paymentMethod?: PaymentMethod;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AccountsPayableSummary {
+  from?: string | null;
+  to?: string | null;
+  totalPending: number;
+  totalPaid: number;
+  totalCancelled: number;
+  totalOverdue: number;
+  countPending: number;
+  countPaid: number;
+  countCancelled: number;
+  countOverdue: number;
+  byCategory?: AccountsPayableCategorySummary[];
+}
+
+export interface AccountsPayableCategorySummary {
+  categoryId: string;
+  categoryName: string;
+  totalPending: number;
+  totalPaid: number;
+  totalCancelled: number;
+  count: number;
+}

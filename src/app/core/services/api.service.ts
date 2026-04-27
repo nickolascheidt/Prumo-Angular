@@ -19,7 +19,16 @@ import {
   AssignResourcePermissionRequest,
   CreateResourceRequest,
   UpdateResourceRequest,
-  PermissionLevel
+  PermissionLevel,
+  Tenant,
+  TenantMembership,
+  TenantMember,
+  CreateTenantRequest,
+  AddTenantMemberRequest,
+  SelectTenantRequest,
+  ApiKey,
+  CreateApiKeyRequest,
+  CreateApiKeyResponse
 } from '../models';
 
 @Injectable({
@@ -171,5 +180,54 @@ export class ApiService {
       .set('roleId', roleId)
       .set('resourceId', resourceId);
     return this.http.delete<void>(`${this.apiUrl}/resources/remove`, { params });
+  }
+
+  // Tenant Endpoints
+  createTenant(data: CreateTenantRequest): Observable<Tenant> {
+    return this.http.post<Tenant>(`${this.apiUrl}/tenants`, data);
+  }
+
+  getMyTenantMemberships(): Observable<TenantMembership[]> {
+    return this.http.get<TenantMembership[]>(`${this.apiUrl}/tenants/me`);
+  }
+
+  getTenantById(tenantId: string): Observable<Tenant> {
+    return this.http.get<Tenant>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}`);
+  }
+
+  selectTenant(data: SelectTenantRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/tenants/select`, data);
+  }
+
+  getTenantMembers(tenantId: string): Observable<TenantMember[]> {
+    return this.http.get<TenantMember[]>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members`);
+  }
+
+  addTenantMember(tenantId: string, data: AddTenantMemberRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members`, data);
+  }
+
+  removeTenantMember(tenantId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}`
+    );
+  }
+
+  // API Keys Endpoints (tenant-scoped)
+  listApiKeys(tenantId: string): Observable<ApiKey[]> {
+    return this.http.get<ApiKey[]>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys`);
+  }
+
+  createApiKey(tenantId: string, data: CreateApiKeyRequest): Observable<CreateApiKeyResponse> {
+    return this.http.post<CreateApiKeyResponse>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys`,
+      data
+    );
+  }
+
+  revokeApiKey(tenantId: string, apiKeyId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys/${encodeURIComponent(apiKeyId)}`
+    );
   }
 }

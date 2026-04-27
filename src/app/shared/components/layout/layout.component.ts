@@ -77,6 +77,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
           icon: 'manage_accounts',
           route: '/admin/users-roles',
           roles: ['Administrador']
+        },
+        {
+          label: 'Tenant (Membros & API Keys)',
+          icon: 'business',
+          route: '/admin/tenant'
         }
       ]
     }
@@ -114,6 +119,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  switchTenant(): void {
+    this.authService.clearTenantSelection();
+    this.router.navigate(['/auth/select-tenant']);
   }
 
   toggleSidenav(): void {

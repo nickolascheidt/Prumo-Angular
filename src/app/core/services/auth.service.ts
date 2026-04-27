@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { LoginRequest, AuthResponse, User, UserResourcePermissions, PermissionLevel } from '../models';
+import { LoginRequest, AuthResponse, User, UserResourcePermissions, PermissionLevel, TenantMembership } from '../models';
 import { ApiService } from './api.service';
 import { PermissionService } from './permission.service';
 
@@ -13,10 +13,13 @@ export class AuthService {
   private readonly userKey = 'saas_baseplatform_user';
   private readonly permissionsKey = 'saas_baseplatform_permissions';
   private readonly resourcePermissionsKey = 'saas_baseplatform_resource_permissions';
+  private readonly tenantIdKey = 'saas_baseplatform_tenant_id';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
   private userResourcePermissionsSubject = new BehaviorSubject<UserResourcePermissions | null>(null);
   public userResourcePermissions$ = this.userResourcePermissionsSubject.asObservable();
+  private currentTenantIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('saas_baseplatform_tenant_id'));
+  public currentTenantId$ = this.currentTenantIdSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -37,8 +40,33 @@ export class AuthService {
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.permissionsKey);
     localStorage.removeItem(this.resourcePermissionsKey);
+    localStorage.removeItem(this.tenantIdKey);
     this.currentUserSubject.next(null);
     this.userResourcePermissionsSubject.next(null);
+    this.currentTenantIdSubject.next(null);
+  }
+
+  getCurrentTenantId(): string | null {
+    return this.currentTenantIdSubject.getValue();
+  }
+
+  hasTenantSelected(): boolean {
+    return !!this.getCurrentTenantId();
+  }
+
+  loadMyMemberships(): Observable<TenantMembership[]> {
+    return this.apiService.getMyTenantMemberships();
+  }
+
+  selectTenant(tenantId: string): Observable<AuthResponse> {
+    return this.apiService.selectTenant({ tenantId }).pipe(
+      tap(response => this.handleAuthSuccess(response))
+    );
+  }
+
+  clearTenantSelection(): void {
+    localStorage.removeItem(this.tenantIdKey);
+    this.currentTenantIdSubject.next(null);
   }
 
   getToken(): string | null {
@@ -164,6 +192,14 @@ export class AuthService {
     if (user.permissions) {
       localStorage.setItem(this.permissionsKey, JSON.stringify(user.permissions));
       this.permissionService.setUserPermissions(user.permissions);
+    }
+
+    if (response.tenantId) {
+      localStorage.setItem(this.tenantIdKey, response.tenantId);
+      this.currentTenantIdSubject.next(response.tenantId);
+    } else {
+      localStorage.removeItem(this.tenantIdKey);
+      this.currentTenantIdSubject.next(null);
     }
 
     this.currentUserSubject.next(user);

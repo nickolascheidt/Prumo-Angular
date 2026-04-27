@@ -1,0 +1,59 @@
+<div class="tenant-page">
+  <mat-card class="tenant-card">
+    <div class="tenant-card__brand">
+      <mat-icon>business</mat-icon>
+      <h1>Selecionar Tenant</h1>
+      <p>Escolha um tenant para continuar ou crie um novo.</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+
+    <mat-list *ngIf="!isLoading && memberships.length">
+      <mat-list-item *ngFor="let m of memberships" class="tenant-item">
+        <div class="tenant-item__info">
+          <strong>{{ m.tenantName }}</strong>
+          <small>{{ m.tenantSlug }} · {{ roleLabel(m.role) }}</small>
+        </div>
+        <button mat-flat-button color="primary"
+                [disabled]="isSelecting"
+                (click)="select(m.tenantId)">
+          Entrar
+        </button>
+      </mat-list-item>
+    </mat-list>
+
+    <p *ngIf="!isLoading && !memberships.length" class="empty-msg">
+      Você ainda não pertence a nenhum tenant. Crie o primeiro abaixo.
+    </p>
+
+    <mat-divider></mat-divider>
+
+    <button mat-stroked-button class="toggle-create" (click)="toggleCreate()">
+      <mat-icon>{{ showCreateForm ? 'expand_less' : 'add' }}</mat-icon>
+      {{ showCreateForm ? 'Cancelar' : 'Criar novo tenant' }}
+    </button>
+
+    <form *ngIf="showCreateForm" [formGroup]="createForm" (ngSubmit)="create()" class="create-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Acme Inc">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Slug</mat-label>
+        <input matInput formControlName="slug" placeholder="acme-inc">
+        <mat-hint>Apenas letras minúsculas, números e hífens.</mat-hint>
+      </mat-form-field>
+      <button mat-flat-button color="primary"
+              [disabled]="isCreating || createForm.invalid">
+        <mat-spinner *ngIf="isCreating" diameter="18"></mat-spinner>
+        <span *ngIf="!isCreating">Criar e entrar</span>
+      </button>
+    </form>
+
+    <button mat-button class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon> Sair
+    </button>
+  </mat-card>
+</div>

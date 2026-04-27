@@ -115,7 +115,8 @@ Login do usuário.
   ```json
   {
     "email": "string",
-    "password": "string"
+    "password": "string",
+    "tenantSlug": "string (opcional)"
   }
   ```
 - **Respostas:**
@@ -128,6 +129,7 @@ Login do usuário.
 {
   "token": "string (JWT)",
   "expiresAt": "datetime",
+  "tenantId": "guid (null quando o login não foi vinculado a um tenant)",
   "user": {
     "id": "guid",
     "email": "string",
@@ -540,21 +542,68 @@ Retorna o histórico de auditoria de mudanças em permissões.
 
 ---
 
+## Multi-tenancy
+
+O backend é multi-tenant. Cada usuário pode pertencer a múltiplos tenants com um papel (`TenantRole`: `Member=0`, `Admin=1`, `Owner=2`). Permissões de módulo e recursos são **escopadas ao tenant ativo** — o token JWT só inclui claims `permission` quando há um tenant selecionado.
+
+### Selecionando o tenant
+
+Há duas formas de associar uma sessão a um tenant:
+
+1. **Login direto com `tenantSlug`** — `POST /api/auth/login` com `tenantSlug` no body retorna um token já vinculado.
+2. **Pós-login** — quando o login não fornece `tenantSlug`, a resposta vem com `tenantId: null`. O frontend deve então:
+   - Listar memberships: `GET /api/tenants/me`
+   - Selecionar: `POST /api/tenants/select` (retorna novo token com `tenant_id` claim)
+
+### Header `X-Tenant-Id`
+
+Como fallback, o middleware aceita o header `X-Tenant-Id` para resolver o tenant da requisição (apenas se o usuário for membro). Útil para alternar de tenant sem reemitir o token.
+
+### Endpoints de Tenants — `/api/tenants`
+
+| Método | Rota | Auth | Descrição |
+|---|---|---|---|
+| POST | `/api/tenants` | JWT | Cria novo tenant; usuário vira Owner |
+| GET  | `/api/tenants/me` | JWT | Lista memberships do usuário |
+| GET  | `/api/tenants/{tenantId}` | JWT + membro | Detalhe do tenant |
+| POST | `/api/tenants/select` | JWT | Body: `{ tenantId }` → retorna novo `LoginResponseDto` |
+| GET  | `/api/tenants/{tenantId}/members` | JWT + membro | Lista membros |
+| POST | `/api/tenants/{tenantId}/members` | JWT + Owner/Admin | Body: `{ userId, role }` |
+| DELETE | `/api/tenants/{tenantId}/members/{userId}` | JWT + Owner/Admin | Remove membro |
+
+### Endpoints de API Keys — `/api/tenants/{tenantId}/api-keys`
+
+API keys são tenant-scoped. Tipos: `Anon=0`, `Service=1`. A chave bruta só é retornada na criação.
+
+| Método | Rota | Auth |
+|---|---|---|
+| POST | `/api/tenants/{tenantId}/api-keys` | JWT + Owner/Admin |
+| GET  | `/api/tenants/{tenantId}/api-keys` | JWT + Owner/Admin |
+| DELETE | `/api/tenants/{tenantId}/api-keys/{apiKeyId}` | JWT + Owner/Admin |
+
+---
+
 ## Fluxo Recomendado para o Frontend
 
 ```
-1. POST /api/auth/login
+1. POST /api/auth/login   (opcionalmente com tenantSlug)
    → Salvar token JWT no storage
+   → Se response.tenantId estiver presente, ir para o passo 3
+   → Caso contrário, ir para o passo 2
 
-2. GET /api/auth/me
-   → Obter dados do usuário logado (roles + permissões de módulo)
+2. GET /api/tenants/me  +  POST /api/tenants/select
+   → Mostrar tela de seleção de tenant
+   → Salvar novo token e tenantId
 
-3. GET /api/resources/my-permissions
+3. GET /api/auth/me
+   → Obter dados do usuário logado (roles + permissões de módulo do tenant ativo)
+
+4. GET /api/resources/my-permissions
    → Obter recursos de UI com nível de acesso
    → Construir menu de navegação com base em `allowedResources`
    → Usar `resourcePermissions[code]` para controlar botões (editar, deletar, etc.)
 
-4. Para verificar acesso pontual:
+5. Para verificar acesso pontual:
    GET /api/resources/check-access/{resourceCode}?minimumLevel=2
 ```
 

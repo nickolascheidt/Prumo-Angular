@@ -1,0 +1,64 @@
+.tenant-mgmt {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #673ab7, #f5576c);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    mat-icon { font-size: 28px; width: 28px; height: 28px; }
+  }
+
+  h1 { margin: 0; font-size: 22px; }
+  p  { margin: 4px 0 0; color: rgba(0,0,0,0.6); }
+}
+
+.add-card { padding: 16px; }
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  mat-form-field { min-width: 220px; flex: 1 1 220px; }
+}
+
+.full-table { width: 100%; }
+.loading { display: flex; justify-content: center; padding: 24px; }
+.empty { text-align: center; color: rgba(0,0,0,0.6); padding: 16px; }
+
+.new-key-card {
+  background: #fff8e1;
+  border-left: 4px solid #ff6f00;
+  padding: 16px;
+  h3 { display: flex; align-items: center; gap: 8px; margin-top: 0; }
+  .key-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 8px 0;
+    code { font-family: monospace; word-break: break-all; flex: 1; }
+  }
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  &--active { background: #e8f5e9; color: #2e7d32; }
+  &--revoked { background: #ffebee; color: #c62828; }
+  &--expired { background: #fff3e0; color: #e65100; }
+}

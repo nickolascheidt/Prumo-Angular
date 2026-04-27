@@ -1,0 +1,70 @@
+.tenant-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #673ab7 0%, #f5576c 100%);
+  padding: 24px;
+}
+
+.tenant-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+  border-radius: 16px;
+
+  &__brand {
+    text-align: center;
+    margin-bottom: 16px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #673ab7;
+    }
+
+    h1 { margin: 8px 0 4px; font-size: 22px; }
+    p  { color: rgba(0,0,0,0.6); margin: 0 0 16px; }
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.tenant-item {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    small { color: rgba(0,0,0,0.6); }
+  }
+}
+
+.empty-msg {
+  text-align: center;
+  color: rgba(0,0,0,0.6);
+  padding: 16px 0;
+}
+
+.toggle-create {
+  width: 100%;
+  margin: 16px 0;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logout-btn {
+  width: 100%;
+  margin-top: 16px;
+}

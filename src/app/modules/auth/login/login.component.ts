@@ -46,7 +46,8 @@ export class LoginComponent implements OnInit {
   private initForm(): void {
     this.loginForm = this.fb.group({
       email: ['admin@saas-baseplatform.com', [Validators.required, Validators.email]],
-      password: ['Admin@123', [Validators.required, Validators.minLength(6)]]
+      password: ['Admin@123', [Validators.required, Validators.minLength(6)]],
+      tenantSlug: ['']
     });
   }
 
@@ -54,10 +55,20 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
+    const raw = this.loginForm.value;
+    const payload = {
+      email: raw.email,
+      password: raw.password,
+      tenantSlug: raw.tenantSlug?.trim() ? raw.tenantSlug.trim() : undefined
+    };
+    this.authService.login(payload).subscribe({
+      next: (response) => {
         this.snackBar.open('Login realizado com sucesso!', 'Fechar', { duration: 3000 });
-        this.router.navigate(['/dashboard']);
+        if (response.tenantId) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/auth/select-tenant']);
+        }
       },
       error: (error) => {
         this.isLoading = false;

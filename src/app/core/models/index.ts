@@ -2,12 +2,91 @@
 export interface LoginRequest {
   email: string;
   password: string;
+  tenantSlug?: string;
 }
 
 export interface AuthResponse {
   token: string;
   expiresAt: string;
   user: User;
+  tenantId?: string | null;
+}
+
+export interface SelectTenantRequest {
+  tenantId: string;
+}
+
+// Multi-tenancy Models
+export enum TenantRole {
+  Member = 0,
+  Admin = 1,
+  Owner = 2
+}
+
+export enum ApiKeyType {
+  Anon = 0,
+  Service = 1
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  ownerUserId: string;
+  createdAt: string;
+}
+
+export interface CreateTenantRequest {
+  name: string;
+  slug: string;
+}
+
+export interface TenantMembership {
+  tenantId: string;
+  tenantName: string;
+  tenantSlug: string;
+  role: TenantRole;
+  joinedAt: string;
+}
+
+export interface TenantMember {
+  userId: string;
+  email: string;
+  fullName?: string;
+  role: TenantRole;
+  joinedAt: string;
+}
+
+export interface AddTenantMemberRequest {
+  userId: string;
+  role: TenantRole;
+}
+
+export interface ApiKey {
+  id: string;
+  name: string;
+  type: ApiKeyType;
+  prefix: string;
+  createdAt: string;
+  expiresAt?: string | null;
+  revokedAt?: string | null;
+  lastUsedAt?: string | null;
+}
+
+export interface CreateApiKeyRequest {
+  name: string;
+  type: ApiKeyType;
+  expiresAt?: string | null;
+}
+
+export interface CreateApiKeyResponse {
+  id: string;
+  name: string;
+  type: ApiKeyType;
+  key: string;
+  prefix: string;
+  expiresAt?: string | null;
+  createdAt: string;
 }
 
 export interface User {

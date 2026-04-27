@@ -1,0 +1,60 @@
+.quick-entry-card {
+  padding: 8px 16px 16px;
+}
+
+.quick-form {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(140px, 1fr)) minmax(160px, 1fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding-top: 12px;
+
+  .field--description { grid-column: span 1; }
+  .submit-btn {
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .quick-form { grid-template-columns: 1fr 1fr; }
+  .quick-form .submit-btn { grid-column: 1 / -1; justify-self: end; }
+}
+
+.hint {
+  margin: 4px 4px 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  kbd {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: monospace;
+    font-size: 11px;
+  }
+}
+
+.bulk-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    mat-form-field { min-width: 220px; flex: 1 1 220px; }
+  }
+
+  &__lines textarea {
+    font-family: monospace;
+    font-size: 13px;
+  }
+}

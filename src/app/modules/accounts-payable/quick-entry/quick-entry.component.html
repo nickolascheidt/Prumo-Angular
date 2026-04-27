@@ -1,0 +1,136 @@
+<mat-card class="quick-entry-card">
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="Lançamento rápido">
+      <form [formGroup]="quickForm" (ngSubmit)="submitQuick()" class="quick-form">
+        <mat-form-field appearance="outline" class="field--description">
+          <mat-label>Descrição</mat-label>
+          <input
+            matInput
+            #descriptionInput
+            formControlName="description"
+            autocomplete="off"
+            (keydown.enter)="$event.preventDefault(); submitQuick()">
+          <mat-error *ngIf="quickForm.get('description')?.hasError('required')">
+            Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field--amount">
+          <mat-label>Valor</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.01"
+            min="0"
+            formControlName="amount"
+            inputmode="decimal">
+          <span matTextPrefix>R$&nbsp;</span>
+          <mat-error *ngIf="quickForm.get('amount')?.hasError('required')">
+            Obrigatório
+          </mat-error>
+          <mat-error *ngIf="quickForm.get('amount')?.hasError('min')">
+            Valor inválido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field--due">
+          <mat-label>Vencimento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dueDate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="quickForm.get('dueDate')?.hasError('required')">
+            Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field--category">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="categoryId">
+            <mat-option *ngFor="let c of categories" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="quickForm.get('categoryId')?.hasError('required')">
+            Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field--supplier">
+          <mat-label>Fornecedor (opcional)</mat-label>
+          <input matInput formControlName="supplierName" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field--method">
+          <mat-label>Forma de pagamento</mat-label>
+          <mat-select formControlName="paymentMethod">
+            <mat-option [value]="null">—</mat-option>
+            <mat-option *ngFor="let m of paymentMethods" [value]="m.value">
+              {{ m.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          [disabled]="isSaving || quickForm.invalid"
+          matTooltip="Enter para salvar">
+          <mat-icon *ngIf="!isSaving">add</mat-icon>
+          <mat-spinner *ngIf="isSaving" diameter="18"></mat-spinner>
+          <span>Salvar e próximo</span>
+        </button>
+      </form>
+      <p class="hint">
+        <mat-icon inline>info</mat-icon>
+        Pressione <kbd>Enter</kbd> para salvar e ir ao próximo lançamento.
+      </p>
+    </mat-tab>
+
+    <mat-tab label="Lote (colar do caderno)">
+      <form [formGroup]="bulkForm" (ngSubmit)="submitBulk()" class="bulk-form">
+        <div class="bulk-form__header">
+          <mat-form-field appearance="outline">
+            <mat-label>Categoria padrão</mat-label>
+            <mat-select formControlName="categoryId">
+              <mat-option *ngFor="let c of categories" [value]="c.id">
+                {{ c.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Forma de pagamento padrão</mat-label>
+            <mat-select formControlName="paymentMethod">
+              <mat-option [value]="null">—</mat-option>
+              <mat-option *ngFor="let m of paymentMethods" [value]="m.value">
+                {{ m.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="bulk-form__lines">
+          <mat-label>Lançamentos (uma linha por entrada)</mat-label>
+          <textarea
+            matInput
+            rows="8"
+            formControlName="lines"
+            placeholder="dd/mm/aaaa | descrição | valor | fornecedor (opcional)
+ex: 12/05/2026 | Aluguel maio | 1850,00 | Imobiliária Silva"></textarea>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="isBulkSaving || bulkForm.invalid">
+          <mat-icon *ngIf="!isBulkSaving">playlist_add</mat-icon>
+          <mat-spinner *ngIf="isBulkSaving" diameter="18"></mat-spinner>
+          <span>Importar lote</span>
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

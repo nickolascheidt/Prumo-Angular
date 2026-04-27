@@ -28,7 +28,19 @@ import {
   SelectTenantRequest,
   ApiKey,
   CreateApiKeyRequest,
-  CreateApiKeyResponse
+  CreateApiKeyResponse,
+  AccountsPayableCategory,
+  CreateAccountsPayableCategoryRequest,
+  AccountsPayableEntry,
+  CreateAccountsPayableEntryRequest,
+  UpdateAccountsPayableEntryRequest,
+  MarkAccountsPayablePaidRequest,
+  CancelAccountsPayableRequest,
+  BulkCreateAccountsPayableRequest,
+  BulkCreateAccountsPayableResponse,
+  AccountsPayableListParams,
+  AccountsPayableSummary,
+  PaginatedResponse
 } from '../models';
 
 @Injectable({
@@ -229,5 +241,129 @@ export class ApiService {
     return this.http.delete<void>(
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys/${encodeURIComponent(apiKeyId)}`
     );
+  }
+
+  // Accounts Payable Endpoints (tenant-scoped)
+  private accountsPayableUrl(tenantId: string): string {
+    return `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/accounts-payable`;
+  }
+
+  getAccountsPayableCategories(tenantId: string): Observable<AccountsPayableCategory[]> {
+    return this.http.get<AccountsPayableCategory[]>(`${this.accountsPayableUrl(tenantId)}/categories`);
+  }
+
+  createAccountsPayableCategory(
+    tenantId: string,
+    payload: CreateAccountsPayableCategoryRequest
+  ): Observable<AccountsPayableCategory> {
+    return this.http.post<AccountsPayableCategory>(
+      `${this.accountsPayableUrl(tenantId)}/categories`,
+      payload
+    );
+  }
+
+  listAccountsPayableEntries(
+    tenantId: string,
+    params: AccountsPayableListParams = {}
+  ): Observable<PaginatedResponse<AccountsPayableEntry>> {
+    return this.http.get<PaginatedResponse<AccountsPayableEntry>>(
+      `${this.accountsPayableUrl(tenantId)}/entries`,
+      { params: this.buildAccountsPayableParams(params) }
+    );
+  }
+
+  getAccountsPayableEntryById(tenantId: string, id: string): Observable<AccountsPayableEntry> {
+    return this.http.get<AccountsPayableEntry>(
+      `${this.accountsPayableUrl(tenantId)}/entries/${encodeURIComponent(id)}`
+    );
+  }
+
+  createAccountsPayableEntry(
+    tenantId: string,
+    payload: CreateAccountsPayableEntryRequest
+  ): Observable<AccountsPayableEntry> {
+    return this.http.post<AccountsPayableEntry>(
+      `${this.accountsPayableUrl(tenantId)}/entries`,
+      payload
+    );
+  }
+
+  updateAccountsPayableEntry(
+    tenantId: string,
+    id: string,
+    payload: UpdateAccountsPayableEntryRequest
+  ): Observable<AccountsPayableEntry> {
+    return this.http.put<AccountsPayableEntry>(
+      `${this.accountsPayableUrl(tenantId)}/entries/${encodeURIComponent(id)}`,
+      payload
+    );
+  }
+
+  markAccountsPayableEntryPaid(
+    tenantId: string,
+    id: string,
+    payload: MarkAccountsPayablePaidRequest
+  ): Observable<AccountsPayableEntry> {
+    return this.http.post<AccountsPayableEntry>(
+      `${this.accountsPayableUrl(tenantId)}/entries/${encodeURIComponent(id)}/mark-paid`,
+      payload
+    );
+  }
+
+  cancelAccountsPayableEntry(
+    tenantId: string,
+    id: string,
+    payload: CancelAccountsPayableRequest
+  ): Observable<AccountsPayableEntry> {
+    return this.http.post<AccountsPayableEntry>(
+      `${this.accountsPayableUrl(tenantId)}/entries/${encodeURIComponent(id)}/cancel`,
+      payload
+    );
+  }
+
+  bulkCreateAccountsPayableEntries(
+    tenantId: string,
+    payload: BulkCreateAccountsPayableRequest
+  ): Observable<BulkCreateAccountsPayableResponse> {
+    return this.http.post<BulkCreateAccountsPayableResponse>(
+      `${this.accountsPayableUrl(tenantId)}/entries/bulk`,
+      payload
+    );
+  }
+
+  getAccountsPayableSummary(
+    tenantId: string,
+    from?: string,
+    to?: string,
+    otherFilters: Omit<AccountsPayableListParams, 'from' | 'to' | 'page' | 'pageSize'> = {}
+  ): Observable<AccountsPayableSummary> {
+    const params = this.buildAccountsPayableParams({ ...otherFilters, from, to });
+    return this.http.get<AccountsPayableSummary>(
+      `${this.accountsPayableUrl(tenantId)}/summary`,
+      { params }
+    );
+  }
+
+  exportAccountsPayableCsv(
+    tenantId: string,
+    filters: AccountsPayableListParams = {}
+  ): Observable<Blob> {
+    return this.http.get(`${this.accountsPayableUrl(tenantId)}/export/csv`, {
+      params: this.buildAccountsPayableParams(filters),
+      responseType: 'blob' as const
+    });
+  }
+
+  private buildAccountsPayableParams(filters: AccountsPayableListParams): HttpParams {
+    let params = new HttpParams();
+    if (filters.from) params = params.set('from', filters.from);
+    if (filters.to) params = params.set('to', filters.to);
+    if (filters.status) params = params.set('status', filters.status);
+    if (filters.categoryId) params = params.set('categoryId', filters.categoryId);
+    if (filters.paymentMethod) params = params.set('paymentMethod', filters.paymentMethod);
+    if (filters.search?.trim()) params = params.set('search', filters.search.trim());
+    if (filters.page != null) params = params.set('page', String(filters.page));
+    if (filters.pageSize != null) params = params.set('pageSize', String(filters.pageSize));
+    return params;
   }
 }

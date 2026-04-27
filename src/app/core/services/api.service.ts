@@ -31,6 +31,7 @@ import {
   CreateApiKeyResponse,
   AccountsPayableCategory,
   CreateAccountsPayableCategoryRequest,
+  UpdateAccountsPayableCategoryRequest,
   AccountsPayableEntry,
   CreateAccountsPayableEntryRequest,
   UpdateAccountsPayableEntryRequest,
@@ -259,6 +260,23 @@ export class ApiService {
     return this.http.post<AccountsPayableCategory>(
       `${this.accountsPayableUrl(tenantId)}/categories`,
       payload
+    );
+  }
+
+  updateAccountsPayableCategory(
+    tenantId: string,
+    id: string,
+    payload: UpdateAccountsPayableCategoryRequest
+  ): Observable<AccountsPayableCategory> {
+    return this.http.put<AccountsPayableCategory>(
+      `${this.accountsPayableUrl(tenantId)}/categories/${encodeURIComponent(id)}`,
+      payload
+    );
+  }
+
+  deleteAccountsPayableCategory(tenantId: string, id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.accountsPayableUrl(tenantId)}/categories/${encodeURIComponent(id)}`
     );
   }
 

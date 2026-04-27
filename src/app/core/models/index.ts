@@ -257,6 +257,7 @@ export interface AccountsPayableCategory {
   name: string;
   color?: string | null;
   description?: string | null;
+  isActive?: boolean;
   createdAt: string;
   updatedAt?: string | null;
 }
@@ -265,6 +266,13 @@ export interface CreateAccountsPayableCategoryRequest {
   name: string;
   color?: string | null;
   description?: string | null;
+}
+
+export interface UpdateAccountsPayableCategoryRequest {
+  name: string;
+  color?: string | null;
+  description?: string | null;
+  isActive: boolean;
 }
 
 export interface AccountsPayableEntry {

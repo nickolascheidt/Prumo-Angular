@@ -56,6 +56,22 @@
         <mat-select formControlName="categoryId">
           <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
         </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          matTooltip="Nova categoria"
+          (click)="$event.stopPropagation(); openQuickCreateCategory()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          matTooltip="Gerenciar categorias"
+          (click)="$event.stopPropagation(); openManageCategories()">
+          <mat-icon>settings</mat-icon>
+        </button>
         <mat-error *ngIf="form.get('categoryId')?.hasError('required')">
           Obrigatório
         </mat-error>

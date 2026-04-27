@@ -28,7 +28,12 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService, AuthService } from '@core/services';
+import {
+  CategoryQuickCreateDialogComponent,
+  CategoryQuickCreateDialogData
+} from '../categories/category-quick-create-dialog.component';
 import {
   AccountsPayableCategory,
   AccountsPayableEntry,
@@ -64,7 +69,8 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
     MatSnackBarModule,
     MatTabsModule,
     MatExpansionModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './quick-entry.component.html',
   styleUrls: ['./quick-entry.component.scss']
@@ -73,6 +79,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
   @Input() categories: AccountsPayableCategory[] = [];
   @Output() entryCreated = new EventEmitter<AccountsPayableEntry>();
   @Output() entriesBulkCreated = new EventEmitter<void>();
+  @Output() categoryCreated = new EventEmitter<AccountsPayableCategory>();
 
   @ViewChild('descriptionInput') descriptionInput?: ElementRef<HTMLInputElement>;
 
@@ -86,7 +93,8 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     private fb: FormBuilder,
     private api: ApiService,
     private auth: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -278,5 +286,23 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
 
   private focusDescription(): void {
     setTimeout(() => this.descriptionInput?.nativeElement?.focus(), 0);
+  }
+
+  openQuickCreateCategory(target: 'quick' | 'bulk'): void {
+    const tenantId = this.auth.getCurrentTenantId();
+    if (!tenantId) {
+      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      return;
+    }
+    const ref = this.dialog.open(CategoryQuickCreateDialogComponent, {
+      data: { tenantId } as CategoryQuickCreateDialogData,
+      width: '420px'
+    });
+    ref.afterClosed().subscribe(created => {
+      if (!created) return;
+      this.categoryCreated.emit(created);
+      const form = target === 'quick' ? this.quickForm : this.bulkForm;
+      form.patchValue({ categoryId: created.id });
+    });
   }
 }

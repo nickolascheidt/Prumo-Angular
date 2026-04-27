@@ -50,6 +50,14 @@
               {{ c.name }}
             </mat-option>
           </mat-select>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            matTooltip="Nova categoria"
+            (click)="$event.stopPropagation(); openQuickCreateCategory('quick')">
+            <mat-icon>add</mat-icon>
+          </button>
           <mat-error *ngIf="quickForm.get('categoryId')?.hasError('required')">
             Obrigatório
           </mat-error>
@@ -98,6 +106,14 @@
                 {{ c.name }}
               </mat-option>
             </mat-select>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              matTooltip="Nova categoria"
+              (click)="$event.stopPropagation(); openQuickCreateCategory('bulk')">
+              <mat-icon>add</mat-icon>
+            </button>
           </mat-form-field>
 
           <mat-form-field appearance="outline">

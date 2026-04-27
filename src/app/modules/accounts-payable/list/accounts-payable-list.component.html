@@ -6,6 +6,10 @@
       <p>Lançamentos, categorização e exportação para planilha.</p>
     </div>
     <span class="spacer"></span>
+    <button mat-stroked-button (click)="openManageCategories()">
+      <mat-icon>category</mat-icon>
+      <span>Gerenciar categorias</span>
+    </button>
     <button mat-stroked-button (click)="exportCsv()" [disabled]="exporting">
       <mat-icon *ngIf="!exporting">download</mat-icon>
       <mat-spinner *ngIf="exporting" diameter="18"></mat-spinner>
@@ -20,7 +24,8 @@
   <app-accounts-payable-quick-entry
     [categories]="categories"
     (entryCreated)="onEntryCreated()"
-    (entriesBulkCreated)="onEntryCreated()">
+    (entriesBulkCreated)="onEntryCreated()"
+    (categoryCreated)="onQuickEntryCategoryCreated($event)">
   </app-accounts-payable-quick-entry>
 
   <mat-card class="totals-card" *ngIf="summary">
@@ -76,6 +81,14 @@
           <mat-option [value]="null">Todas</mat-option>
           <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
         </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          matTooltip="Nova categoria"
+          (click)="$event.stopPropagation(); openQuickCreateCategory()">
+          <mat-icon>add</mat-icon>
+        </button>
       </mat-form-field>
 
       <mat-form-field appearance="outline">

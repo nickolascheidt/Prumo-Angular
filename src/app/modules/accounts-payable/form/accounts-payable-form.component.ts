@@ -15,8 +15,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { ApiService, AuthService } from '@core/services';
+import {
+  CategoryQuickCreateDialogComponent,
+  CategoryQuickCreateDialogData
+} from '../categories/category-quick-create-dialog.component';
+import {
+  CategoryManageDialogComponent,
+  CategoryManageDialogData
+} from '../categories/category-manage-dialog.component';
 import {
   AccountsPayableCategory,
   AccountsPayableEntry,
@@ -53,7 +62,8 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './accounts-payable-form.component.html',
   styleUrls: ['./accounts-payable-form.component.scss']
@@ -76,7 +86,8 @@ export class AccountsPayableFormComponent implements OnInit {
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -259,6 +270,30 @@ export class AccountsPayableFormComponent implements OnInit {
 
   back(): void {
     this.router.navigate(['/accounts-payable']);
+  }
+
+  openQuickCreateCategory(): void {
+    if (!this.tenantId) return;
+    const ref = this.dialog.open(CategoryQuickCreateDialogComponent, {
+      data: { tenantId: this.tenantId } as CategoryQuickCreateDialogData,
+      width: '420px'
+    });
+    ref.afterClosed().subscribe(created => {
+      if (!created) return;
+      this.categories = [...this.categories, created];
+      this.form.patchValue({ categoryId: created.id });
+    });
+  }
+
+  openManageCategories(): void {
+    if (!this.tenantId) return;
+    const ref = this.dialog.open(CategoryManageDialogComponent, {
+      data: { tenantId: this.tenantId } as CategoryManageDialogData,
+      width: '600px'
+    });
+    ref.afterClosed().subscribe(changed => {
+      if (changed) this.loadCategories();
+    });
   }
 
   private toIsoDate(value: Date | string): string {

@@ -250,10 +250,19 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
 
   markPaid(entry: AccountsPayableEntry): void {
     if (!this.tenantId) return;
+    if (!entry.paymentMethod) {
+      this.snackBar.open(
+        'Defina a forma de pagamento antes de marcar como pago',
+        'Fechar',
+        { duration: 5000 }
+      );
+      return;
+    }
+
     this.api
       .markAccountsPayableEntryPaid(this.tenantId, entry.id, {
         paidAt: new Date().toISOString(),
-        paymentMethod: entry.paymentMethod || null
+        paymentMethod: entry.paymentMethod
       })
       .subscribe({
         next: () => {
@@ -271,8 +280,15 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
 
   cancel(entry: AccountsPayableEntry): void {
     if (!this.tenantId) return;
-    if (!confirm(`Cancelar "${entry.description}"?`)) return;
-    this.api.cancelAccountsPayableEntry(this.tenantId, entry.id, {}).subscribe({
+    const reasonInput = prompt(`Motivo do cancelamento de "${entry.description}":`);
+    if (reasonInput === null) return;
+    const reason = reasonInput.trim();
+    if (!reason) {
+      this.snackBar.open('Informe o motivo do cancelamento', 'Fechar', { duration: 4000 });
+      return;
+    }
+
+    this.api.cancelAccountsPayableEntry(this.tenantId, entry.id, { reason }).subscribe({
       next: () => {
         this.snackBar.open('Lançamento cancelado', 'Fechar', { duration: 2500 });
         this.reload();

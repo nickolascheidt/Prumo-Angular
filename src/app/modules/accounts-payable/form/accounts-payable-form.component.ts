@@ -232,6 +232,15 @@ export class AccountsPayableFormComponent implements OnInit {
   markPaid(): void {
     if (!this.tenantId || !this.entry) return;
     const method = this.form.get('paymentMethod')?.value as PaymentMethod | null;
+    if (!method) {
+      this.snackBar.open(
+        'Selecione a forma de pagamento antes de marcar como pago',
+        'Fechar',
+        { duration: 5000 }
+      );
+      return;
+    }
+
     this.api
       .markAccountsPayableEntryPaid(this.tenantId, this.entry.id, {
         paidAt: new Date().toISOString(),
@@ -253,8 +262,15 @@ export class AccountsPayableFormComponent implements OnInit {
 
   cancelEntry(): void {
     if (!this.tenantId || !this.entry) return;
-    if (!confirm('Cancelar este lançamento?')) return;
-    this.api.cancelAccountsPayableEntry(this.tenantId, this.entry.id, {}).subscribe({
+    const reasonInput = prompt('Informe o motivo do cancelamento:');
+    if (reasonInput === null) return;
+    const reason = reasonInput.trim();
+    if (!reason) {
+      this.snackBar.open('Informe o motivo do cancelamento', 'Fechar', { duration: 4000 });
+      return;
+    }
+
+    this.api.cancelAccountsPayableEntry(this.tenantId, this.entry.id, { reason }).subscribe({
       next: updated => {
         this.entry = updated;
         this.snackBar.open('Lançamento cancelado', 'Fechar', { duration: 2500 });

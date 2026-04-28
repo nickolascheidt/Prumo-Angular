@@ -314,12 +314,11 @@ export interface UpdateAccountsPayableEntryRequest {
 
 export interface MarkAccountsPayablePaidRequest {
   paidAt: string;
-  paymentMethod?: PaymentMethod | null;
-  notes?: string | null;
+  paymentMethod: PaymentMethod;
 }
 
 export interface CancelAccountsPayableRequest {
-  reason?: string | null;
+  reason: string;
 }
 
 export interface BulkCreateAccountsPayableRequest {

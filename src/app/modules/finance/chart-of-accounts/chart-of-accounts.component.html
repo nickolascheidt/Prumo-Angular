@@ -1,0 +1,106 @@
+<div class="chart-of-accounts">
+  <section class="page-header">
+    <div class="page-header__icon"><mat-icon>account_tree</mat-icon></div>
+    <div class="page-header__text">
+      <h1>Plano de Contas</h1>
+      <p>Estrutura de contas contábeis do tenant.</p>
+    </div>
+    <span class="spacer"></span>
+    <mat-slide-toggle [(ngModel)]="includeInactive" (change)="loadAll()" style="margin-right:16px">
+      Incluir inativas
+    </mat-slide-toggle>
+    <button mat-flat-button color="primary" *ngIf="canManage" (click)="openCreate()">
+      <mat-icon>add</mat-icon> Nova Conta
+    </button>
+  </section>
+
+  <mat-card>
+    <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="40" style="margin:24px auto"></mat-progress-spinner>
+
+    <table mat-table [dataSource]="accounts" *ngIf="!loading">
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let a" [style.paddingLeft.px]="indentLevel(a.code)">
+          <strong>{{ a.code }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let a">{{ a.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let a">
+          <mat-chip-set><mat-chip>{{ accountTypeLabels[a.type] }}</mat-chip></mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="kind">
+        <th mat-header-cell *matHeaderCellDef>Natureza</th>
+        <td mat-cell *matCellDef="let a">{{ a.isAnalytic ? 'Analítica' : 'Sintética' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef>Ativa</th>
+        <td mat-cell *matCellDef="let a">
+          <mat-icon [style.color]="a.isActive ? '#4caf50' : '#bdbdbd'">
+            {{ a.isActive ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let a">
+          <button mat-icon-button *ngIf="canManage" (click)="openEdit(a)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="canManage && a.isActive" (click)="deactivate(a)" matTooltip="Desativar">
+            <mat-icon>block</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.inactive-row]="!row.isActive"></tr>
+    </table>
+  </mat-card>
+
+  <mat-card class="gl-settings-card" *ngIf="glSettings !== null">
+    <mat-card-header>
+      <mat-card-title>Configurações do Razão Geral</mat-card-title>
+      <mat-card-subtitle>Contas padrão usadas no lançamento automático</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="glSettingsForm" class="gl-settings-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Conta de Caixa/Banco padrão</mat-label>
+          <mat-select formControlName="defaultCashAccountId">
+            <mat-option [value]="null">— nenhuma —</mat-option>
+            <mat-option *ngFor="let a of analyticAccounts" [value]="a.id">
+              {{ a.code }} – {{ a.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Conta de Contas a Pagar padrão</mat-label>
+          <mat-select formControlName="defaultAccountsPayableAccountId">
+            <mat-option [value]="null">— nenhuma —</mat-option>
+            <mat-option *ngFor="let a of analyticAccounts" [value]="a.id">
+              {{ a.code }} – {{ a.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions *ngIf="canManage">
+      <button mat-flat-button color="primary" (click)="saveGlSettings()" [disabled]="savingSettings">
+        <mat-spinner *ngIf="savingSettings" diameter="18"></mat-spinner>
+        Salvar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

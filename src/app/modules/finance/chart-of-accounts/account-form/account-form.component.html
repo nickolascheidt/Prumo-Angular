@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar Conta' : 'Nova Conta' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="account-form">
+    <mat-form-field appearance="outline" style="width:100%">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="code" placeholder="Ex: 1.1.3">
+      <mat-error *ngIf="form.get('code')?.hasError('required')">Código obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width:100%">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">Nome obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width:100%">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let t of accountTypes" [value]="t.value">{{ t.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width:100%">
+      <mat-label>Conta Pai (opcional)</mat-label>
+      <mat-select formControlName="parentId">
+        <mat-option [value]="null">— Nenhuma (raiz) —</mat-option>
+        <mat-option *ngFor="let a of syntheticAccounts" [value]="a.id">
+          {{ a.code }} – {{ a.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div style="display:flex; gap:24px; padding:8px 0">
+      <mat-slide-toggle formControlName="isAnalytic">Conta Analítica</mat-slide-toggle>
+      <mat-slide-toggle formControlName="isActive" *ngIf="isEdit">Ativa</mat-slide-toggle>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving">
+    <mat-spinner *ngIf="saving" diameter="18" style="display:inline-block;margin-right:8px"></mat-spinner>
+    Salvar
+  </button>
+</mat-dialog-actions>

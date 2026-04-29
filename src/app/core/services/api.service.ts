@@ -378,8 +378,13 @@ export class ApiService {
     if (filters.to) params = params.set('to', filters.to);
     if (filters.status) params = params.set('status', filters.status);
     if (filters.categoryId) params = params.set('categoryId', filters.categoryId);
+    if (filters.supplierName?.trim()) params = params.set('supplierName', filters.supplierName.trim());
     if (filters.paymentMethod) params = params.set('paymentMethod', filters.paymentMethod);
     if (filters.search?.trim()) params = params.set('search', filters.search.trim());
+    if (filters.minAmount != null) params = params.set('minAmount', String(filters.minAmount));
+    if (filters.maxAmount != null) params = params.set('maxAmount', String(filters.maxAmount));
+    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
+    if (filters.sortDir) params = params.set('sortDir', filters.sortDir);
     if (filters.page != null) params = params.set('page', String(filters.page));
     if (filters.pageSize != null) params = params.set('pageSize', String(filters.pageSize));
     return params;

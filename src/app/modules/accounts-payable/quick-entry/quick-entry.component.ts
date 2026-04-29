@@ -37,6 +37,7 @@ import {
 import {
   AccountsPayableCategory,
   AccountsPayableEntry,
+  BulkEntryLine,
   CreateAccountsPayableEntryRequest,
   PaymentMethod
 } from '@core/models';
@@ -194,12 +195,12 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     this.isBulkSaving = true;
     this.api
       .bulkCreateAccountsPayableEntries(tenantId, {
-        entries: parsed.map(p => p.entry!)
+        lines: parsed.map(p => p.entry!)
       })
       .subscribe({
         next: resp => {
-          const msg = `${resp.created} lançamento(s) criado(s)` +
-            (resp.failed > 0 ? `, ${resp.failed} falharam` : '');
+          const msg = `${resp.successCount} lançamento(s) criado(s)` +
+            (resp.failedCount > 0 ? `, ${resp.failedCount} falharam` : '');
           this.snackBar.open(msg, 'Fechar', { duration: 4000 });
           this.bulkForm.patchValue({ lines: '' });
           this.entriesBulkCreated.emit();
@@ -222,7 +223,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     line: string,
     fallbackCategoryId: string,
     fallbackPaymentMethod: PaymentMethod | null
-  ): { lineNumber: number; entry?: CreateAccountsPayableEntryRequest; error?: string } {
+  ): { lineNumber: number; entry?: BulkEntryLine; error?: string } {
     const parts = line.split('|').map(p => p.trim());
     if (parts.length < 3) {
       return { lineNumber: 0, error: 'formato' };
@@ -242,7 +243,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
         description,
         amount,
         dueDate,
-        categoryId: fallbackCategoryId,
+        categoryId: fallbackCategoryId || null,
         supplierName: supplier || null,
         paymentMethod: fallbackPaymentMethod || null
       }

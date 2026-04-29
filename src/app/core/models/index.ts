@@ -166,16 +166,25 @@ export interface ResourcePermission {
   createdByUserEmail?: string;
 }
 
+export interface AllowedResource {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  module: string;
+  frontendRoute?: string;
+  icon?: string;
+  displayOrder: number;
+  userPermissionLevel: PermissionLevel;
+}
+
 export interface UserResourcePermissions {
   userId: string;
   email: string;
-  resources: UserResourcePermission[];
-}
-
-export interface UserResourcePermission {
-  resourceCode: string;
-  resourceName: string;
-  level: PermissionLevel;
+  fullName: string;
+  roles: string[];
+  allowedResources: AllowedResource[];
+  resourcePermissions: Record<string, PermissionLevel>;
 }
 
 export interface AssignResourcePermissionRequest {

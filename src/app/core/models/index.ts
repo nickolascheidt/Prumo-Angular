@@ -288,6 +288,9 @@ export interface AccountsPayableEntry {
   status: AccountsPayableStatus;
   paidAt?: string | null;
   notes?: string | null;
+  cancelledAt?: string | null;
+  cancellationReason?: string | null;
+  isOverdue: boolean;
   createdAt: string;
   updatedAt?: string | null;
 }
@@ -321,14 +324,34 @@ export interface CancelAccountsPayableRequest {
   reason: string;
 }
 
+// Bulk entry: categoryId is optional — provide categoryName to auto-create
+export interface BulkEntryLine {
+  description: string;
+  amount: number;
+  dueDate: string;
+  categoryId?: string | null;
+  categoryName?: string | null;
+  paymentMethod?: PaymentMethod | null;
+  supplierName?: string | null;
+  notes?: string | null;
+}
+
 export interface BulkCreateAccountsPayableRequest {
-  entries: CreateAccountsPayableEntryRequest[];
+  lines: BulkEntryLine[];
+}
+
+export interface BulkEntryResult {
+  index: number;
+  success: boolean;
+  entryId?: string | null;
+  errors: string[];
 }
 
 export interface BulkCreateAccountsPayableResponse {
-  created: number;
-  failed: number;
-  errors?: { index: number; message: string }[];
+  totalLines: number;
+  successCount: number;
+  failedCount: number;
+  results: BulkEntryResult[];
 }
 
 export interface AccountsPayableListParams {
@@ -336,8 +359,13 @@ export interface AccountsPayableListParams {
   to?: string;
   status?: AccountsPayableStatus;
   categoryId?: string;
+  supplierName?: string;
   paymentMethod?: PaymentMethod;
   search?: string;
+  minAmount?: number;
+  maxAmount?: number;
+  sortBy?: string;
+  sortDir?: 'asc' | 'desc';
   page?: number;
   pageSize?: number;
 }
@@ -348,19 +376,16 @@ export interface AccountsPayableSummary {
   totalPending: number;
   totalPaid: number;
   totalCancelled: number;
-  totalOverdue: number;
   countPending: number;
   countPaid: number;
   countCancelled: number;
-  countOverdue: number;
-  byCategory?: AccountsPayableCategorySummary[];
+  totalsByCategory: AccountsPayableCategoryTotal[];
 }
 
-export interface AccountsPayableCategorySummary {
+export interface AccountsPayableCategoryTotal {
   categoryId: string;
   categoryName: string;
   totalPending: number;
   totalPaid: number;
   totalCancelled: number;
-  count: number;
 }

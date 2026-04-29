@@ -1,0 +1,19 @@
+.statement-content {
+  min-width: 600px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  button { margin-top: 4px; }
+}
+
+.balance-row {
+  display: flex;
+  gap: 32px;
+  margin: 8px 0 16px;
+  font-size: 0.95rem;
+}

@@ -41,7 +41,17 @@ import {
   BulkCreateAccountsPayableResponse,
   AccountsPayableListParams,
   AccountsPayableSummary,
-  PaginatedResponse
+  PaginatedResponse,
+  Account,
+  CreateAccountRequest,
+  UpdateAccountRequest,
+  TenantGlSettings,
+  UpdateTenantGlSettingsRequest,
+  JournalEntryDto,
+  JournalEntryListItem,
+  JournalEntryQuery,
+  CreateJournalEntryRequest,
+  AccountStatementDto
 } from '../models';
 
 @Injectable({
@@ -388,5 +398,69 @@ export class ApiService {
     if (filters.page != null) params = params.set('page', String(filters.page));
     if (filters.pageSize != null) params = params.set('pageSize', String(filters.pageSize));
     return params;
+  }
+
+  // Chart of Accounts (tenant-scoped)
+  private chartOfAccountsUrl(tenantId: string): string {
+    return `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/chart-of-accounts`;
+  }
+
+  getChartOfAccounts(tenantId: string, includeInactive = false): Observable<Account[]> {
+    const params = new HttpParams().set('includeInactive', String(includeInactive));
+    return this.http.get<Account[]>(this.chartOfAccountsUrl(tenantId), { params });
+  }
+
+  getAccountById(tenantId: string, accountId: string): Observable<Account> {
+    return this.http.get<Account>(`${this.chartOfAccountsUrl(tenantId)}/${encodeURIComponent(accountId)}`);
+  }
+
+  createAccount(tenantId: string, payload: CreateAccountRequest): Observable<Account> {
+    return this.http.post<Account>(this.chartOfAccountsUrl(tenantId), payload);
+  }
+
+  updateAccount(tenantId: string, accountId: string, payload: UpdateAccountRequest): Observable<Account> {
+    return this.http.put<Account>(`${this.chartOfAccountsUrl(tenantId)}/${encodeURIComponent(accountId)}`, payload);
+  }
+
+  deactivateAccount(tenantId: string, accountId: string): Observable<void> {
+    return this.http.delete<void>(`${this.chartOfAccountsUrl(tenantId)}/${encodeURIComponent(accountId)}`);
+  }
+
+  // General Ledger (tenant-scoped)
+  private generalLedgerUrl(tenantId: string): string {
+    return `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/general-ledger`;
+  }
+
+  listJournalEntries(tenantId: string, query: JournalEntryQuery = {}): Observable<PaginatedResponse<JournalEntryListItem>> {
+    let params = new HttpParams();
+    if (query.from) params = params.set('from', query.from);
+    if (query.to) params = params.set('to', query.to);
+    if (query.sourceModule) params = params.set('sourceModule', query.sourceModule);
+    if (query.page != null) params = params.set('page', String(query.page));
+    if (query.pageSize != null) params = params.set('pageSize', String(query.pageSize));
+    return this.http.get<PaginatedResponse<JournalEntryListItem>>(`${this.generalLedgerUrl(tenantId)}/entries`, { params });
+  }
+
+  getJournalEntry(tenantId: string, entryId: string): Observable<JournalEntryDto> {
+    return this.http.get<JournalEntryDto>(`${this.generalLedgerUrl(tenantId)}/entries/${encodeURIComponent(entryId)}`);
+  }
+
+  createJournalEntry(tenantId: string, payload: CreateJournalEntryRequest): Observable<JournalEntryDto> {
+    return this.http.post<JournalEntryDto>(`${this.generalLedgerUrl(tenantId)}/entries`, payload);
+  }
+
+  getAccountStatement(tenantId: string, accountId: string, from?: string, to?: string, page = 1, pageSize = 50): Observable<AccountStatementDto> {
+    let params = new HttpParams().set('page', String(page)).set('pageSize', String(pageSize));
+    if (from) params = params.set('from', from);
+    if (to) params = params.set('to', to);
+    return this.http.get<AccountStatementDto>(`${this.generalLedgerUrl(tenantId)}/accounts/${encodeURIComponent(accountId)}/statement`, { params });
+  }
+
+  getGlSettings(tenantId: string): Observable<TenantGlSettings> {
+    return this.http.get<TenantGlSettings>(`${this.generalLedgerUrl(tenantId)}/settings`);
+  }
+
+  updateGlSettings(tenantId: string, payload: UpdateTenantGlSettingsRequest): Observable<TenantGlSettings> {
+    return this.http.put<TenantGlSettings>(`${this.generalLedgerUrl(tenantId)}/settings`, payload);
   }
 }

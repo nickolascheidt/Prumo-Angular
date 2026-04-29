@@ -398,3 +398,135 @@ export interface AccountsPayableCategoryTotal {
   totalPaid: number;
   totalCancelled: number;
 }
+
+// ─── Finance: Chart of Accounts ────────────────────────────────────────────
+
+export enum AccountType {
+  Asset = 1,
+  Liability = 2,
+  Equity = 3,
+  Revenue = 4,
+  Expense = 5
+}
+
+export enum JournalEntryType {
+  Debit = 1,
+  Credit = 2
+}
+
+export interface Account {
+  id: string;
+  tenantId: string;
+  code: string;
+  name: string;
+  type: AccountType;
+  typeName: string;
+  isAnalytic: boolean;
+  parentId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateAccountRequest {
+  code: string;
+  name: string;
+  type: AccountType;
+  isAnalytic: boolean;
+  parentId?: string | null;
+}
+
+export interface UpdateAccountRequest {
+  code: string;
+  name: string;
+  type: AccountType;
+  isAnalytic: boolean;
+  parentId?: string | null;
+  isActive: boolean;
+}
+
+export interface TenantGlSettings {
+  tenantId: string;
+  defaultCashAccountId?: string | null;
+  defaultCashAccountCode?: string | null;
+  defaultAccountsPayableAccountId?: string | null;
+  defaultAccountsPayableAccountCode?: string | null;
+}
+
+export interface UpdateTenantGlSettingsRequest {
+  defaultCashAccountId?: string | null;
+  defaultAccountsPayableAccountId?: string | null;
+}
+
+// ─── Finance: General Ledger ────────────────────────────────────────────────
+
+export interface JournalLineDto {
+  id: string;
+  accountId: string;
+  accountCode: string;
+  accountName: string;
+  entryType: JournalEntryType;
+  amount: number;
+}
+
+export interface JournalEntryDto {
+  id: string;
+  tenantId: string;
+  date: string;
+  description: string;
+  sourceModule?: string | null;
+  sourceDocumentId?: string | null;
+  createdByUserId: string;
+  createdAt: string;
+  lines: JournalLineDto[];
+}
+
+export interface JournalEntryListItem {
+  id: string;
+  date: string;
+  description: string;
+  sourceModule?: string | null;
+  totalAmount: number;
+  lineCount: number;
+  createdAt: string;
+}
+
+export interface JournalEntryQuery {
+  from?: string;
+  to?: string;
+  sourceModule?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface CreateJournalLineDto {
+  accountId: string;
+  entryType: JournalEntryType;
+  amount: number;
+}
+
+export interface CreateJournalEntryRequest {
+  date: string;
+  description: string;
+  lines: CreateJournalLineDto[];
+}
+
+export interface AccountStatementLine {
+  journalEntryId: string;
+  date: string;
+  description: string;
+  entryType: JournalEntryType;
+  amount: number;
+  runningBalance: number;
+}
+
+export interface AccountStatementDto {
+  accountId: string;
+  accountCode: string;
+  accountName: string;
+  from?: string | null;
+  to?: string | null;
+  openingBalance: number;
+  lines: AccountStatementLine[];
+  closingBalance: number;
+}

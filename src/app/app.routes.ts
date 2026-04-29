@@ -12,6 +12,8 @@ import { UsersRolesManagementComponent } from './modules/admin/users-roles-manag
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
 import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
+import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
+import { GeneralLedgerComponent } from './modules/finance/general-ledger/general-ledger.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -85,6 +87,14 @@ export const routes: Routes = [
         path: 'accounts-payable/:id/edit',
         component: AccountsPayableFormComponent,
         data: { roles: ['Administrador', 'Funcionario'] }
+      },
+      {
+        path: 'finance/chart-of-accounts',
+        component: ChartOfAccountsComponent
+      },
+      {
+        path: 'finance/general-ledger',
+        component: GeneralLedgerComponent
       }
     ]
   }

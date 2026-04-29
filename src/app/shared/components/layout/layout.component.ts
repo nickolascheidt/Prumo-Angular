@@ -20,6 +20,7 @@ interface NavigationItem {
   icon: string;
   route: string;
   roles?: string[];
+  resourceCode?: string;
 }
 
 interface NavigationSection {
@@ -60,6 +61,23 @@ export class LayoutComponent implements OnInit, OnDestroy {
           icon: 'request_quote',
           route: '/accounts-payable',
           roles: ['Administrador', 'Funcionario']
+        }
+      ]
+    },
+    {
+      title: 'Financeiro',
+      items: [
+        {
+          label: 'Plano de Contas',
+          icon: 'account_tree',
+          route: '/finance/chart-of-accounts',
+          resourceCode: 'ChartOfAccounts.Management'
+        },
+        {
+          label: 'Razão Geral',
+          icon: 'menu_book',
+          route: '/finance/general-ledger',
+          resourceCode: 'GeneralLedger.Management'
         }
       ]
     },
@@ -148,16 +166,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  hasAccess(requiredRoles: string[] | undefined, user: User | null): boolean {
-    if (!requiredRoles?.length) {
-      return true;
+  hasAccess(item: NavigationItem, user: User | null): boolean {
+    if (item.resourceCode) {
+      return this.authService.canAccessResource(item.resourceCode);
     }
-
+    if (!item.roles?.length) return true;
     const userRoles = user?.roles ?? [];
-    return requiredRoles.some(role => userRoles.includes(role));
+    return item.roles.some(role => userRoles.includes(role));
   }
 
   hasVisibleItems(section: NavigationSection, user: User | null): boolean {
-    return section.items.some(item => this.hasAccess(item.roles, user));
+    return section.items.some(item => this.hasAccess(item, user));
   }
 }

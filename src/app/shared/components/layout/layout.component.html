@@ -53,7 +53,7 @@
             <ng-container *ngFor="let item of section.items">
               <a
                 mat-list-item
-                *ngIf="hasAccess(item.roles, currentUser)"
+                *ngIf="hasAccess(item, currentUser)"
                 [routerLink]="item.route"
                 routerLinkActive="active"
                 (click)="onNavItemClick()">

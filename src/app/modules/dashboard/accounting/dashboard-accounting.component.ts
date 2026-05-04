@@ -26,7 +26,7 @@ export class DashboardAccountingComponent implements OnInit {
 
   ngOnInit(): void {
     this.tenantId = this.auth.getCurrentTenantId();
-    if (!this.tenantId) return;
+    if (!this.tenantId) { this.loading = false; return; }
 
     const today = new Date();
     const from = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;

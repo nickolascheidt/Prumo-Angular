@@ -192,6 +192,7 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
         this.total = list.total;
       },
       error: err => {
+        this.loadingEntries = false;
         this.snackBar.open(
           err?.error?.message || 'Erro ao carregar lançamentos',
           'Fechar',

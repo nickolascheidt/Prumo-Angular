@@ -34,11 +34,6 @@
       <span class="total-item__value">{{ summary.totalPending | currency:'BRL' }}</span>
       <span class="total-item__count">{{ summary.countPending }} lançamento(s)</span>
     </div>
-    <div class="total-item total-item--overdue" *ngIf="summary.countOverdue">
-      <span class="total-item__label">Atrasado</span>
-      <span class="total-item__value">{{ summary.totalOverdue | currency:'BRL' }}</span>
-      <span class="total-item__count">{{ summary.countOverdue }} lançamento(s)</span>
-    </div>
     <div class="total-item total-item--paid">
       <span class="total-item__label">Pago</span>
       <span class="total-item__value">{{ summary.totalPaid | currency:'BRL' }}</span>

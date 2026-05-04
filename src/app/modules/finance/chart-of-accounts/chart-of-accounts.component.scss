@@ -1,0 +1,31 @@
+.chart-of-accounts {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &__icon mat-icon { font-size: 32px; height: 32px; width: 32px; }
+  &__text h1 { margin: 0; font-size: 1.5rem; }
+  &__text p { margin: 0; color: rgba(0,0,0,0.54); }
+}
+
+.spacer { flex: 1; }
+
+.inactive-row { opacity: 0.45; }
+
+.gl-settings-card {
+  .gl-settings-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+
+    mat-form-field { flex: 1; min-width: 280px; }
+  }
+}

@@ -333,11 +333,7 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
   }
 
   isOverdue(entry: AccountsPayableEntry): boolean {
-    if (entry.status !== 'Pending') return false;
-    const due = new Date(entry.dueDate);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    return due < now;
+    return entry.isOverdue;
   }
 
   statusLabel(status: AccountsPayableStatus): string {

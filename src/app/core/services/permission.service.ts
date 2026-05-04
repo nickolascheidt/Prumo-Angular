@@ -118,16 +118,9 @@ export class PermissionService {
    */
   userCanAccessResource(resourceCode: string, minLevel: PermissionLevel = PermissionLevel.Read): boolean {
     const resourcePerms = this.getUserResourcePermissions();
-    if (!resourcePerms || !resourcePerms.resources) {
-      return false;
-    }
-
-    const resource = resourcePerms.resources.find(r => r.resourceCode.toLowerCase() === resourceCode.toLowerCase());
-    if (!resource) {
-      return false;
-    }
-
-    return resource.level >= minLevel;
+    if (!resourcePerms?.resourcePermissions) return false;
+    const level = resourcePerms.resourcePermissions[resourceCode] ?? PermissionLevel.None;
+    return level >= minLevel;
   }
 
   /**
@@ -137,12 +130,8 @@ export class PermissionService {
    */
   getUserResourcePermissionLevel(resourceCode: string): PermissionLevel {
     const resourcePerms = this.getUserResourcePermissions();
-    if (!resourcePerms || !resourcePerms.resources) {
-      return PermissionLevel.None;
-    }
-
-    const resource = resourcePerms.resources.find(r => r.resourceCode.toLowerCase() === resourceCode.toLowerCase());
-    return resource?.level ?? PermissionLevel.None;
+    if (!resourcePerms?.resourcePermissions) return PermissionLevel.None;
+    return resourcePerms.resourcePermissions[resourceCode] ?? PermissionLevel.None;
   }
 
   /**

@@ -95,18 +95,25 @@
     color: var(--color-text-muted);
     transition: background-color 0.15s ease, color 0.15s ease;
 
-    .mat-icon { color: var(--color-text-subtle); }
+    .mdc-list-item__start { margin-right: 12px; }
+
+    .mat-icon {
+      color: var(--color-text-subtle);
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
 
     &:hover {
       background-color: var(--color-surface-alt) !important;
       color: var(--color-text);
+      .mat-icon { color: var(--color-text-muted); }
     }
 
     &.active {
       background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12)) !important;
       color: var(--color-primary-700);
       font-weight: 600;
-
       .mat-icon { color: var(--color-primary); }
     }
   }

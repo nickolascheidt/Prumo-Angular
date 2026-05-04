@@ -20,6 +20,7 @@ interface NavigationItem {
   icon: string;
   route: string;
   roles?: string[];
+  resourceCode?: string;
 }
 
 interface NavigationSection {
@@ -52,11 +53,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
   isMobile = false;
   readonly menuSections: NavigationSection[] = [
     {
-      title: 'Menu Principal',
+      title: 'Principal',
       items: [
-        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' }
+      ]
+    },
+    {
+      title: 'Contas a Pagar',
+      items: [
         {
-          label: 'Contas a Pagar',
+          label: 'Lançamentos',
           icon: 'request_quote',
           route: '/accounts-payable',
           roles: ['Administrador', 'Funcionario']
@@ -64,22 +70,33 @@ export class LayoutComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Administracao',
+      title: 'Financeiro',
       items: [
         {
-          label: 'Painel Admin',
-          icon: 'admin_panel_settings',
-          route: '/admin',
+          label: 'Plano de Contas',
+          icon: 'account_tree',
+          route: '/finance/chart-of-accounts',
           roles: ['Administrador']
         },
         {
-          label: 'Permissoes por Role',
+          label: 'Razão Geral',
+          icon: 'menu_book',
+          route: '/finance/general-ledger',
+          roles: ['Administrador']
+        }
+      ]
+    },
+    {
+      title: 'Administração',
+      items: [
+        {
+          label: 'Permissões por Role',
           icon: 'security',
           route: '/admin/permissions',
           roles: ['Administrador']
         },
         {
-          label: 'Roles por Usuario',
+          label: 'Roles por Usuário',
           icon: 'manage_accounts',
           route: '/admin/users-roles',
           roles: ['Administrador']
@@ -104,13 +121,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Detecta se está em dispositivo móvel
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         this.isMobile = result.matches;
-        // Se retornar a desktop e o sidenav estava fechado, abre
         if (!this.isMobile && !this.sidenavOpened) {
           this.sidenavOpened = true;
         }
@@ -138,26 +153,22 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Fecha o sidenav quando um item do menu é clicado (útil em mobile)
-   * Em desktop, o sidenav permanece aberto
-   */
   onNavItemClick(): void {
     if (this.isMobile && this.sidenav) {
       this.sidenav.close();
     }
   }
 
-  hasAccess(requiredRoles: string[] | undefined, user: User | null): boolean {
-    if (!requiredRoles?.length) {
-      return true;
+  hasAccess(item: NavigationItem, user: User | null): boolean {
+    if (item.resourceCode) {
+      return this.authService.canAccessResource(item.resourceCode);
     }
-
+    if (!item.roles?.length) return true;
     const userRoles = user?.roles ?? [];
-    return requiredRoles.some(role => userRoles.includes(role));
+    return item.roles.some(role => userRoles.includes(role));
   }
 
   hasVisibleItems(section: NavigationSection, user: User | null): boolean {
-    return section.items.some(item => this.hasAccess(item.roles, user));
+    return section.items.some(item => this.hasAccess(item, user));
   }
 }

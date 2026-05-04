@@ -6,12 +6,13 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { TenantSelectionComponent } from './modules/auth/tenant-selection/tenant-selection.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
-import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
 import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
+import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
+import { GeneralLedgerComponent } from './modules/finance/general-ledger/general-ledger.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -53,11 +54,6 @@ export const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'admin',
-        component: AdminPanelComponent,
-        data: { roles: ['Administrador'] }
-      },
-      {
         path: 'admin/permissions',
         component: PermissionsManagementComponent,
         data: { roles: ['Administrador'] }
@@ -85,6 +81,14 @@ export const routes: Routes = [
         path: 'accounts-payable/:id/edit',
         component: AccountsPayableFormComponent,
         data: { roles: ['Administrador', 'Funcionario'] }
+      },
+      {
+        path: 'finance/chart-of-accounts',
+        component: ChartOfAccountsComponent,
+      },
+      {
+        path: 'finance/general-ledger',
+        component: GeneralLedgerComponent
       }
     ]
   }

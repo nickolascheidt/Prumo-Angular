@@ -203,6 +203,11 @@ export class AuthService {
     }
 
     this.currentUserSubject.next(user);
+
+    // Load resource permissions after successful login
+    this.loadUserResourcePermissions().subscribe({
+      error: (err) => console.error('Erro ao carregar permissões de recursos:', err)
+    });
   }
 
   private storeResourcePermissions(resourcePerms: UserResourcePermissions): void {

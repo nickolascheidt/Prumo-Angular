@@ -53,11 +53,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
   isMobile = false;
   readonly menuSections: NavigationSection[] = [
     {
-      title: 'Menu Principal',
+      title: 'Principal',
       items: [
-        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+        { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' }
+      ]
+    },
+    {
+      title: 'Contas a Pagar',
+      items: [
         {
-          label: 'Contas a Pagar',
+          label: 'Lançamentos',
           icon: 'request_quote',
           route: '/accounts-payable',
           roles: ['Administrador', 'Funcionario']
@@ -71,33 +76,27 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Plano de Contas',
           icon: 'account_tree',
           route: '/finance/chart-of-accounts',
-          resourceCode: 'ChartOfAccounts.Management'
+          roles: ['Administrador']
         },
         {
           label: 'Razão Geral',
           icon: 'menu_book',
           route: '/finance/general-ledger',
-          resourceCode: 'GeneralLedger.Management'
+          roles: ['Administrador']
         }
       ]
     },
     {
-      title: 'Administracao',
+      title: 'Administração',
       items: [
         {
-          label: 'Painel Admin',
-          icon: 'admin_panel_settings',
-          route: '/admin',
-          roles: ['Administrador']
-        },
-        {
-          label: 'Permissoes por Role',
+          label: 'Permissões por Role',
           icon: 'security',
           route: '/admin/permissions',
           roles: ['Administrador']
         },
         {
-          label: 'Roles por Usuario',
+          label: 'Roles por Usuário',
           icon: 'manage_accounts',
           route: '/admin/users-roles',
           roles: ['Administrador']
@@ -122,13 +121,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Detecta se está em dispositivo móvel
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         this.isMobile = result.matches;
-        // Se retornar a desktop e o sidenav estava fechado, abre
         if (!this.isMobile && !this.sidenavOpened) {
           this.sidenavOpened = true;
         }
@@ -156,10 +153,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Fecha o sidenav quando um item do menu é clicado (útil em mobile)
-   * Em desktop, o sidenav permanece aberto
-   */
   onNavItemClick(): void {
     if (this.isMobile && this.sidenav) {
       this.sidenav.close();

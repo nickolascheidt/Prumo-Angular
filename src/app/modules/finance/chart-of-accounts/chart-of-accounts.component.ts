@@ -18,8 +18,7 @@ import {
   Account,
   AccountType,
   TenantGlSettings,
-  UpdateTenantGlSettingsRequest,
-  PermissionLevel
+  UpdateTenantGlSettingsRequest
 } from '@core/models';
 import { AccountFormComponent, AccountFormData } from './account-form/account-form.component';
 
@@ -117,7 +116,7 @@ export class ChartOfAccountsComponent implements OnInit {
   }
 
   get canManage(): boolean {
-    return this.auth.canAccessResource('ChartOfAccounts.Management', PermissionLevel.Full);
+    return this.auth.hasRole('Administrador');
   }
 
   get analyticAccounts(): Account[] {

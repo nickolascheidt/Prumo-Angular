@@ -20,8 +20,7 @@ import { ApiService, AuthService } from '@core/services';
 import {
   JournalEntryListItem,
   JournalEntryQuery,
-  PaginatedResponse,
-  PermissionLevel
+  PaginatedResponse
 } from '@core/models';
 import { JournalEntryDetailComponent } from './journal-entry-detail/journal-entry-detail.component';
 import { JournalEntryFormComponent } from './journal-entry-form/journal-entry-form.component';
@@ -158,7 +157,7 @@ export class GeneralLedgerComponent implements OnInit, OnDestroy {
   }
 
   get canCreate(): boolean {
-    return this.auth.canAccessResource('GeneralLedger.Management', PermissionLevel.Full);
+    return this.auth.hasRole('Administrador');
   }
 
   private toIso(d: Date | string): string {

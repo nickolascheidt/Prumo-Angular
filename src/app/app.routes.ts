@@ -6,7 +6,6 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { TenantSelectionComponent } from './modules/auth/tenant-selection/tenant-selection.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
-import { AdminPanelComponent } from './modules/admin/admin-panel.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
@@ -55,11 +54,6 @@ export const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'admin',
-        component: AdminPanelComponent,
-        data: { roles: ['Administrador'] }
-      },
-      {
         path: 'admin/permissions',
         component: PermissionsManagementComponent,
         data: { roles: ['Administrador'] }
@@ -90,7 +84,7 @@ export const routes: Routes = [
       },
       {
         path: 'finance/chart-of-accounts',
-        component: ChartOfAccountsComponent
+        component: ChartOfAccountsComponent,
       },
       {
         path: 'finance/general-ledger',

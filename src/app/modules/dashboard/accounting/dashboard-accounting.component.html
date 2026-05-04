@@ -1,0 +1,39 @@
+<div class="accounting-dashboard">
+  <div class="accounting-dashboard__header">
+    <div class="accounting-dashboard__title">
+      <mat-icon>request_quote</mat-icon>
+      <h2>Contas a Pagar</h2>
+      <span class="accounting-dashboard__period">Mês atual</span>
+    </div>
+    <a mat-stroked-button routerLink="/accounts-payable">
+      <mat-icon>open_in_new</mat-icon>
+      Ver lançamentos
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="accounting-dashboard__loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && summary" class="totals-grid">
+    <mat-card class="total-card total-card--pending">
+      <div class="total-card__label">Pendente</div>
+      <div class="total-card__value">{{ summary.totalPending | currency:'BRL' }}</div>
+      <div class="total-card__count">{{ summary.countPending }} lançamento(s)</div>
+    </mat-card>
+    <mat-card class="total-card total-card--paid">
+      <div class="total-card__label">Pago</div>
+      <div class="total-card__value">{{ summary.totalPaid | currency:'BRL' }}</div>
+      <div class="total-card__count">{{ summary.countPaid }} lançamento(s)</div>
+    </mat-card>
+    <mat-card class="total-card total-card--cancelled">
+      <div class="total-card__label">Cancelado</div>
+      <div class="total-card__value">{{ summary.totalCancelled | currency:'BRL' }}</div>
+      <div class="total-card__count">{{ summary.countCancelled }} lançamento(s)</div>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!loading && !summary" class="accounting-dashboard__empty">
+    Não foi possível carregar o resumo.
+  </p>
+</div>

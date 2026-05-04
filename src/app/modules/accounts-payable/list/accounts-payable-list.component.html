@@ -28,24 +28,6 @@
     (categoryCreated)="onQuickEntryCategoryCreated($event)">
   </app-accounts-payable-quick-entry>
 
-  <mat-card class="totals-card" *ngIf="summary">
-    <div class="total-item total-item--pending">
-      <span class="total-item__label">Pendente</span>
-      <span class="total-item__value">{{ summary.totalPending | currency:'BRL' }}</span>
-      <span class="total-item__count">{{ summary.countPending }} lançamento(s)</span>
-    </div>
-    <div class="total-item total-item--paid">
-      <span class="total-item__label">Pago</span>
-      <span class="total-item__value">{{ summary.totalPaid | currency:'BRL' }}</span>
-      <span class="total-item__count">{{ summary.countPaid }} lançamento(s)</span>
-    </div>
-    <div class="total-item total-item--cancelled">
-      <span class="total-item__label">Cancelado</span>
-      <span class="total-item__value">{{ summary.totalCancelled | currency:'BRL' }}</span>
-      <span class="total-item__count">{{ summary.countCancelled }} lançamento(s)</span>
-    </div>
-  </mat-card>
-
   <mat-card class="filters-card">
     <form [formGroup]="filtersForm" class="filters">
       <mat-form-field appearance="outline">

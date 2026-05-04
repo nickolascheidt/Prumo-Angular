@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Subject, forkJoin } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { MatCardModule } from '@angular/material/card';
@@ -37,7 +37,6 @@ import {
   AccountsPayableEntry,
   AccountsPayableListParams,
   AccountsPayableStatus,
-  AccountsPayableSummary,
   PaymentMethod
 } from '@core/models';
 import { AccountsPayableQuickEntryComponent } from '../quick-entry/quick-entry.component';
@@ -91,10 +90,8 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
   filtersForm!: FormGroup;
   entries: AccountsPayableEntry[] = [];
   categories: AccountsPayableCategory[] = [];
-  summary: AccountsPayableSummary | null = null;
 
   loadingEntries = false;
-  loadingSummary = false;
   exporting = false;
 
   total = 0;
@@ -184,32 +181,18 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
     const filters = this.buildFilters();
 
     this.loadingEntries = true;
-    this.loadingSummary = true;
 
-    forkJoin({
-      list: this.api.listAccountsPayableEntries(this.tenantId, {
-        ...filters,
-        page: this.pageIndex + 1,
-        pageSize: this.pageSize
-      }),
-      summary: this.api.getAccountsPayableSummary(
-        this.tenantId,
-        filters.from,
-        filters.to,
-        {
-          status: filters.status,
-          categoryId: filters.categoryId,
-          paymentMethod: filters.paymentMethod,
-          search: filters.search
-        }
-      )
+    this.api.listAccountsPayableEntries(this.tenantId, {
+      ...filters,
+      page: this.pageIndex + 1,
+      pageSize: this.pageSize
     }).subscribe({
-      next: ({ list, summary }) => {
+      next: list => {
         this.entries = list.items;
         this.total = list.total;
-        this.summary = summary;
       },
       error: err => {
+        this.loadingEntries = false;
         this.snackBar.open(
           err?.error?.message || 'Erro ao carregar lançamentos',
           'Fechar',
@@ -218,7 +201,6 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.loadingEntries = false;
-        this.loadingSummary = false;
       }
     });
   }

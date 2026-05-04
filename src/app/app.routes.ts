@@ -6,6 +6,10 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { TenantSelectionComponent } from './modules/auth/tenant-selection/tenant-selection.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
+import { DashboardOverviewComponent } from './modules/dashboard/overview/dashboard-overview.component';
+import { DashboardAccountingComponent } from './modules/dashboard/accounting/dashboard-accounting.component';
+import { DashboardFinanceComponent } from './modules/dashboard/finance/dashboard-finance.component';
+import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-admin.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
@@ -25,23 +29,12 @@ const tenantSelectionGuard: CanActivateFn = () => {
 };
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
-  },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'auth',
     children: [
-      {
-        path: 'login',
-        component: LoginComponent
-      },
-      {
-        path: 'select-tenant',
-        component: TenantSelectionComponent,
-        canActivate: [tenantSelectionGuard]
-      }
+      { path: 'login', component: LoginComponent },
+      { path: 'select-tenant', component: TenantSelectionComponent, canActivate: [tenantSelectionGuard] }
     ]
   },
   {
@@ -51,21 +44,22 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
-      },
-      {
-        path: 'admin/permissions',
-        component: PermissionsManagementComponent,
-        data: { roles: ['Administrador'] }
-      },
-      {
-        path: 'admin/users-roles',
-        component: UsersRolesManagementComponent,
-        data: { roles: ['Administrador'] }
-      },
-      {
-        path: 'admin/tenant',
-        component: TenantManagementComponent
+        component: DashboardComponent,
+        children: [
+          { path: '', redirectTo: 'overview', pathMatch: 'full' },
+          { path: 'overview', component: DashboardOverviewComponent },
+          {
+            path: 'accounting',
+            component: DashboardAccountingComponent,
+            data: { roles: ['Administrador', 'Funcionario'] }
+          },
+          { path: 'finance', component: DashboardFinanceComponent },
+          {
+            path: 'admin',
+            component: DashboardAdminComponent,
+            data: { roles: ['Administrador'] }
+          }
+        ]
       },
       {
         path: 'accounts-payable',
@@ -82,14 +76,11 @@ export const routes: Routes = [
         component: AccountsPayableFormComponent,
         data: { roles: ['Administrador', 'Funcionario'] }
       },
-      {
-        path: 'finance/chart-of-accounts',
-        component: ChartOfAccountsComponent,
-      },
-      {
-        path: 'finance/general-ledger',
-        component: GeneralLedgerComponent
-      }
+      { path: 'admin/permissions', component: PermissionsManagementComponent, data: { roles: ['Administrador'] } },
+      { path: 'admin/users-roles', component: UsersRolesManagementComponent, data: { roles: ['Administrador'] } },
+      { path: 'admin/tenant', component: TenantManagementComponent },
+      { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent },
+      { path: 'finance/general-ledger', component: GeneralLedgerComponent }
     ]
   }
 ];

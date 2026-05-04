@@ -18,7 +18,7 @@ import { AccountsPayableSummary } from '@core/models';
 })
 export class DashboardAccountingComponent implements OnInit {
   summary: AccountsPayableSummary | null = null;
-  loading = false;
+  loading = true;
 
   private tenantId: string | null = null;
 
@@ -33,11 +33,9 @@ export class DashboardAccountingComponent implements OnInit {
     const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     const to = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
-    this.loading = true;
     this.api.getAccountsPayableSummary(this.tenantId, from, to).subscribe({
-      next: s => (this.summary = s),
-      error: () => (this.loading = false),
-      complete: () => (this.loading = false)
+      next: s => { this.summary = s; this.loading = false; },
+      error: () => (this.loading = false)
     });
   }
 }

@@ -1,0 +1,67 @@
+<div class="dashboard" *ngIf="currentUser$ | async as user">
+  <section class="hero">
+    <div class="hero__text">
+      <span class="hero__eyebrow">Dashboard</span>
+      <h1>Bem-vindo, {{ user.fullName }} 👋</h1>
+      <p>{{ user.email }}</p>
+    </div>
+    <div class="hero__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</div>
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat">
+      <div class="stat__icon stat__icon--primary"><mat-icon>shield</mat-icon></div>
+      <div class="stat__body">
+        <span class="stat__label">Roles atribuídas</span>
+        <span class="stat__value">{{ user.roles.length || 0 }}</span>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat__icon stat__icon--accent"><mat-icon>verified_user</mat-icon></div>
+      <div class="stat__body">
+        <span class="stat__label">Status</span>
+        <span class="stat__value">Ativo</span>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat__icon stat__icon--info"><mat-icon>schedule</mat-icon></div>
+      <div class="stat__body">
+        <span class="stat__label">Sessão</span>
+        <span class="stat__value">Online</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards-grid">
+    <mat-card class="info-card">
+      <div class="info-card__head">
+        <div class="info-card__icon"><mat-icon>badge</mat-icon></div>
+        <h3>Suas Roles</h3>
+      </div>
+      <div class="info-card__body">
+        <div class="role-chips" *ngIf="user.roles?.length; else noRoles">
+          <span class="role-chip" *ngFor="let role of user.roles">{{ role }}</span>
+        </div>
+        <ng-template #noRoles>
+          <p class="empty-state">Nenhuma role atribuída</p>
+        </ng-template>
+      </div>
+    </mat-card>
+
+    <mat-card class="info-card info-card--admin" *ngIf="user.roles?.includes('Administrador')">
+      <div class="info-card__head">
+        <div class="info-card__icon info-card__icon--accent">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <h3>Administração</h3>
+      </div>
+      <div class="info-card__body">
+        <p>Acesse o painel para gerenciar usuários, roles, permissões e recursos.</p>
+        <a mat-flat-button color="primary" routerLink="/admin">
+          Abrir painel admin
+          <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+        </a>
+      </div>
+    </mat-card>
+  </section>
+</div>

@@ -13,6 +13,7 @@ import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-adm
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
 import { TenantManagementComponent } from './modules/admin/tenant-management.component';
+import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
 import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
 import { GeneralLedgerComponent } from './modules/finance/general-ledger/general-ledger.component';
@@ -48,11 +49,11 @@ export const routes: Routes = [
           { path: '', redirectTo: 'overview', pathMatch: 'full' },
           { path: 'overview', component: DashboardOverviewComponent },
           {
-            path: 'contabilidade',
+            path: 'accounting',
             component: DashboardAccountingComponent,
             data: { roles: ['Administrador', 'Funcionario'] }
           },
-          { path: 'financeiro', component: DashboardFinanceComponent },
+          { path: 'finance', component: DashboardFinanceComponent },
           {
             path: 'admin',
             component: DashboardAdminComponent,
@@ -60,9 +61,11 @@ export const routes: Routes = [
           }
         ]
       },
-      // Redirect old AP list URL → accounting dashboard
-      { path: 'accounts-payable', redirectTo: '/dashboard/contabilidade', pathMatch: 'full' },
-      // AP form routes stay as standalone pages
+      {
+        path: 'accounts-payable',
+        component: AccountsPayableListComponent,
+        data: { roles: ['Administrador', 'Funcionario'] }
+      },
       {
         path: 'accounts-payable/new',
         component: AccountsPayableFormComponent,

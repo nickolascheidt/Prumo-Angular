@@ -24,8 +24,8 @@ export class DashboardComponent {
 
   readonly tabs: DashTab[] = [
     { label: 'Visão Geral', route: 'overview' },
-    { label: 'Contabilidade', route: 'contabilidade', roles: ['Administrador', 'Funcionario'] },
-    { label: 'Financeiro', route: 'financeiro' },
+    { label: 'Contabilidade', route: 'accounting', roles: ['Administrador', 'Funcionario'] },
+    { label: 'Financeiro', route: 'finance' },
     { label: 'Administração', route: 'admin', roles: ['Administrador'] }
   ];
 

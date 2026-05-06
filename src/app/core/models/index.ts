@@ -530,3 +530,153 @@ export interface AccountStatementDto {
   lines: AccountStatementLine[];
   closingBalance: number;
 }
+
+// ─── HR Module ───────────────────────────────────────────────────────────────
+
+export enum ContractType {
+  CLT = 1,
+  Temporary = 2,
+  Daily = 3
+}
+
+export enum HrPaymentMethod {
+  Cash = 1,
+  Pix = 2,
+  BankTransfer = 3,
+  Check = 4
+}
+
+export enum HrPaymentStatus {
+  Pending = 1,
+  Paid = 2,
+  Cancelled = 3,
+  Overdue = 4
+}
+
+export interface Employee {
+  id: string;
+  tenantId: string;
+  fullName: string;
+  cpf: string;
+  phone?: string | null;
+  email?: string | null;
+  hireDate: string;
+  terminationDate?: string | null;
+  isActive: boolean;
+  contractType: ContractType;
+  contractTypeName: string;
+  hourlyRate: number;
+  preferredPaymentMethod: HrPaymentMethod;
+  preferredPaymentMethodName: string;
+  pixKey?: string | null;
+  bankName?: string | null;
+  bankAccountNumber?: string | null;
+  bankAgency?: string | null;
+  hasSignedContract: boolean;
+  contractSignedDate?: string | null;
+  applicationUserId?: string | null;
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateEmployeeRequest {
+  fullName: string;
+  cpf: string;
+  phone?: string | null;
+  email?: string | null;
+  hireDate: string;
+  contractType: ContractType;
+  hourlyRate: number;
+  preferredPaymentMethod: HrPaymentMethod;
+  pixKey?: string | null;
+  bankName?: string | null;
+  bankAccountNumber?: string | null;
+  bankAgency?: string | null;
+  hasSignedContract: boolean;
+  applicationUserId?: string | null;
+}
+
+export interface UpdateEmployeeRequest {
+  fullName: string;
+  phone?: string | null;
+  email?: string | null;
+  isActive: boolean;
+  contractType: ContractType;
+  hourlyRate: number;
+  preferredPaymentMethod: HrPaymentMethod;
+  pixKey?: string | null;
+  bankName?: string | null;
+  bankAccountNumber?: string | null;
+  bankAgency?: string | null;
+  hasSignedContract: boolean;
+  terminationDate?: string | null;
+}
+
+export interface WorkLog {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  workDate: string;
+  hoursWorked: number;
+  hourlyRateAtTime: number;
+  totalAmount: number;
+  notes?: string | null;
+  paymentPeriodId?: string | null;
+  createdAt: string;
+}
+
+export interface CreateWorkLogRequest {
+  employeeId: string;
+  workDate: string;
+  hoursWorked: number;
+  notes?: string | null;
+}
+
+export interface UpdateWorkLogRequest {
+  workDate: string;
+  hoursWorked: number;
+  notes?: string | null;
+}
+
+export interface PaymentPeriodSummary {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  startDate: string;
+  endDate: string;
+  totalHours: number;
+  totalAmount: number;
+  status: HrPaymentStatus;
+  statusName: string;
+  createdAt: string;
+}
+
+export interface GeneratePaymentPeriodRequest {
+  employeeId: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface HrPayment {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  paymentPeriodId: string;
+  paymentDate: string;
+  amount: number;
+  paymentMethod: HrPaymentMethod;
+  paymentMethodName: string;
+  paymentProof?: string | null;
+  notes?: string | null;
+  paidByUserId: string;
+  paidByUserName: string;
+  createdAt: string;
+}
+
+export interface CreateHrPaymentRequest {
+  paymentPeriodId: string;
+  paymentDate: string;
+  paymentMethod: HrPaymentMethod;
+  paymentProof?: string | null;
+  notes?: string | null;
+}

@@ -458,6 +458,7 @@ export interface TenantGlSettings {
 export interface UpdateTenantGlSettingsRequest {
   defaultCashAccountId?: string | null;
   defaultAccountsPayableAccountId?: string | null;
+  defaultExpenseAccountId?: string | null;
 }
 
 // ─── Finance: General Ledger ────────────────────────────────────────────────

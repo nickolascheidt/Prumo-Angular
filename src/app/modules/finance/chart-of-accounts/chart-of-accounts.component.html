@@ -96,6 +96,16 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Despesas com Fornecedores (Padrão)</mat-label>
+          <mat-select formControlName="defaultExpenseAccountId">
+            <mat-option [value]="null">— nenhuma —</mat-option>
+            <mat-option *ngFor="let a of analyticAccounts" [value]="a.id">
+              {{ a.code }} – {{ a.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </form>
     </mat-card-content>
     <mat-card-actions *ngIf="canManage">

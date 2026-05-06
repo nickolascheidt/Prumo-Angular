@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
 import { TenantGlSettings } from '@core/models';
 
 interface HintRow {
@@ -16,7 +15,7 @@ interface HintRow {
 @Component({
   selector: 'app-accounts-hints',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
   template: `
     <mat-card class="hints-card">
       <mat-card-header>
@@ -61,11 +60,6 @@ interface HintRow {
             }
           </tbody>
         </table>
-        <div class="hints-footer">
-          <button mat-stroked-button routerLink="/finance/chart-of-accounts">
-            <mat-icon>settings</mat-icon> Configurar contas padrão
-          </button>
-        </div>
       </mat-card-content>
     </mat-card>
   `,
@@ -78,7 +72,6 @@ interface HintRow {
     .status-ok   { display: flex; align-items: center; gap: 4px; color: #388e3c; font-size: 13px; }
     .status-warn { display: flex; align-items: center; gap: 4px; color: #f57c00; font-size: 13px; }
     .status-info { display: flex; align-items: center; gap: 4px; color: #9e9e9e; font-size: 13px; }
-    .hints-footer { margin-top: 16px; }
   `]
 })
 export class AccountsHintsComponent {

@@ -81,7 +81,8 @@ export class ChartOfAccountsComponent implements OnInit {
 
     this.glSettingsForm = this.fb.group({
       defaultCashAccountId: [null],
-      defaultAccountsPayableAccountId: [null]
+      defaultAccountsPayableAccountId: [null],
+      defaultExpenseAccountId: [null]
     });
 
     this.loadAll();
@@ -106,7 +107,8 @@ export class ChartOfAccountsComponent implements OnInit {
         this.glSettings = settings;
         this.glSettingsForm.patchValue({
           defaultCashAccountId: settings.defaultCashAccountId,
-          defaultAccountsPayableAccountId: settings.defaultAccountsPayableAccountId
+          defaultAccountsPayableAccountId: settings.defaultAccountsPayableAccountId,
+          defaultExpenseAccountId: settings.defaultExpenseAccountId
         });
       },
       error: () => {}

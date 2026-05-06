@@ -17,6 +17,9 @@ import { AccountsPayableListComponent } from './modules/accounts-payable/list/ac
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
 import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
 import { GeneralLedgerComponent } from './modules/finance/general-ledger/general-ledger.component';
+import { EmployeesComponent } from './modules/hr/employees/employees.component';
+import { WorklogsComponent } from './modules/hr/worklogs/worklogs.component';
+import { HrPaymentsComponent } from './modules/hr/payments/payments.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -80,7 +83,10 @@ export const routes: Routes = [
       { path: 'admin/users-roles', component: UsersRolesManagementComponent, data: { roles: ['Administrador'] } },
       { path: 'admin/tenant', component: TenantManagementComponent },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent },
-      { path: 'finance/general-ledger', component: GeneralLedgerComponent }
+      { path: 'finance/general-ledger', component: GeneralLedgerComponent },
+      { path: 'hr/employees', component: EmployeesComponent },
+      { path: 'hr/worklogs', component: WorklogsComponent },
+      { path: 'hr/payments', component: HrPaymentsComponent }
     ]
   }
 ];

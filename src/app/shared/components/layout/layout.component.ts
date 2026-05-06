@@ -87,6 +87,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
       ]
     },
     {
+      title: 'RH',
+      items: [
+        { label: 'Funcionários', icon: 'badge', route: '/hr/employees' },
+        { label: 'Horas', icon: 'schedule', route: '/hr/worklogs' },
+        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' }
+      ]
+    },
+    {
       title: 'Administração',
       items: [
         {

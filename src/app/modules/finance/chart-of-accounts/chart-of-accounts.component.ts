@@ -21,6 +21,7 @@ import {
   UpdateTenantGlSettingsRequest
 } from '@core/models';
 import { AccountFormComponent, AccountFormData } from './account-form/account-form.component';
+import { AccountsHintsComponent } from './accounts-hints.component';
 
 @Component({
   selector: 'app-chart-of-accounts',
@@ -40,7 +41,8 @@ import { AccountFormComponent, AccountFormData } from './account-form/account-fo
     MatSelectModule,
     MatFormFieldModule,
     MatSlideToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AccountsHintsComponent
   ],
   templateUrl: './chart-of-accounts.component.html',
   styleUrls: ['./chart-of-accounts.component.scss']

@@ -451,6 +451,8 @@ export interface TenantGlSettings {
   defaultCashAccountCode?: string | null;
   defaultAccountsPayableAccountId?: string | null;
   defaultAccountsPayableAccountCode?: string | null;
+  defaultExpenseAccountId?: string | null;
+  defaultExpenseAccountCode?: string | null;
 }
 
 export interface UpdateTenantGlSettingsRequest {

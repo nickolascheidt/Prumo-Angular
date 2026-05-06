@@ -51,7 +51,17 @@ import {
   JournalEntryListItem,
   JournalEntryQuery,
   CreateJournalEntryRequest,
-  AccountStatementDto
+  AccountStatementDto,
+  Employee,
+  CreateEmployeeRequest,
+  UpdateEmployeeRequest,
+  WorkLog,
+  CreateWorkLogRequest,
+  UpdateWorkLogRequest,
+  PaymentPeriodSummary,
+  GeneratePaymentPeriodRequest,
+  HrPayment,
+  CreateHrPaymentRequest
 } from '../models';
 
 @Injectable({
@@ -462,5 +472,105 @@ export class ApiService {
 
   updateGlSettings(tenantId: string, payload: UpdateTenantGlSettingsRequest): Observable<TenantGlSettings> {
     return this.http.put<TenantGlSettings>(`${this.generalLedgerUrl(tenantId)}/settings`, payload);
+  }
+
+  // ─── HR Module ────────────────────────────────────────────────────────────
+
+  private hrUrl(tenantId: string): string {
+    return `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}`;
+  }
+
+  // Employees
+  getEmployees(tenantId: string, includeInactive = false): Observable<Employee[]> {
+    let params = new HttpParams();
+    if (includeInactive) params = params.set('includeInactive', 'true');
+    return this.http.get<Employee[]>(`${this.hrUrl(tenantId)}/employees`, { params });
+  }
+
+  getEmployee(tenantId: string, id: string): Observable<Employee> {
+    return this.http.get<Employee>(`${this.hrUrl(tenantId)}/employees/${encodeURIComponent(id)}`);
+  }
+
+  createEmployee(tenantId: string, data: CreateEmployeeRequest): Observable<Employee> {
+    return this.http.post<Employee>(`${this.hrUrl(tenantId)}/employees`, data);
+  }
+
+  updateEmployee(tenantId: string, id: string, data: UpdateEmployeeRequest): Observable<Employee> {
+    return this.http.put<Employee>(`${this.hrUrl(tenantId)}/employees/${encodeURIComponent(id)}`, data);
+  }
+
+  deactivateEmployee(tenantId: string, id: string): Observable<void> {
+    return this.http.delete<void>(`${this.hrUrl(tenantId)}/employees/${encodeURIComponent(id)}`);
+  }
+
+  // WorkLogs
+  getWorkLogs(tenantId: string, employeeId: string, from?: string, to?: string, onlyUnassigned = false): Observable<WorkLog[]> {
+    let params: any = {};
+    if (from) params['from'] = from;
+    if (to) params['to'] = to;
+    if (onlyUnassigned) params['onlyUnassigned'] = 'true';
+    return this.http.get<WorkLog[]>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(employeeId)}/worklogs`,
+      { params }
+    );
+  }
+
+  createWorkLog(tenantId: string, data: CreateWorkLogRequest): Observable<WorkLog> {
+    return this.http.post<WorkLog>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(data.employeeId)}/worklogs`,
+      data
+    );
+  }
+
+  updateWorkLog(tenantId: string, employeeId: string, id: string, data: UpdateWorkLogRequest): Observable<WorkLog> {
+    return this.http.put<WorkLog>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(employeeId)}/worklogs/${encodeURIComponent(id)}`,
+      data
+    );
+  }
+
+  deleteWorkLog(tenantId: string, employeeId: string, id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(employeeId)}/worklogs/${encodeURIComponent(id)}`
+    );
+  }
+
+  // Payment Periods
+  getPaymentPeriods(tenantId: string, employeeId: string): Observable<PaymentPeriodSummary[]> {
+    return this.http.get<PaymentPeriodSummary[]>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(employeeId)}/payment-periods`
+    );
+  }
+
+  generatePaymentPeriod(tenantId: string, data: GeneratePaymentPeriodRequest): Observable<PaymentPeriodSummary> {
+    return this.http.post<PaymentPeriodSummary>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(data.employeeId)}/payment-periods/generate`,
+      data
+    );
+  }
+
+  deletePaymentPeriod(tenantId: string, employeeId: string, id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(employeeId)}/payment-periods/${encodeURIComponent(id)}`
+    );
+  }
+
+  // HR Payments
+  getRecentHrPayments(tenantId: string, count = 50): Observable<HrPayment[]> {
+    return this.http.get<HrPayment[]>(`${this.hrUrl(tenantId)}/payments/recent`, { params: { count: String(count) } });
+  }
+
+  getHrPaymentsByEmployee(tenantId: string, employeeId: string): Observable<HrPayment[]> {
+    return this.http.get<HrPayment[]>(
+      `${this.hrUrl(tenantId)}/payments/employee/${encodeURIComponent(employeeId)}`
+    );
+  }
+
+  createHrPayment(tenantId: string, data: CreateHrPaymentRequest): Observable<HrPayment> {
+    return this.http.post<HrPayment>(`${this.hrUrl(tenantId)}/payments`, data);
+  }
+
+  deleteHrPayment(tenantId: string, id: string): Observable<void> {
+    return this.http.delete<void>(`${this.hrUrl(tenantId)}/payments/${encodeURIComponent(id)}`);
   }
 }

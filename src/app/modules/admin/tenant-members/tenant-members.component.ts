@@ -24,13 +24,20 @@ const ROLE_LABELS: Record<number, string> = { 0: 'Membro', 1: 'Admin', 2: 'Owner
     MatDialogModule, MatSnackBarModule, MatChipsModule,
     MatProgressSpinnerModule, MatTooltipModule
   ],
-  templateUrl: './tenant-members.component.html'
+  templateUrl: './tenant-members.component.html',
+  styles: [`
+    .page-container { padding: 24px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .full-width { width: 100%; }
+    .loading-container { display: flex; justify-content: center; padding: 64px; }
+  `]
 })
 export class TenantMembersComponent implements OnInit {
   displayedColumns = ['name', 'email', 'role', 'joinedAt', 'actions'];
   members: TenantMember[] = [];
   loading = false;
   currentUserId = '';
+  myRole = -1;
   private tenantId = '';
 
   constructor(
@@ -50,7 +57,11 @@ export class TenantMembersComponent implements OnInit {
   loadMembers(): void {
     this.loading = true;
     this.api.getTenantMembers(this.tenantId).subscribe({
-      next: members => { this.members = members; this.loading = false; },
+      next: members => {
+        this.members = members;
+        this.myRole = members.find(m => m.userId === this.currentUserId)?.role ?? -1;
+        this.loading = false;
+      },
       error: () => { this.loading = false; }
     });
   }
@@ -58,8 +69,7 @@ export class TenantMembersComponent implements OnInit {
   roleLabel(role: number): string { return ROLE_LABELS[role] ?? 'Desconhecido'; }
 
   canManage(member: TenantMember): boolean {
-    const myRole = this.members.find(m => m.userId === this.currentUserId)?.role ?? -1;
-    return (myRole === 1 || myRole === 2) && member.role !== 2;
+    return (this.myRole === 1 || this.myRole === 2) && member.role !== 2;
   }
 
   openAddDialog(): void {

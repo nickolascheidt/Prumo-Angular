@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '@core/services';
 import { TenantMember } from '@core/models';
 
@@ -15,7 +16,7 @@ import { TenantMember } from '@core/models';
   imports: [
     CommonModule, ReactiveFormsModule,
     MatDialogModule, MatFormFieldModule, MatSelectModule,
-    MatButtonModule, MatProgressSpinnerModule
+    MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule
   ],
   template: `
     <h2 mat-dialog-title>Alterar Papel</h2>
@@ -47,6 +48,7 @@ export class ChangeRoleDialogComponent {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
+    private snack: MatSnackBar,
     private dialogRef: MatDialogRef<ChangeRoleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { tenantId: string; member: TenantMember }
   ) {
@@ -59,7 +61,10 @@ export class ChangeRoleDialogComponent {
       role: this.form.value.role
     }).subscribe({
       next: () => this.dialogRef.close(true),
-      error: () => { this.saving = false; }
+      error: () => {
+        this.saving = false;
+        this.snack.open('Falha ao alterar papel.', 'OK', { duration: 4000 });
+      }
     });
   }
 }

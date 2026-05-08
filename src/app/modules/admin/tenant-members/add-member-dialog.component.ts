@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '@core/services';
 import { UserLookupResult } from '@core/models';
 
@@ -17,7 +18,7 @@ import { UserLookupResult } from '@core/models';
   imports: [
     CommonModule, ReactiveFormsModule,
     MatDialogModule, MatFormFieldModule, MatInputModule,
-    MatSelectModule, MatButtonModule, MatProgressSpinnerModule, MatIconModule
+    MatSelectModule, MatButtonModule, MatProgressSpinnerModule, MatIconModule, MatSnackBarModule
   ],
   template: `
     <h2 mat-dialog-title>Adicionar Membro</h2>
@@ -87,6 +88,7 @@ export class AddMemberDialogComponent {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
+    private snack: MatSnackBar,
     private dialogRef: MatDialogRef<AddMemberDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { tenantId: string }
   ) {
@@ -124,7 +126,10 @@ export class AddMemberDialogComponent {
       role: this.form.value.role
     }).subscribe({
       next: () => this.dialogRef.close(true),
-      error: () => { this.saving = false; }
+      error: () => {
+        this.saving = false;
+        this.snack.open('Falha ao adicionar membro.', 'OK', { duration: 4000 });
+      }
     });
   }
 }

@@ -256,7 +256,7 @@ export class ApiService {
 
   lookupUserByEmail(email: string): Observable<UserLookupResult | null> {
     return this.http.get<UserLookupResult>(
-      `${this.apiUrl}/tenants/users/lookup?email=${encodeURIComponent(email)}`
+      `${this.apiUrl}/auth/users/lookup?email=${encodeURIComponent(email)}`
     ).pipe(catchError(() => of(null)));
   }
 

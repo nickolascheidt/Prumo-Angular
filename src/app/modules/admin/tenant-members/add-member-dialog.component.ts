@@ -82,7 +82,7 @@ import { UserLookupResult } from '@core/models';
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Senha *</mat-label>
-            <input matInput formControlName="password" type="password">
+            <input matInput formControlName="password" type="password" autocomplete="new-password">
             @if (createForm.get('password')?.hasError('required') && createForm.get('password')?.touched) {
               <mat-error>Senha é obrigatória</mat-error>
             }
@@ -169,6 +169,10 @@ export class AddMemberDialogComponent {
       phoneNumber: [''],
       role: [0]
     });
+    this.lookupForm.get('email')!.valueChanges.subscribe(() => {
+      this.foundUser = null;
+      this.lookupDone = false;
+    });
   }
 
   onLookup(): void {
@@ -191,6 +195,8 @@ export class AddMemberDialogComponent {
   }
 
   onSwitchToCreate(): void {
+    this.createForm.reset({ role: 0 });
+    this.passwordError = null;
     this.mode = 'create';
   }
 
@@ -212,7 +218,7 @@ export class AddMemberDialogComponent {
       userId: this.foundUser.userId,
       role: this.lookupForm.value.role
     }).subscribe({
-      next: () => this.dialogRef.close(true),
+      next: () => { this.saving = false; this.dialogRef.close(true); },
       error: () => {
         this.saving = false;
         this.snack.open('Falha ao adicionar membro.', 'OK', { duration: 4000 });
@@ -233,7 +239,7 @@ export class AddMemberDialogComponent {
       phoneNumber: phoneNumber || undefined,
       role
     }).subscribe({
-      next: () => this.dialogRef.close(true),
+      next: () => { this.saving = false; this.dialogRef.close(true); },
       error: (err) => {
         this.saving = false;
         const msg = err?.error?.message || err?.error?.title || 'Falha ao criar usuário.';

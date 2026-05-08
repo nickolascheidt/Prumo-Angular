@@ -9,6 +9,7 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { DashboardOverviewComponent } from './modules/dashboard/overview/dashboard-overview.component';
 import { DashboardAccountingComponent } from './modules/dashboard/accounting/dashboard-accounting.component';
 import { DashboardFinanceComponent } from './modules/dashboard/finance/dashboard-finance.component';
+import { DashboardHrComponent } from './modules/dashboard/hr/dashboard-hr.component';
 import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-admin.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
@@ -20,6 +21,8 @@ import { GeneralLedgerComponent } from './modules/finance/general-ledger/general
 import { EmployeesComponent } from './modules/hr/employees/employees.component';
 import { WorklogsComponent } from './modules/hr/worklogs/worklogs.component';
 import { HrPaymentsComponent } from './modules/hr/payments/payments.component';
+import { PaymentPeriodsComponent } from './modules/hr/payment-periods/payment-periods.component';
+import { TenantMembersComponent } from './modules/admin/tenant-members/tenant-members.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -57,6 +60,7 @@ export const routes: Routes = [
             data: { roles: ['Administrador', 'Funcionario'] }
           },
           { path: 'finance', component: DashboardFinanceComponent },
+          { path: 'hr', component: DashboardHrComponent, data: { roles: ['Administrador', 'RH', 'Funcionario'] } },
           {
             path: 'admin',
             component: DashboardAdminComponent,
@@ -82,11 +86,13 @@ export const routes: Routes = [
       { path: 'admin/permissions', component: PermissionsManagementComponent, data: { roles: ['Administrador'] } },
       { path: 'admin/users-roles', component: UsersRolesManagementComponent, data: { roles: ['Administrador'] } },
       { path: 'admin/tenant', component: TenantManagementComponent },
+      { path: 'admin/members', component: TenantMembersComponent, data: { roles: ['Administrador'] } },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent },
       { path: 'finance/general-ledger', component: GeneralLedgerComponent },
       { path: 'hr/employees', component: EmployeesComponent },
       { path: 'hr/worklogs', component: WorklogsComponent },
-      { path: 'hr/payments', component: HrPaymentsComponent }
+      { path: 'hr/payments', component: HrPaymentsComponent },
+      { path: 'hr/periodos', component: PaymentPeriodsComponent }
     ]
   }
 ];

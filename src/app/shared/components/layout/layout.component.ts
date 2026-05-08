@@ -91,7 +91,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
       items: [
         { label: 'Funcionários', icon: 'badge', route: '/hr/employees' },
         { label: 'Horas', icon: 'schedule', route: '/hr/worklogs' },
-        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' }
+        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' },
+        { label: 'Períodos', icon: 'event_note', route: '/hr/periodos' }
       ]
     },
     {
@@ -113,7 +114,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Tenant (Membros & API Keys)',
           icon: 'business',
           route: '/admin/tenant'
-        }
+        },
+        { label: 'Membros do Tenant', icon: 'group', route: '/admin/members', roles: ['Administrador'] }
       ]
     }
   ];

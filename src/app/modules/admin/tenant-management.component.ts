@@ -53,9 +53,7 @@ export class TenantManagementComponent implements OnInit {
 
   members: TenantMember[] = [];
   membersLoading = false;
-  memberColumns = ['email', 'fullName', 'role', 'joinedAt', 'actions'];
-  addMemberForm!: FormGroup;
-  isAddingMember = false;
+  memberColumns = ['email', 'fullName', 'role', 'joinedAt'];
 
   apiKeys: ApiKey[] = [];
   apiKeysLoading = false;
@@ -66,7 +64,6 @@ export class TenantManagementComponent implements OnInit {
 
   TenantRole = TenantRole;
   ApiKeyType = ApiKeyType;
-  tenantRoles = [TenantRole.Member, TenantRole.Admin, TenantRole.Owner];
   apiKeyTypes = [ApiKeyType.Anon, ApiKeyType.Service];
 
   constructor(
@@ -79,10 +76,6 @@ export class TenantManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.tenantId = this.auth.getCurrentTenantId();
-    this.addMemberForm = this.fb.group({
-      userId: ['', [Validators.required]],
-      role: [TenantRole.Member, [Validators.required]]
-    });
     this.createKeyForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
       type: [ApiKeyType.Anon, [Validators.required]],
@@ -116,32 +109,6 @@ export class TenantManagementComponent implements OnInit {
         this.membersLoading = false;
         this.snackBar.open(err?.error?.message || 'Erro ao carregar membros', 'Fechar', { duration: 5000 });
       }
-    });
-  }
-
-  addMember(): void {
-    if (!this.tenantId || this.addMemberForm.invalid) return;
-    this.isAddingMember = true;
-    this.api.addTenantMember(this.tenantId, this.addMemberForm.value).subscribe({
-      next: () => {
-        this.snackBar.open('Membro adicionado', 'Fechar', { duration: 3000 });
-        this.addMemberForm.reset({ userId: '', role: TenantRole.Member });
-        this.loadMembers();
-      },
-      error: err => this.snackBar.open(err?.error?.message || 'Erro ao adicionar membro', 'Fechar', { duration: 5000 }),
-      complete: () => { this.isAddingMember = false; }
-    });
-  }
-
-  removeMember(userId: string): void {
-    if (!this.tenantId) return;
-    if (!confirm('Remover este membro do tenant?')) return;
-    this.api.removeTenantMember(this.tenantId, userId).subscribe({
-      next: () => {
-        this.snackBar.open('Membro removido', 'Fechar', { duration: 3000 });
-        this.loadMembers();
-      },
-      error: err => this.snackBar.open(err?.error?.message || 'Erro ao remover membro', 'Fechar', { duration: 5000 })
     });
   }
 

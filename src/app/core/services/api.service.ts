@@ -64,7 +64,8 @@ import {
   HrPayment,
   CreateHrPaymentRequest,
   UserLookupResult,
-  UpdateMemberRoleRequest
+  UpdateMemberRoleRequest,
+  CreateTenantUserRequest
 } from '../models';
 
 @Injectable({
@@ -243,6 +244,10 @@ export class ApiService {
     return this.http.post<void>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members`, data);
   }
 
+  createTenantUser(tenantId: string, data: CreateTenantUserRequest): Observable<TenantMember> {
+    return this.http.post<TenantMember>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/users`, data);
+  }
+
   removeTenantMember(tenantId: string, userId: string): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}`
@@ -251,7 +256,7 @@ export class ApiService {
 
   lookupUserByEmail(email: string): Observable<UserLookupResult | null> {
     return this.http.get<UserLookupResult>(
-      `${this.apiUrl}/tenants/users/lookup?email=${encodeURIComponent(email)}`
+      `${this.apiUrl}/auth/users/lookup?email=${encodeURIComponent(email)}`
     ).pipe(catchError(() => of(null)));
   }
 

@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ApiService } from '@core/services';
+import { ApiService, AuthService } from '@core/services';
 import { AppUserSummary } from '@core/models';
 
 @Component({
@@ -55,6 +55,7 @@ export class UsersRolesManagementComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -63,16 +64,26 @@ export class UsersRolesManagementComponent implements OnInit {
   }
 
   loadUsers(): void {
+    const tenantId = this.authService.getCurrentTenantId();
+    if (!tenantId) {
+      this.showErrorMessage('Nenhum tenant selecionado.');
+      return;
+    }
     this.isLoadingUsers = true;
-    this.apiService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users;
+    this.apiService.getTenantMembers(tenantId).subscribe({
+      next: (members) => {
+        this.users = members.map(m => ({
+          id: m.userId,
+          email: m.email,
+          fullName: m.fullName ?? '',
+          roles: []
+        }));
         this.applyFilter();
         this.isLoadingUsers = false;
       },
       error: (error: HttpErrorResponse) => {
         this.isLoadingUsers = false;
-        this.showError('Nao foi possivel carregar usuarios', error);
+        this.showError('Nao foi possivel carregar membros do tenant', error);
       }
     });
   }

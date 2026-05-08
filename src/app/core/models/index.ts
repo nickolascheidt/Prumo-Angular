@@ -62,6 +62,14 @@ export interface AddTenantMemberRequest {
   role: TenantRole;
 }
 
+export interface CreateTenantUserRequest {
+  email: string;
+  password: string;
+  fullName: string;
+  phoneNumber?: string;
+  role: TenantRole;
+}
+
 export interface ApiKey {
   id: string;
   name: string;

@@ -20,6 +20,7 @@ import { GeneralLedgerComponent } from './modules/finance/general-ledger/general
 import { EmployeesComponent } from './modules/hr/employees/employees.component';
 import { WorklogsComponent } from './modules/hr/worklogs/worklogs.component';
 import { HrPaymentsComponent } from './modules/hr/payments/payments.component';
+import { TenantMembersComponent } from './modules/admin/tenant-members/tenant-members.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -82,6 +83,7 @@ export const routes: Routes = [
       { path: 'admin/permissions', component: PermissionsManagementComponent, data: { roles: ['Administrador'] } },
       { path: 'admin/users-roles', component: UsersRolesManagementComponent, data: { roles: ['Administrador'] } },
       { path: 'admin/tenant', component: TenantManagementComponent },
+      { path: 'admin/members', component: TenantMembersComponent, data: { roles: ['Administrador'] } },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent },
       { path: 'finance/general-ledger', component: GeneralLedgerComponent },
       { path: 'hr/employees', component: EmployeesComponent },

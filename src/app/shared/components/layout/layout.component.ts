@@ -113,7 +113,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Tenant (Membros & API Keys)',
           icon: 'business',
           route: '/admin/tenant'
-        }
+        },
+        { label: 'Membros do Tenant', icon: 'group', route: '/admin/members', roles: ['Administrador'] }
       ]
     }
   ];

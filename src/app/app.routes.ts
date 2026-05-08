@@ -21,6 +21,7 @@ import { GeneralLedgerComponent } from './modules/finance/general-ledger/general
 import { EmployeesComponent } from './modules/hr/employees/employees.component';
 import { WorklogsComponent } from './modules/hr/worklogs/worklogs.component';
 import { HrPaymentsComponent } from './modules/hr/payments/payments.component';
+import { PaymentPeriodsComponent } from './modules/hr/payment-periods/payment-periods.component';
 import { TenantMembersComponent } from './modules/admin/tenant-members/tenant-members.component';
 
 const tenantSelectionGuard: CanActivateFn = () => {
@@ -90,7 +91,8 @@ export const routes: Routes = [
       { path: 'finance/general-ledger', component: GeneralLedgerComponent },
       { path: 'hr/employees', component: EmployeesComponent },
       { path: 'hr/worklogs', component: WorklogsComponent },
-      { path: 'hr/payments', component: HrPaymentsComponent }
+      { path: 'hr/payments', component: HrPaymentsComponent },
+      { path: 'hr/periodos', component: PaymentPeriodsComponent }
     ]
   }
 ];

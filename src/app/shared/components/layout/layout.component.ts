@@ -91,7 +91,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
       items: [
         { label: 'Funcionários', icon: 'badge', route: '/hr/employees' },
         { label: 'Horas', icon: 'schedule', route: '/hr/worklogs' },
-        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' }
+        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' },
+        { label: 'Períodos', icon: 'event_note', route: '/hr/periodos' }
       ]
     },
     {

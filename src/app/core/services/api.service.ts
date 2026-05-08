@@ -558,6 +558,12 @@ export class ApiService {
     );
   }
 
+  getAllPaymentPeriods(tenantId: string): Observable<PaymentPeriodSummary[]> {
+    return this.http.get<PaymentPeriodSummary[]>(
+      `${this.hrUrl(tenantId)}/payment-periods`
+    );
+  }
+
   generatePaymentPeriod(tenantId: string, data: GeneratePaymentPeriodRequest): Observable<PaymentPeriodSummary> {
     return this.http.post<PaymentPeriodSummary>(
       `${this.hrUrl(tenantId)}/employees/${encodeURIComponent(data.employeeId)}/payment-periods/generate`,

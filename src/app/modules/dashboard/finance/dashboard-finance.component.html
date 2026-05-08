@@ -1,5 +1,58 @@
-<div class="dash-placeholder">
-  <mat-icon>bar_chart</mat-icon>
-  <h2>Financeiro</h2>
-  <p>Dashboards financeiros em breve.</p>
+<div class="finance-dash">
+  @if (isLoading) {
+    <div class="spinner-wrap">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  }
+
+  @if (!isLoading) {
+    <!-- Summary tiles -->
+    <div class="tiles">
+      <mat-card class="tile">
+        <mat-card-content>
+          <mat-icon class="tile-icon pending">pending_actions</mat-icon>
+          <div class="tile-value">{{ totalPending | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="tile-label">A Pagar (mês)</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="tile">
+        <mat-card-content>
+          <mat-icon class="tile-icon paid">check_circle</mat-icon>
+          <div class="tile-value">{{ totalPaid | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="tile-label">Pago (mês)</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="tile">
+        <mat-card-content>
+          <mat-icon class="tile-icon total">account_balance_wallet</mat-icon>
+          <div class="tile-value">{{ grandTotal | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="tile-label">Total (mês)</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Category breakdown -->
+    @if (categoryRows.length > 0) {
+      <mat-card class="category-card">
+        <mat-card-header>
+          <mat-card-title>Despesas por Categoria</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @for (row of categoryRows; track row.name) {
+            <div class="cat-row">
+              <div class="cat-name">{{ row.name }}</div>
+              <mat-progress-bar mode="determinate" [value]="row.pct" class="cat-bar"></mat-progress-bar>
+              <div class="cat-amount">{{ row.amount | currency:'BRL':'symbol':'1.2-2' }}</div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @if (!summary) {
+      <p class="no-data">Nenhum dado disponível para este período.</p>
+    }
+  }
 </div>

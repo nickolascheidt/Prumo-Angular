@@ -9,6 +9,7 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { DashboardOverviewComponent } from './modules/dashboard/overview/dashboard-overview.component';
 import { DashboardAccountingComponent } from './modules/dashboard/accounting/dashboard-accounting.component';
 import { DashboardFinanceComponent } from './modules/dashboard/finance/dashboard-finance.component';
+import { DashboardHrComponent } from './modules/dashboard/hr/dashboard-hr.component';
 import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-admin.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
 import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
@@ -58,6 +59,7 @@ export const routes: Routes = [
             data: { roles: ['Administrador', 'Funcionario'] }
           },
           { path: 'finance', component: DashboardFinanceComponent },
+          { path: 'hr', component: DashboardHrComponent, data: { roles: ['Administrador', 'RH', 'Funcionario'] } },
           {
             path: 'admin',
             component: DashboardAdminComponent,

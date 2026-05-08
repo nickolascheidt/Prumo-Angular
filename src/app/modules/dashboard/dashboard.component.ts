@@ -26,6 +26,7 @@ export class DashboardComponent {
     { label: 'Visão Geral', route: 'overview' },
     { label: 'Contabilidade', route: 'accounting', roles: ['Administrador', 'Funcionario'] },
     { label: 'Financeiro', route: 'finance' },
+    { label: 'RH', route: 'hr', roles: ['Administrador', 'RH', 'Funcionario'] },
     { label: 'Administração', route: 'admin', roles: ['Administrador'] }
   ];
 

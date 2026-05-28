@@ -27,9 +27,6 @@ import {
   CreateTenantRequest,
   AddTenantMemberRequest,
   SelectTenantRequest,
-  ApiKey,
-  CreateApiKeyRequest,
-  CreateApiKeyResponse,
   AccountsPayableCategory,
   CreateAccountsPayableCategoryRequest,
   UpdateAccountsPayableCategoryRequest,
@@ -264,24 +261,6 @@ export class ApiService {
     return this.http.put<void>(
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/role`,
       request
-    );
-  }
-
-  // API Keys Endpoints (tenant-scoped)
-  listApiKeys(tenantId: string): Observable<ApiKey[]> {
-    return this.http.get<ApiKey[]>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys`);
-  }
-
-  createApiKey(tenantId: string, data: CreateApiKeyRequest): Observable<CreateApiKeyResponse> {
-    return this.http.post<CreateApiKeyResponse>(
-      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys`,
-      data
-    );
-  }
-
-  revokeApiKey(tenantId: string, apiKeyId: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/api-keys/${encodeURIComponent(apiKeyId)}`
     );
   }
 

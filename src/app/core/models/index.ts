@@ -23,11 +23,6 @@ export enum TenantRole {
   Owner = 2
 }
 
-export enum ApiKeyType {
-  Anon = 0,
-  Service = 1
-}
-
 export interface Tenant {
   id: string;
   name: string;
@@ -70,32 +65,6 @@ export interface CreateTenantUserRequest {
   role: TenantRole;
 }
 
-export interface ApiKey {
-  id: string;
-  name: string;
-  type: ApiKeyType;
-  prefix: string;
-  createdAt: string;
-  expiresAt?: string | null;
-  revokedAt?: string | null;
-  lastUsedAt?: string | null;
-}
-
-export interface CreateApiKeyRequest {
-  name: string;
-  type: ApiKeyType;
-  expiresAt?: string | null;
-}
-
-export interface CreateApiKeyResponse {
-  id: string;
-  name: string;
-  type: ApiKeyType;
-  key: string;
-  prefix: string;
-  expiresAt?: string | null;
-  createdAt: string;
-}
 
 export interface User {
   id: string;

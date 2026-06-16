@@ -1,0 +1,26 @@
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Azure platform DNS; used for request-time upstream resolution below.
+    resolver 168.63.129.16 valid=30s;
+
+    location /api/ {
+        # Using a variable defers DNS resolution to request time, so the
+        # container starts even if the API FQDN is not resolvable yet.
+        set $upstream ${API_URL};
+        # No URI on proxy_pass: the original request path (/api/...) is forwarded as-is.
+        proxy_pass $upstream;
+        proxy_http_version 1.1;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ${API_HOST};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

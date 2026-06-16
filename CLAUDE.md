@@ -46,7 +46,7 @@ src/app/
 
 **Backend** lives at `C:\Users\Nickolas\source\repos\SaaSBasePlatform` (sibling repo, .NET 10 / ASP.NET Core / EF Core). The full API contract is documented in `SYSTEM_OVERVIEW.md` at the root of this repo — consult it before adding or changing any HTTP call. For source-of-truth behavior, read controllers under `SaaS_BasePlatform.Api/Controllers`.
 
-**API calls** all go through `ApiService` (`core/services/api.service.ts`). The base URL is hardcoded to `http://localhost:5201/api` in development — to change it, update `ApiService` directly (the `environments/` files are not wired in for dev).
+**API calls** all go through `ApiService` (`core/services/api.service.ts`). The base URL comes from `environment.apiUrl`: `http://localhost:5201/api` in dev (`src/environments/environment.ts`) and the relative `/api` in production (`src/environments/environment.prod.ts`, swapped in via the `production` build's `fileReplacements`). In production the SPA is served by nginx, which proxies `/api` to the API container, so requests stay same-origin.
 
 **Login → bootstrap sequence** the frontend must follow:
 1. `POST /api/auth/login` → store JWT

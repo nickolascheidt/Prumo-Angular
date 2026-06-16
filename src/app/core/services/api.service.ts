@@ -64,12 +64,13 @@ import {
   UpdateMemberRoleRequest,
   CreateTenantUserRequest
 } from '../models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly apiUrl = 'http://localhost:5201/api';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

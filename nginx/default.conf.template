@@ -4,8 +4,11 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # Azure platform DNS; used for request-time upstream resolution below.
-    resolver 168.63.129.16 valid=30s;
+    # Use the container's own DNS servers (from /etc/resolv.conf, exported as
+    # NGINX_LOCAL_RESOLVERS by the nginx image's 15-local-resolvers.envsh) for
+    # request-time upstream resolution. The Azure DNS IP 168.63.129.16 is not
+    # reachable from inside the Container Apps environment.
+    resolver ${NGINX_LOCAL_RESOLVERS} valid=30s;
 
     location /api/ {
         # Using a variable defers DNS resolution to request time, so the

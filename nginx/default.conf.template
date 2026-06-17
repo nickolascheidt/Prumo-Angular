@@ -4,18 +4,13 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # Use the container's own DNS servers (from /etc/resolv.conf, exported as
-    # NGINX_LOCAL_RESOLVERS by the nginx image's 15-local-resolvers.envsh) for
-    # request-time upstream resolution. The Azure DNS IP 168.63.129.16 is not
-    # reachable from inside the Container Apps environment.
-    resolver ${NGINX_LOCAL_RESOLVERS} valid=30s;
-
     location /api/ {
-        # Using a variable defers DNS resolution to request time, so the
-        # container starts even if the API FQDN is not resolvable yet.
-        set $upstream ${API_URL};
+        # proxy_pass with the env-substituted URL as a LITERAL (no nginx variable)
+        # so nginx resolves the API host once at startup via the container's normal
+        # OS resolver (/etc/resolv.conf). Avoids the `resolver` directive, whose
+        # hardcoded Azure DNS (168.63.129.16) is unreachable inside Container Apps.
         # No URI on proxy_pass: the original request path (/api/...) is forwarded as-is.
-        proxy_pass $upstream;
+        proxy_pass ${API_URL};
         proxy_http_version 1.1;
         proxy_ssl_server_name on;
         proxy_set_header Host ${API_HOST};

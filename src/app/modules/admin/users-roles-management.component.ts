@@ -35,7 +35,9 @@ import { AppUserSummary } from '@core/models';
 })
 export class UsersRolesManagementComponent implements OnInit {
   readonly usersColumns: string[] = ['fullName', 'email', 'rolesCount', 'actions'];
-  readonly availableRoles: string[] = ['Administrador', 'Funcionario', 'Usuario', 'Cliente'];
+  // Must match the Identity roles seeded by the backend (DbInitializer.cs).
+  // 'Usuario' was offered here but is never seeded on the backend, so assigning it failed.
+  readonly availableRoles: string[] = ['Administrador', 'Funcionario', 'Cliente', 'RH', 'Financeiro', 'ContasAPagar'];
 
   users: AppUserSummary[] = [];
   filteredUsers: AppUserSummary[] = [];

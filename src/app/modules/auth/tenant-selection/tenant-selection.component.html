@@ -3,7 +3,7 @@
     <div class="tenant-card__brand">
       <mat-icon>business</mat-icon>
       <h1>Selecionar Tenant</h1>
-      <p>Escolha um tenant para continuar ou crie um novo.</p>
+      <p>Escolha um tenant para continuar.</p>
     </div>
 
     <div *ngIf="isLoading" class="loading">
@@ -25,32 +25,10 @@
     </mat-list>
 
     <p *ngIf="!isLoading && !memberships.length" class="empty-msg">
-      Você ainda não pertence a nenhum tenant. Crie o primeiro abaixo.
+      Sua conta não tem acesso a nenhum tenant. Contate um administrador.
     </p>
 
     <mat-divider></mat-divider>
-
-    <button mat-stroked-button class="toggle-create" (click)="toggleCreate()">
-      <mat-icon>{{ showCreateForm ? 'expand_less' : 'add' }}</mat-icon>
-      {{ showCreateForm ? 'Cancelar' : 'Criar novo tenant' }}
-    </button>
-
-    <form *ngIf="showCreateForm" [formGroup]="createForm" (ngSubmit)="create()" class="create-form">
-      <mat-form-field appearance="outline">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" placeholder="Acme Inc">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Slug</mat-label>
-        <input matInput formControlName="slug" placeholder="acme-inc">
-        <mat-hint>Apenas letras minúsculas, números e hífens.</mat-hint>
-      </mat-form-field>
-      <button mat-flat-button color="primary"
-              [disabled]="isCreating || createForm.invalid">
-        <mat-spinner *ngIf="isCreating" diameter="18"></mat-spinner>
-        <span *ngIf="!isCreating">Criar e entrar</span>
-      </button>
-    </form>
 
     <button mat-button class="logout-btn" (click)="logout()">
       <mat-icon>logout</mat-icon> Sair

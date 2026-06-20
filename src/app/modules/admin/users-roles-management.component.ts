@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService, AuthService } from '@core/services';
-import { AppUserSummary } from '@core/models';
+import { AppUserSummary, TenantMemberRoles } from '@core/models';
 
 @Component({
   selector: 'app-users-roles-management',
@@ -35,9 +35,9 @@ import { AppUserSummary } from '@core/models';
 })
 export class UsersRolesManagementComponent implements OnInit {
   readonly usersColumns: string[] = ['fullName', 'email', 'rolesCount', 'actions'];
-  // Must match the Identity roles seeded by the backend (DbInitializer.cs).
-  // 'Usuario' was offered here but is never seeded on the backend, so assigning it failed.
-  readonly availableRoles: string[] = ['Administrador', 'Funcionario', 'Cliente', 'RH', 'Financeiro', 'ContasAPagar'];
+  availableRoles: string[] = [];
+
+  private tenantId: string | null = null;
 
   users: AppUserSummary[] = [];
   filteredUsers: AppUserSummary[] = [];
@@ -62,17 +62,23 @@ export class UsersRolesManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.tenantId = this.authService.getCurrentTenantId();
     this.loadUsers();
   }
 
   loadUsers(): void {
-    const tenantId = this.authService.getCurrentTenantId();
-    if (!tenantId) {
+    if (!this.tenantId) {
       this.showErrorMessage('Nenhum tenant selecionado.');
       return;
     }
+
+    this.apiService.getAssignableTenantRoles(this.tenantId).subscribe({
+      next: roles => this.availableRoles = roles,
+      error: () => this.availableRoles = []
+    });
+
     this.isLoadingUsers = true;
-    this.apiService.getTenantMembers(tenantId).subscribe({
+    this.apiService.getTenantMembers(this.tenantId).subscribe({
       next: (members) => {
         this.users = members.map(m => ({
           id: m.userId,
@@ -106,27 +112,28 @@ export class UsersRolesManagementComponent implements OnInit {
       return;
     }
 
+    if (!this.tenantId) {
+      this.showErrorMessage('Nenhum tenant selecionado.');
+      return;
+    }
+
     if (this.selectedUserRoles.includes(this.roleToAssign)) {
       this.showErrorMessage(`Usuario ja possui a role '${this.roleToAssign}'.`);
       return;
     }
 
     this.isSavingRole = true;
-    this.apiService.assignRoleToUser(this.selectedUser.id, { 
-      roleName: this.roleToAssign,
-      email: this.selectedUser.email
+    this.apiService.assignMemberFeatureRole(this.tenantId, this.selectedUser.id, {
+      roleName: this.roleToAssign
     }).subscribe({
-      next: (response) => {
+      next: () => {
         this.isSavingRole = false;
-        this.showSuccess(response.message || 'Role atribuida com sucesso.');
+        this.showSuccess('Role atribuida com sucesso.');
         this.roleToAssign = '';
         this.loadSelectedUserRoles();
       },
       error: (error: HttpErrorResponse) => {
         this.isSavingRole = false;
-        console.error('[Users Roles] Erro ao atribuir role:', error);
-        console.error('[Users Roles] Status:', error.status);
-        console.error('[Users Roles] Response Body:', error.error);
         this.showError('Nao foi possivel atribuir role', error);
       }
     });
@@ -163,16 +170,21 @@ export class UsersRolesManagementComponent implements OnInit {
       return;
     }
 
+    if (!this.tenantId) {
+      this.showErrorMessage('Nenhum tenant selecionado.');
+      return;
+    }
+
     const confirmed = confirm(`Deseja remover a role "${roleName}" do usuario "${this.selectedUser.fullName}"?`);
     if (!confirmed) {
       return;
     }
 
     this.isSavingRole = true;
-    this.apiService.removeRoleFromUser(this.selectedUser.id, roleName).subscribe({
-      next: (response) => {
+    this.apiService.revokeMemberFeatureRole(this.tenantId, this.selectedUser.id, roleName).subscribe({
+      next: () => {
         this.isSavingRole = false;
-        this.showSuccess(response.message || 'Role removida com sucesso.');
+        this.showSuccess('Role removida com sucesso.');
         this.loadSelectedUserRoles();
       },
       error: (error: HttpErrorResponse) => {
@@ -187,9 +199,14 @@ export class UsersRolesManagementComponent implements OnInit {
       return;
     }
 
+    if (!this.tenantId) {
+      this.showErrorMessage('Nenhum tenant selecionado.');
+      return;
+    }
+
     this.isLoadingRoles = true;
-    this.apiService.getUserRoles(this.selectedUser.id).subscribe({
-      next: (response) => {
+    this.apiService.getMemberFeatureRoles(this.tenantId, this.selectedUser.id).subscribe({
+      next: (response: TenantMemberRoles) => {
         this.selectedUserRoles = response.roles || [];
 
         const userIndex = this.users.findIndex(u => u.id === this.selectedUser?.id);

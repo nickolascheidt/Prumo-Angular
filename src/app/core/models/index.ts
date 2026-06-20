@@ -74,7 +74,6 @@ export interface AssignFeatureRoleRequest {
   roleName: string;
 }
 
-
 export interface User {
   id: string;
   email: string;

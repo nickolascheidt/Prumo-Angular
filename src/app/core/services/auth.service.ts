@@ -99,11 +99,15 @@ export class AuthService {
   }
 
   /**
-   * Get the user's role within the currently selected tenant (from the JWT claim)
+   * Get the user's role within the currently selected tenant.
+   * Read from the JWT (not stored user state) because the tenant role is only
+   * reissued by login/selectTenant, which is exactly when the token is replaced.
+   * Returns null for any unrecognized claim value rather than trusting the cast.
    */
   getTenantRole(): 'Owner' | 'Admin' | 'Member' | null {
     const claims = this.decodeToken();
-    return claims?.['tenant_role'] ?? null;
+    const role = claims?.['tenant_role'];
+    return role === 'Owner' || role === 'Admin' || role === 'Member' ? role : null;
   }
 
   /**
@@ -239,12 +243,20 @@ export class AuthService {
     this.permissionService.setUserResourcePermissions(resourcePerms);
   }
 
-  private decodeToken(): any | null {
+  private decodeToken(): Record<string, unknown> | null {
     const token = this.getToken();
     if (!token) return null;
     try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      let payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      payload += '==='.slice((payload.length + 3) % 4); // restore base64 padding
+      // Percent-decode so non-ASCII claim values survive atob's binary string.
+      const json = decodeURIComponent(
+        atob(payload)
+          .split('')
+          .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join('')
+      );
+      return JSON.parse(json);
     } catch {
       return null;
     }

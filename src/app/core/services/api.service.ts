@@ -277,9 +277,9 @@ export class ApiService {
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles`);
   }
 
-  assignMemberFeatureRole(tenantId: string, userId: string, body: AssignFeatureRoleRequest): Observable<void> {
+  assignMemberFeatureRole(tenantId: string, userId: string, request: AssignFeatureRoleRequest): Observable<void> {
     return this.http.post<void>(
-      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles`, body);
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles`, request);
   }
 
   revokeMemberFeatureRole(tenantId: string, userId: string, roleName: string): Observable<void> {

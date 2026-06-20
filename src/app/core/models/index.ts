@@ -65,6 +65,15 @@ export interface CreateTenantUserRequest {
   role: TenantRole;
 }
 
+export interface TenantMemberRoles {
+  userId: string;
+  roles: string[];
+}
+
+export interface AssignFeatureRoleRequest {
+  roleName: string;
+}
+
 
 export interface User {
   id: string;

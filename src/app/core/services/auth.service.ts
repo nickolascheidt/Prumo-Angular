@@ -92,6 +92,29 @@ export class AuthService {
   }
 
   /**
+   * Check if the user is a master (cross-tenant) administrator
+   */
+  isMasterAdmin(): boolean {
+    return this.hasRole('Administrador');
+  }
+
+  /**
+   * Get the user's role within the currently selected tenant (from the JWT claim)
+   */
+  getTenantRole(): 'Owner' | 'Admin' | 'Member' | null {
+    const claims = this.decodeToken();
+    return claims?.['tenant_role'] ?? null;
+  }
+
+  /**
+   * Check if the user is an administrator (Owner or Admin) of the current tenant
+   */
+  isTenantAdmin(): boolean {
+    const r = this.getTenantRole();
+    return r === 'Owner' || r === 'Admin';
+  }
+
+  /**
    * Get user permissions
    */
   getPermissions(): string[] {
@@ -214,6 +237,17 @@ export class AuthService {
     localStorage.setItem(this.resourcePermissionsKey, JSON.stringify(resourcePerms));
     this.userResourcePermissionsSubject.next(resourcePerms);
     this.permissionService.setUserResourcePermissions(resourcePerms);
+  }
+
+  private decodeToken(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    } catch {
+      return null;
+    }
   }
 
   private getUserFromStorage(): User | null {

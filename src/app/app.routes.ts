@@ -1,6 +1,8 @@
 import { Routes, CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { authGuard } from './core/guards';
+import { resourceAccessGuard } from './core/guards';
+import { PermissionLevel } from './core/models';
 import { AuthService } from './core/services';
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
@@ -56,43 +58,41 @@ export const routes: Routes = [
           { path: 'overview', component: DashboardOverviewComponent },
           {
             path: 'accounting',
-            component: DashboardAccountingComponent,
-            data: { roles: ['Administrador', 'Funcionario'] }
+            component: DashboardAccountingComponent
           },
           { path: 'finance', component: DashboardFinanceComponent },
-          { path: 'hr', component: DashboardHrComponent, data: { roles: ['Administrador', 'RH', 'Funcionario'] } },
+          { path: 'hr', component: DashboardHrComponent },
           {
             path: 'admin',
-            component: DashboardAdminComponent,
-            data: { roles: ['Administrador'] }
+            component: DashboardAdminComponent
           }
         ]
       },
-      {
-        path: 'accounts-payable',
-        component: AccountsPayableListComponent,
-        data: { roles: ['Administrador', 'Funcionario'] }
-      },
-      {
-        path: 'accounts-payable/new',
-        component: AccountsPayableFormComponent,
-        data: { roles: ['Administrador', 'Funcionario'] }
-      },
-      {
-        path: 'accounts-payable/:id/edit',
-        component: AccountsPayableFormComponent,
-        data: { roles: ['Administrador', 'Funcionario'] }
-      },
-      { path: 'admin/permissions', component: PermissionsManagementComponent, data: { roles: ['Administrador'] } },
-      { path: 'admin/users-roles', component: UsersRolesManagementComponent, data: { roles: ['Administrador'] } },
+      { path: 'accounts-payable', component: AccountsPayableListComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Read } },
+      { path: 'accounts-payable/new', component: AccountsPayableFormComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
+      { path: 'accounts-payable/:id/edit', component: AccountsPayableFormComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
+      { path: 'admin/permissions', component: PermissionsManagementComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'Permission.Management', requiredLevel: PermissionLevel.Read } },
+      { path: 'admin/users-roles', component: UsersRolesManagementComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
       { path: 'admin/tenant', component: TenantManagementComponent },
-      { path: 'admin/members', component: TenantMembersComponent, data: { roles: ['Administrador'] } },
-      { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent },
-      { path: 'finance/general-ledger', component: GeneralLedgerComponent },
-      { path: 'hr/employees', component: EmployeesComponent },
-      { path: 'hr/worklogs', component: WorklogsComponent },
-      { path: 'hr/payments', component: HrPaymentsComponent },
-      { path: 'hr/periodos', component: PaymentPeriodsComponent }
+      { path: 'admin/members', component: TenantMembersComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
+      { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'ChartOfAccounts.Management', requiredLevel: PermissionLevel.Read } },
+      { path: 'finance/general-ledger', component: GeneralLedgerComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'GeneralLedger.Management', requiredLevel: PermissionLevel.Read } },
+      { path: 'hr/employees', component: EmployeesComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'HR.Employees', requiredLevel: PermissionLevel.Read } },
+      { path: 'hr/worklogs', component: WorklogsComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'HR.WorkLogs', requiredLevel: PermissionLevel.Read } },
+      { path: 'hr/payments', component: HrPaymentsComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'HR.Payments', requiredLevel: PermissionLevel.Read } },
+      { path: 'hr/periodos', component: PaymentPeriodsComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'HR.PaymentPeriods', requiredLevel: PermissionLevel.Read } }
     ]
   }
 ];

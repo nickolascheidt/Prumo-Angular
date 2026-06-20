@@ -2,7 +2,7 @@
   <nav mat-tab-nav-bar [tabPanel]="tabPanel" color="primary" class="dash-hub__nav">
     <ng-container *ngFor="let tab of tabs">
       <a
-        *ngIf="hasAccess(tab, user)"
+        *ngIf="hasAccess(tab)"
         mat-tab-link
         [routerLink]="tab.route"
         routerLinkActive

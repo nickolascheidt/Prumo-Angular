@@ -47,13 +47,13 @@
     <mat-nav-list>
       <ng-container *ngIf="currentUser$ | async as currentUser">
         <ng-container *ngFor="let section of menuSections">
-          <ng-container *ngIf="hasVisibleItems(section, currentUser)">
+          <ng-container *ngIf="hasVisibleItems(section)">
             <h2 matSubheader>{{ section.title }}</h2>
 
             <ng-container *ngFor="let item of section.items">
               <a
                 mat-list-item
-                *ngIf="hasAccess(item, currentUser)"
+                *ngIf="hasAccess(item)"
                 [routerLink]="item.route"
                 routerLinkActive="active"
                 (click)="onNavItemClick()">

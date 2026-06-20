@@ -19,7 +19,8 @@ interface NavigationItem {
   label: string;
   icon: string;
   route: string;
-  roles?: string[];
+  // Items with a resourceCode are gated by per-tenant resource access; items
+  // without one are visible to any authenticated member (e.g. Dashboard, Tenant).
   resourceCode?: string;
 }
 
@@ -169,16 +170,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  hasAccess(item: NavigationItem, user: User | null): boolean {
+  hasAccess(item: NavigationItem): boolean {
     if (item.resourceCode) {
       return this.authService.canAccessResource(item.resourceCode);
     }
-    if (!item.roles?.length) return true;
-    const userRoles = user?.roles ?? [];
-    return item.roles.some(role => userRoles.includes(role));
+    return true;
   }
 
-  hasVisibleItems(section: NavigationSection, user: User | null): boolean {
-    return section.items.some(item => this.hasAccess(item, user));
+  hasVisibleItems(section: NavigationSection): boolean {
+    return section.items.some(item => this.hasAccess(item));
   }
 }

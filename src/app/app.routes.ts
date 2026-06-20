@@ -1,7 +1,6 @@
 import { Routes, CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { authGuard } from './core/guards';
-import { resourceAccessGuard } from './core/guards';
+import { authGuard, resourceAccessGuard } from './core/guards';
 import { PermissionLevel } from './core/models';
 import { AuthService } from './core/services';
 import { LayoutComponent } from './shared/components/layout/layout.component';
@@ -58,13 +57,27 @@ export const routes: Routes = [
           { path: 'overview', component: DashboardOverviewComponent },
           {
             path: 'accounting',
-            component: DashboardAccountingComponent
+            component: DashboardAccountingComponent,
+            canActivate: [resourceAccessGuard],
+            data: { resource: 'GeneralLedger.Management', requiredLevel: PermissionLevel.Read }
           },
-          { path: 'finance', component: DashboardFinanceComponent },
-          { path: 'hr', component: DashboardHrComponent },
+          {
+            path: 'finance',
+            component: DashboardFinanceComponent,
+            canActivate: [resourceAccessGuard],
+            data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Read }
+          },
+          {
+            path: 'hr',
+            component: DashboardHrComponent,
+            canActivate: [resourceAccessGuard],
+            data: { resource: 'HR.Employees', requiredLevel: PermissionLevel.Read }
+          },
           {
             path: 'admin',
-            component: DashboardAdminComponent
+            component: DashboardAdminComponent,
+            canActivate: [resourceAccessGuard],
+            data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read }
           }
         ]
       },

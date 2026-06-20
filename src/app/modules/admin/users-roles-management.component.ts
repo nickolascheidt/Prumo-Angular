@@ -37,7 +37,11 @@ export class UsersRolesManagementComponent implements OnInit {
   readonly usersColumns: string[] = ['fullName', 'email', 'rolesCount', 'actions'];
   availableRoles: string[] = [];
 
-  private tenantId: string | null = null;
+  // Read live so a tenant switch (which updates the BehaviorSubject) can't leave
+  // role assignment pointing at a stale tenant.
+  private get tenantId(): string | null {
+    return this.authService.getCurrentTenantId();
+  }
 
   users: AppUserSummary[] = [];
   filteredUsers: AppUserSummary[] = [];
@@ -62,7 +66,6 @@ export class UsersRolesManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tenantId = this.authService.getCurrentTenantId();
     this.loadUsers();
   }
 
@@ -74,7 +77,10 @@ export class UsersRolesManagementComponent implements OnInit {
 
     this.apiService.getAssignableTenantRoles(this.tenantId).subscribe({
       next: roles => this.availableRoles = roles,
-      error: () => this.availableRoles = []
+      error: (error: HttpErrorResponse) => {
+        this.availableRoles = [];
+        this.showError('Nao foi possivel carregar as roles atribuiveis', error);
+      }
     });
 
     this.isLoadingUsers = true;

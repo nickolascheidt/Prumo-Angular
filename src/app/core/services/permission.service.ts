@@ -7,7 +7,8 @@ import {
   GrantPermissionRequest,
   PermissionAuditLog,
   UserResourcePermissions,
-  PermissionLevel
+  PermissionLevel,
+  normalizeUserResourcePermissions
 } from '../models';
 import { ApiService } from './api.service';
 
@@ -100,7 +101,7 @@ export class PermissionService {
    * Set user resource permissions
    */
   setUserResourcePermissions(resourcePerms: UserResourcePermissions): void {
-    this.userResourcePermissionsSubject.next(resourcePerms);
+    this.userResourcePermissionsSubject.next(normalizeUserResourcePermissions(resourcePerms));
   }
 
   /**

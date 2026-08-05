@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { LoginRequest, AuthResponse, User, UserResourcePermissions, PermissionLevel, TenantMembership } from '../models';
+import { LoginRequest, AuthResponse, User, UserResourcePermissions, PermissionLevel, TenantMembership, normalizeUserResourcePermissions } from '../models';
 import { ApiService } from './api.service';
 import { PermissionService } from './permission.service';
 
@@ -238,9 +238,12 @@ export class AuthService {
   }
 
   private storeResourcePermissions(resourcePerms: UserResourcePermissions): void {
-    localStorage.setItem(this.resourcePermissionsKey, JSON.stringify(resourcePerms));
-    this.userResourcePermissionsSubject.next(resourcePerms);
-    this.permissionService.setUserResourcePermissions(resourcePerms);
+    // Normalize before persisting: the API sends levels as strings ("Full"), and
+    // every access check compares them against the numeric PermissionLevel enum.
+    const normalized = normalizeUserResourcePermissions(resourcePerms);
+    localStorage.setItem(this.resourcePermissionsKey, JSON.stringify(normalized));
+    this.userResourcePermissionsSubject.next(normalized);
+    this.permissionService.setUserResourcePermissions(normalized);
   }
 
   private decodeToken(): Record<string, unknown> | null {
@@ -276,11 +279,13 @@ export class AuthService {
       if (permissions.length > 0) {
         this.permissionService.setUserPermissions(permissions);
       }
-      // Load stored resource permissions
+      // Load stored resource permissions. Re-normalize: a payload persisted by an
+      // older build may still hold string levels.
       const resourcePerms = this.getUserResourcePermissions();
       if (resourcePerms) {
-        this.userResourcePermissionsSubject.next(resourcePerms);
-        this.permissionService.setUserResourcePermissions(resourcePerms);
+        const normalized = normalizeUserResourcePermissions(resourcePerms);
+        this.userResourcePermissionsSubject.next(normalized);
+        this.permissionService.setUserResourcePermissions(normalized);
       }
     }
   }

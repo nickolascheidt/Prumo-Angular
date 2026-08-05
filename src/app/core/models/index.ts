@@ -126,6 +126,46 @@ export enum PermissionLevel {
   Full = 3
 }
 
+/**
+ * The API serializes enums as strings (JsonStringEnumConverter), so permission
+ * levels arrive as "Full"/"Read"/… while this enum is numeric. Comparing the raw
+ * value against a numeric level is always false, so every payload must be
+ * normalized before it reaches the access checks.
+ */
+export function toPermissionLevel(value: unknown): PermissionLevel {
+  if (typeof value === 'number') {
+    return value >= PermissionLevel.None && value <= PermissionLevel.Full
+      ? value
+      : PermissionLevel.None;
+  }
+  if (typeof value === 'string') {
+    const parsed = PermissionLevel[value as keyof typeof PermissionLevel];
+    if (typeof parsed === 'number') return parsed;
+    // Numeric levels can still arrive as strings (e.g. rehydrated from storage).
+    const numeric = Number(value);
+    if (Number.isInteger(numeric)) return toPermissionLevel(numeric);
+  }
+  return PermissionLevel.None;
+}
+
+/** Returns a copy of the payload with every permission level as a numeric enum. */
+export function normalizeUserResourcePermissions(
+  perms: UserResourcePermissions
+): UserResourcePermissions {
+  return {
+    ...perms,
+    allowedResources: (perms.allowedResources ?? []).map(r => ({
+      ...r,
+      userPermissionLevel: toPermissionLevel(r.userPermissionLevel)
+    })),
+    resourcePermissions: Object.fromEntries(
+      Object.entries(perms.resourcePermissions ?? {}).map(
+        ([code, level]) => [code, toPermissionLevel(level)]
+      )
+    )
+  };
+}
+
 export interface Resource {
   id: string;
   code: string;

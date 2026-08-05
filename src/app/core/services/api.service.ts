@@ -62,7 +62,9 @@ import {
   CreateHrPaymentRequest,
   UserLookupResult,
   UpdateMemberRoleRequest,
-  CreateTenantUserRequest
+  CreateTenantUserRequest,
+  TenantMemberRoles,
+  AssignFeatureRoleRequest
 } from '../models';
 import { environment } from '../../../environments/environment';
 
@@ -263,6 +265,26 @@ export class ApiService {
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/role`,
       request
     );
+  }
+
+  getAssignableTenantRoles(tenantId: string): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/assignable-roles`);
+  }
+
+  getMemberFeatureRoles(tenantId: string, userId: string): Observable<TenantMemberRoles> {
+    return this.http.get<TenantMemberRoles>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles`);
+  }
+
+  assignMemberFeatureRole(tenantId: string, userId: string, request: AssignFeatureRoleRequest): Observable<void> {
+    return this.http.post<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles`, request);
+  }
+
+  revokeMemberFeatureRole(tenantId: string, userId: string, roleName: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}/roles/${encodeURIComponent(roleName)}`);
   }
 
   // Accounts Payable Endpoints (tenant-scoped)

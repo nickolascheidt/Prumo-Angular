@@ -9,7 +9,7 @@ import { User } from '@core/models';
 interface DashTab {
   label: string;
   route: string;
-  roles?: string[];
+  resourceCode?: string;
 }
 
 @Component({
@@ -24,19 +24,18 @@ export class DashboardComponent {
 
   readonly tabs: DashTab[] = [
     { label: 'Visão Geral', route: 'overview' },
-    { label: 'Contabilidade', route: 'accounting', roles: ['Administrador', 'Funcionario'] },
-    { label: 'Financeiro', route: 'finance' },
-    { label: 'RH', route: 'hr', roles: ['Administrador', 'RH', 'Funcionario'] },
-    { label: 'Administração', route: 'admin', roles: ['Administrador'] }
+    { label: 'Contabilidade', route: 'accounting', resourceCode: 'GeneralLedger.Management' },
+    { label: 'Financeiro', route: 'finance', resourceCode: 'AccountsPayable.Entries' },
+    { label: 'RH', route: 'hr', resourceCode: 'HR.Employees' },
+    { label: 'Administração', route: 'admin', resourceCode: 'User.Management' }
   ];
 
   constructor(private authService: AuthService) {
     this.currentUser$ = this.authService.currentUser$;
   }
 
-  hasAccess(tab: DashTab, user: User | null): boolean {
-    if (!tab.roles?.length) return true;
-    const userRoles = user?.roles ?? [];
-    return tab.roles.some(r => userRoles.includes(r));
+  hasAccess(tab: DashTab): boolean {
+    if (!tab.resourceCode) return true;
+    return this.authService.canAccessResource(tab.resourceCode);
   }
 }

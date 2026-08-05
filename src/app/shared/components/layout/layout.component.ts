@@ -19,7 +19,8 @@ interface NavigationItem {
   label: string;
   icon: string;
   route: string;
-  roles?: string[];
+  // Items with a resourceCode are gated by per-tenant resource access; items
+  // without one are visible to any authenticated member (e.g. Dashboard, Tenant).
   resourceCode?: string;
 }
 
@@ -65,7 +66,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Lançamentos',
           icon: 'request_quote',
           route: '/accounts-payable',
-          roles: ['Administrador', 'Funcionario']
+          resourceCode: 'AccountsPayable.Entries'
         }
       ]
     },
@@ -76,23 +77,23 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Plano de Contas',
           icon: 'account_tree',
           route: '/finance/chart-of-accounts',
-          roles: ['Administrador']
+          resourceCode: 'ChartOfAccounts.Management'
         },
         {
           label: 'Razão Geral',
           icon: 'menu_book',
           route: '/finance/general-ledger',
-          roles: ['Administrador']
+          resourceCode: 'GeneralLedger.Management'
         }
       ]
     },
     {
       title: 'RH',
       items: [
-        { label: 'Funcionários', icon: 'badge', route: '/hr/employees' },
-        { label: 'Horas', icon: 'schedule', route: '/hr/worklogs' },
-        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments' },
-        { label: 'Períodos', icon: 'event_note', route: '/hr/periodos' }
+        { label: 'Funcionários', icon: 'badge', route: '/hr/employees', resourceCode: 'HR.Employees' },
+        { label: 'Horas', icon: 'schedule', route: '/hr/worklogs', resourceCode: 'HR.WorkLogs' },
+        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments', resourceCode: 'HR.Payments' },
+        { label: 'Períodos', icon: 'event_note', route: '/hr/periodos', resourceCode: 'HR.PaymentPeriods' }
       ]
     },
     {
@@ -102,20 +103,20 @@ export class LayoutComponent implements OnInit, OnDestroy {
           label: 'Permissões por Role',
           icon: 'security',
           route: '/admin/permissions',
-          roles: ['Administrador']
+          resourceCode: 'Permission.Management'
         },
         {
           label: 'Roles por Usuário',
           icon: 'manage_accounts',
           route: '/admin/users-roles',
-          roles: ['Administrador']
+          resourceCode: 'User.Management'
         },
         {
           label: 'Tenant',
           icon: 'business',
           route: '/admin/tenant'
         },
-        { label: 'Membros do Tenant', icon: 'group', route: '/admin/members', roles: ['Administrador'] }
+        { label: 'Membros do Tenant', icon: 'group', route: '/admin/members', resourceCode: 'User.Management' }
       ]
     }
   ];
@@ -169,16 +170,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  hasAccess(item: NavigationItem, user: User | null): boolean {
+  hasAccess(item: NavigationItem): boolean {
     if (item.resourceCode) {
       return this.authService.canAccessResource(item.resourceCode);
     }
-    if (!item.roles?.length) return true;
-    const userRoles = user?.roles ?? [];
-    return item.roles.some(role => userRoles.includes(role));
+    return true;
   }
 
-  hasVisibleItems(section: NavigationSection, user: User | null): boolean {
-    return section.items.some(item => this.hasAccess(item, user));
+  hasVisibleItems(section: NavigationSection): boolean {
+    return section.items.some(item => this.hasAccess(item));
   }
 }

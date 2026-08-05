@@ -92,6 +92,33 @@ export class AuthService {
   }
 
   /**
+   * Check if the user is a master (cross-tenant) administrator
+   */
+  isMasterAdmin(): boolean {
+    return this.hasRole('Administrador');
+  }
+
+  /**
+   * Get the user's role within the currently selected tenant.
+   * Read from the JWT (not stored user state) because the tenant role is only
+   * reissued by login/selectTenant, which is exactly when the token is replaced.
+   * Returns null for any unrecognized claim value rather than trusting the cast.
+   */
+  getTenantRole(): 'Owner' | 'Admin' | 'Member' | null {
+    const claims = this.decodeToken();
+    const role = claims?.['tenant_role'];
+    return role === 'Owner' || role === 'Admin' || role === 'Member' ? role : null;
+  }
+
+  /**
+   * Check if the user is an administrator (Owner or Admin) of the current tenant
+   */
+  isTenantAdmin(): boolean {
+    const r = this.getTenantRole();
+    return r === 'Owner' || r === 'Admin';
+  }
+
+  /**
    * Get user permissions
    */
   getPermissions(): string[] {
@@ -214,6 +241,25 @@ export class AuthService {
     localStorage.setItem(this.resourcePermissionsKey, JSON.stringify(resourcePerms));
     this.userResourcePermissionsSubject.next(resourcePerms);
     this.permissionService.setUserResourcePermissions(resourcePerms);
+  }
+
+  private decodeToken(): Record<string, unknown> | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      let payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      payload += '==='.slice((payload.length + 3) % 4); // restore base64 padding
+      // Percent-decode so non-ASCII claim values survive atob's binary string.
+      const json = decodeURIComponent(
+        atob(payload)
+          .split('')
+          .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join('')
+      );
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
   }
 
   private getUserFromStorage(): User | null {

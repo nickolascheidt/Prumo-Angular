@@ -9,16 +9,16 @@ import { PermissionService } from './permission.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly tokenKey = 'saas_baseplatform_token';
-  private readonly userKey = 'saas_baseplatform_user';
-  private readonly permissionsKey = 'saas_baseplatform_permissions';
-  private readonly resourcePermissionsKey = 'saas_baseplatform_resource_permissions';
-  private readonly tenantIdKey = 'saas_baseplatform_tenant_id';
+  private readonly tokenKey = 'prumo_token';
+  private readonly userKey = 'prumo_user';
+  private readonly permissionsKey = 'prumo_permissions';
+  private readonly resourcePermissionsKey = 'prumo_resource_permissions';
+  private readonly tenantIdKey = 'prumo_tenant_id';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
   private userResourcePermissionsSubject = new BehaviorSubject<UserResourcePermissions | null>(null);
   public userResourcePermissions$ = this.userResourcePermissionsSubject.asObservable();
-  private currentTenantIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('saas_baseplatform_tenant_id'));
+  private currentTenantIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('prumo_tenant_id'));
   public currentTenantId$ = this.currentTenantIdSubject.asObservable();
 
   constructor(

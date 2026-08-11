@@ -1,6 +1,6 @@
-# SaaS Base Platform — Frontend
+# Prumo ERP — Frontend
 
-Angular 18 SPA for the SaaS Base Platform — a multi-tenant ERP with accounts payable, financial core (Chart of Accounts + General Ledger), role-based access control, and tenant management.
+Angular 18 SPA for Prumo — a multi-tenant ERP with accounts payable, financial core (Chart of Accounts + General Ledger), role-based access control, and tenant management.
 
 ## Tech Stack
 
@@ -82,10 +82,10 @@ src/app/
 3. `GET /api/resources/my-permissions` → resource-level access (drives button visibility)
 
 **localStorage keys:**
-- `saas_baseplatform_token`
-- `saas_baseplatform_user`
-- `saas_baseplatform_permissions`
-- `saas_baseplatform_resource_permissions`
+- `prumo_token`
+- `prumo_user`
+- `prumo_permissions`
+- `prumo_resource_permissions`
 
 **Dual permission system:**
 

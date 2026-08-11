@@ -44,7 +44,7 @@ src/app/
 
 ## Key Patterns
 
-**Backend** lives at `C:\Users\Nickolas\source\repos\SaaSBasePlatform` (sibling repo, .NET 10 / ASP.NET Core / EF Core). The full API contract is documented in `SYSTEM_OVERVIEW.md` at the root of this repo — consult it before adding or changing any HTTP call. For source-of-truth behavior, read controllers under `SaaS_BasePlatform.Api/Controllers`.
+**Backend** lives at `C:\Users\Nickolas\source\repos\SaaSBasePlatform` (sibling repo, .NET 10 / ASP.NET Core / EF Core). The full API contract is documented in `SYSTEM_OVERVIEW.md` at the root of this repo — consult it before adding or changing any HTTP call. For source-of-truth behavior, read controllers under `Prumo.Api/Controllers`.
 
 **API calls** all go through `ApiService` (`core/services/api.service.ts`). The base URL comes from `environment.apiUrl`: `http://localhost:5201/api` in dev (`src/environments/environment.ts`) and the relative `/api` in production (`src/environments/environment.prod.ts`, swapped in via the `production` build's `fileReplacements`). In production the SPA is served by nginx, which proxies `/api` to the API container, so requests stay same-origin.
 
@@ -56,10 +56,10 @@ src/app/
 **Backend errors** use the envelope `{ "message": "..." }`. Watch for `429` from rate limits (`public` policy = 10/min on login/register; `authenticated` = 100/60s). JWT clock skew is zero, so `401` can mean a token that expired seconds ago.
 
 **Auth** uses JWT tokens stored in `localStorage` under the keys:
-- `saas_baseplatform_token`
-- `saas_baseplatform_user`
-- `saas_baseplatform_permissions`
-- `saas_baseplatform_resource_permissions`
+- `prumo_token`
+- `prumo_user`
+- `prumo_permissions`
+- `prumo_resource_permissions`
 
 **Permissions** follow a dual system:
 1. **Module permissions** — dot-notation strings (e.g., `"employees.view"`, supports `*` wildcard) checked via `PermissionService.userHasPermission()`

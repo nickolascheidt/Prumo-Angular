@@ -1,8 +1,8 @@
-# SaaS_BasePlatform ERP - Instruções de Desenvolvimento
+# Prumo ERP - Instruções de Desenvolvimento
 
 ## Estrutura do Projeto
 
-Este é um projeto Angular 18 para o sistema ERP da SaaS_BasePlatform.
+Este é um projeto Angular 18 para o sistema ERP da Prumo.
 
 ### Diretórios Principais
 
@@ -50,7 +50,7 @@ Base URL: `https://localhost:7145/api` (desenvolvimento)
 
 ## Autenticação
 
-O token JWT é armazenado em `localStorage` com a chave `saas_baseplatform_token`.
+O token JWT é armazenado em `localStorage` com a chave `prumo_token`.
 
 O interceptador `JwtInterceptor` adiciona automaticamente o token a todas as requisições.
 

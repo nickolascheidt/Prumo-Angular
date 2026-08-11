@@ -12,5 +12,5 @@ FROM nginx:1.27-alpine AS final
 ENV API_URL=http://localhost:5201
 ENV API_HOST=localhost:5201
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
-COPY --from=build /src/dist/saas-baseplatform-erp /usr/share/nginx/html
+COPY --from=build /src/dist/prumo-erp /usr/share/nginx/html
 EXPOSE 8080

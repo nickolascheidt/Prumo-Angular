@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "saas-baseplatform-erp": {
+    "prumo-erp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/saas-baseplatform-erp",
+            "outputPath": "dist/prumo-erp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "saas-baseplatform-erp:build:production"
+              "buildTarget": "prumo-erp:build:production"
             },
             "development": {
-              "buildTarget": "saas-baseplatform-erp:build:development"
+              "buildTarget": "prumo-erp:build:development"
             }
           },
           "defaultConfiguration": "development"

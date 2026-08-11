@@ -1,7 +1,7 @@
 {
-  "name": "saas-baseplatform-erp",
+  "name": "prumo-erp",
   "version": "1.0.0",
-  "description": "ERP Frontend para SaaS_BasePlatform - Sistema de Gestão de Funcionários, Horas e Pagamentos",
+  "description": "ERP Frontend para Prumo - Sistema de Gestão de Funcionários, Horas e Pagamentos",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

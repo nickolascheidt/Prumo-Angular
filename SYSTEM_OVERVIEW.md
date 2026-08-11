@@ -1,4 +1,4 @@
-# SaaS Base Platform — Visão Geral do Sistema
+# Prumo ERP — Visão Geral do Sistema
 
 Este documento descreve a arquitetura, regras de negócio e todos os endpoints da API REST do backend. Ele foi criado para orientar o desenvolvimento do **frontend**.
 
@@ -21,11 +21,11 @@ Este documento descreve a arquitetura, regras de negócio e todos os endpoints d
 
 ```
 SaaSBasePlatform/
-├── SaaS_BasePlatform.Domain          # Entidades, Enums, DTOs de domínio, catálogo de permissões
-├── SaaS_BasePlatform.Application     # Serviços de aplicação, DTOs de aplicação, interfaces
-├── SaaS_BasePlatform.Infrastructure  # Implementações (EF Core, JWT, Identity)
-├── SaaS_BasePlatform.Api             # Controllers, Middlewares, Program.cs
-└── SaaS_BasePlatform.Tests           # Testes automatizados
+├── Prumo.Domain          # Entidades, Enums, DTOs de domínio, catálogo de permissões
+├── Prumo.Application     # Serviços de aplicação, DTOs de aplicação, interfaces
+├── Prumo.Infrastructure  # Implementações (EF Core, JWT, Identity)
+├── Prumo.Api             # Controllers, Middlewares, Program.cs
+└── Prumo.Tests           # Testes automatizados
 ```
 
 ---

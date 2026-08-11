@@ -95,7 +95,7 @@ Frontend interface has `resources: UserResourcePermission[]` with no `allowedRes
 - Replace `UserResourcePermissions` interface with the correct shape
 - Add `AllowedResource` interface matching the backend object
 - Update `AuthService` and any component reading `resources[]` to use `allowedResources` and `resourcePermissions`
-- The `resourcePermissions` map must be stored in `localStorage` under `saas_baseplatform_resource_permissions` (already the right key, just needs the right shape)
+- The `resourcePermissions` map must be stored in `localStorage` under `prumo_resource_permissions` (already the right key, just needs the right shape)
 
 ---
 

@@ -129,6 +129,12 @@ export class ApiService {
     return this.http.get<PermissionCatalog>(`${this.apiUrl}/permissions/catalog`);
   }
 
+  /** Roles canônicas configuráveis na tela de Permissões por Role. Nunca chumbe esta
+   *  lista no frontend: foi assim que a role fantasma "Usuario" sobreviveu. */
+  getConfigurableRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/permissions/roles`);
+  }
+
   getRolePermissions(roleName: string): Observable<RolePermissionsResponse> {
     return this.http.get<RolePermissionsResponse>(`${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}`);
   }

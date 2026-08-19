@@ -47,7 +47,10 @@ interface CatalogPermissionOption {
   styleUrls: ['./permissions-management.component.scss']
 })
 export class PermissionsManagementComponent implements OnInit {
-  readonly availableRoles: string[] = ['Administrador', 'Funcionario', 'Cliente', 'Usuario'];
+  // Vem do backend (`GET /api/permissions/roles`). Chumbar esta lista foi o item 2 do
+  // backlog: inventava uma role "Usuario" que nunca existiu e escondia RH, Financeiro
+  // e ContasAPagar da tela.
+  availableRoles: string[] = [];
   readonly rolePermissionColumns: string[] = ['name', 'description', 'actions'];
   readonly auditColumns: string[] = ['performedAt', 'action', 'permissionName', 'performedByUserEmail', 'reason'];
 
@@ -70,6 +73,7 @@ export class PermissionsManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadRoles();
     this.loadCatalog();
     this.reloadRoleData();
   }
@@ -147,6 +151,24 @@ export class PermissionsManagementComponent implements OnInit {
 
   readInputValue(event: Event): string {
     return (event.target as HTMLInputElement)?.value ?? '';
+  }
+
+  private loadRoles(): void {
+    this.apiService.getConfigurableRoles().subscribe({
+      next: (roles) => {
+        this.availableRoles = roles;
+        // Se a role pré-selecionada não existir mais no backend, cai na primeira que
+        // existe em vez de deixar o select apontando para nada.
+        if (roles.length > 0 && !roles.includes(this.selectedRole)) {
+          this.selectedRole = roles[0];
+          this.reloadRoleData();
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.availableRoles = [];
+        this.showError('Nao foi possivel carregar as roles', error);
+      }
+    });
   }
 
   private loadCatalog(): void {

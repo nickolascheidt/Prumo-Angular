@@ -22,10 +22,8 @@
   </ng-container>
 
   <mat-menu #userMenu="matMenu" xPosition="before">
-    <button mat-menu-item>
-      <mat-icon>settings</mat-icon>
-      <span>Configurações</span>
-    </button>
+    <!-- "Configurações" ficou oculto: era um mat-menu-item sem (click), que não fazia
+         nada. Decisão do backlog (item 6): ocultar em vez de inventar uma tela no MVP. -->
     <button mat-menu-item (click)="switchTenant()">
       <mat-icon>swap_horiz</mat-icon>
       <span>Trocar Tenant</span>

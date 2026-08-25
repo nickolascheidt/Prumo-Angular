@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #673ab7 0%, #f5576c 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   padding: 24px;
 }
 
@@ -21,7 +21,7 @@
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: #673ab7;
+      color: var(--color-primary);
     }
 
     h1 { margin: 8px 0 4px; font-size: 22px; }

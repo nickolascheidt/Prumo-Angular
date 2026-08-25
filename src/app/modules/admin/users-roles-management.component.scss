@@ -12,8 +12,8 @@
 .page-header__icon {
   width: 52px; height: 52px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: #fff;
+  background: var(--gradient-accent);
+  color: var(--color-text-inverse);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -37,8 +37,8 @@ table { width: 100%; }
 .user-cell__avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff; font-weight: 600; font-size: 13px;
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse); font-weight: var(--font-semibold); font-size: 13px;
   display: flex; align-items: center; justify-content: center;
 }
 .muted { color: var(--color-text-muted); }
@@ -47,7 +47,7 @@ table { width: 100%; }
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 26px; height: 22px; padding: 0 8px;
   border-radius: 999px;
-  background: rgba(102, 126, 234, 0.12);
+  background: var(--color-primary-light);
   color: var(--color-primary-700);
   font-size: 12px; font-weight: 600;
 }
@@ -63,8 +63,8 @@ table { width: 100%; }
 .selected-head__avatar {
   width: 48px; height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff; font-weight: 600; font-size: 18px;
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse); font-weight: var(--font-semibold); font-size: 18px;
   display: flex; align-items: center; justify-content: center;
 }
 .selected-head h3 { margin: 0; font-size: 16px; font-weight: 600; }

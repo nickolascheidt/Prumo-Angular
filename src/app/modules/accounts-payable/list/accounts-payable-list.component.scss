@@ -14,8 +14,8 @@
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #673ab7, #f5576c);
-    color: #fff;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: var(--color-text-inverse);
     display: flex; align-items: center; justify-content: center;
     mat-icon { font-size: 28px; width: 28px; height: 28px; }
   }
@@ -58,8 +58,8 @@
   align-items: center;
   gap: 4px;
 
-  &--overdue { color: #c62828; font-weight: 500; }
-  .overdue-icon { font-size: 18px; width: 18px; height: 18px; color: #c62828; }
+  &--overdue { color: var(--color-error); font-weight: var(--font-medium); }
+  .overdue-icon { font-size: 18px; width: 18px; height: 18px; color: var(--color-error); }
 }
 
 .status-chip {
@@ -69,8 +69,8 @@
   font-size: 12px;
   font-weight: 500;
 
-  &--pending { background: #fff3e0; color: #e65100; }
-  &--overdue { background: #ffebee; color: #c62828; }
-  &--paid { background: #e8f5e9; color: #2e7d32; }
-  &--cancelled { background: #eeeeee; color: #616161; }
+  &--pending { background: var(--chip-pending-bg); color: var(--chip-pending-text); }
+  &--overdue { background: var(--chip-overdue-bg); color: var(--chip-overdue-text); }
+  &--paid { background: var(--chip-paid-bg); color: var(--chip-paid-text); }
+  &--cancelled { background: var(--chip-cancelled-bg); color: var(--chip-cancelled-text); }
 }

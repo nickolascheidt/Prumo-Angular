@@ -17,8 +17,8 @@
   width: 52px; height: 52px;
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
   flex-shrink: 0;
 }
 .page-header__icon mat-icon { font-size: 28px; width: 28px; height: 28px; }
@@ -32,8 +32,8 @@
 .status-card__icon {
   width: 44px; height: 44px;
   border-radius: 12px;
-  background: rgba(255, 111, 0, 0.12);
-  color: #ef6c00;
+  background: var(--color-warn-light);
+  color: var(--chip-pending-text);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }

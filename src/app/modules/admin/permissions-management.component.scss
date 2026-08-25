@@ -12,8 +12,8 @@
 .page-header__icon {
   width: 52px; height: 52px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -62,8 +62,8 @@ table { width: 100%; }
   background: var(--color-surface-alt);
   color: var(--color-text-muted);
 }
-.audit-action--grant { background: rgba(22, 163, 74, 0.12); color: var(--color-success); }
-.audit-action--revoke { background: rgba(245, 87, 108, 0.12); color: var(--color-accent); }
+.audit-action--grant { background: var(--color-success-light); color: var(--color-success); }
+.audit-action--revoke { background: var(--color-accent-light); color: var(--color-accent); }
 
 .no-data {
   margin: 0;

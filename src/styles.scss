@@ -3,45 +3,135 @@
 
 /* ============================================
    Design Tokens
+
+   Espelho do design system "SaaS Base Platform Design System"
+   (claude.ai/design, projeto 019df28f-17ee-750e-a62f-64153583d01b),
+   arquivo `colors_and_type.css`. Aquele projeto é a fonte da verdade:
+   token novo ou valor alterado nasce lá e desce para cá.
+
+   NÃO chumbe hex em .scss de componente — referencie um token daqui.
+   Se o valor que você precisa não existe, ele nasce no design system
+   primeiro, não como exceção local.
    ============================================ */
 :root {
+  /* Marca */
   --color-primary: #673ab7;
   --color-primary-600: #5e35b1;
   --color-primary-700: #512da8;
-  --color-accent: #f5576c;
-  --color-warn: #ff6f00;
-  --color-success: #16a34a;
-  --color-info: #0284c7;
+  --color-primary-light: rgba(102, 126, 234, 0.12);
 
+  --color-accent: #f5576c;
+  --color-accent-light: rgba(245, 87, 108, 0.12);
+
+  /* Semânticas */
+  --color-warn: #ff6f00;
+  --color-warn-light: rgba(255, 111, 0, 0.12);
+  --color-success: #16a34a;
+  --color-success-light: rgba(22, 163, 74, 0.12);
+  --color-info: #0284c7;
+  --color-info-light: rgba(2, 132, 199, 0.12);
+  --color-error: #c62828;
+  --color-error-light: rgba(198, 40, 40, 0.12);
+
+  /* Gradientes */
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+  --gradient-login: linear-gradient(135deg, #667eea 0%, #764ba2 60%, #5e35b1 100%);
+  --gradient-toolbar: linear-gradient(135deg, #5e35b1 0%, #764ba2 100%);
 
+  /* Orbes decorativos do fundo do login */
+  --color-login-orb-a: #f093fb;
+  --color-login-orb-b: #4facfe;
+
+  /* Superfícies */
   --color-bg: #f4f6fb;
   --color-surface: #ffffff;
   --color-surface-alt: #f8fafc;
   --color-border: #e6ebf2;
   --color-border-strong: #cfd6e2;
 
+  /* Texto */
   --color-text: #1f2937;
   --color-text-muted: #5b6577;
   --color-text-subtle: #8a93a4;
+  --color-text-inverse: #ffffff;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* Chips de status */
+  --chip-pending-bg: #fff3e0;
+  --chip-pending-text: #e65100;
+  --chip-overdue-bg: #ffebee;
+  --chip-overdue-text: #c62828;
+  --chip-paid-bg: #e8f5e9;
+  --chip-paid-text: #2e7d32;
+  --chip-cancelled-bg: #eeeeee;
+  --chip-cancelled-text: #616161;
 
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+  /* Tipografia */
+  --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-icon: 'Material Icons';
 
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 17px;
+  --text-2xl: 20px;
+  --text-3xl: 22px;
+  --text-4xl: 26px;
+
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --tracking-tight: 0.2px;
+  --tracking-normal: 0.3px;
+  --tracking-wide: 0.5px;
+  --tracking-wider: 0.6px;
+  --tracking-widest: 1.5px;
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.5;
+
+  /* Espaçamento (grid de 4px) */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 20px;
   --space-6: 24px;
+  --space-7: 28px;
   --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Raio */
+  --radius-xs: 6px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 20px;
+  --radius-pill: 999px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.25);
+  --shadow-primary: 0 8px 16px rgba(102, 126, 234, 0.4);
+  --shadow-hero: 0 12px 32px rgba(102, 126, 234, 0.25);
+  --shadow-toolbar: 0 2px 12px rgba(15, 23, 42, 0.15);
+
+  /* Layout */
+  --toolbar-height: 64px;
+  --sidenav-width: 260px;
+  --content-max-width: 1280px;
+  --page-padding: 24px;
 }
 
 /* ============================================

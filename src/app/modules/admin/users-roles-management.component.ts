@@ -86,11 +86,14 @@ export class UsersRolesManagementComponent implements OnInit {
     this.isLoadingUsers = true;
     this.apiService.getTenantMembers(this.tenantId).subscribe({
       next: (members) => {
+        // As roles vêm no próprio payload de membros. Antes nasciam [] e só eram
+        // buscadas ao clicar no usuário, então a coluna mostrava 0 para todo mundo.
         this.users = members.map(m => ({
           id: m.userId,
           email: m.email,
           fullName: m.fullName ?? '',
-          roles: []
+          roles: m.roles ?? [],
+          isMasterAdmin: m.isMasterAdmin
         }));
         this.applyFilter();
         this.isLoadingUsers = false;

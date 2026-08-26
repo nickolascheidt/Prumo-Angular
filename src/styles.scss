@@ -229,6 +229,49 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }
 
 /* ============================================
+   Classes base do design system
+
+   Espelho de colors_and_type.css (Claude Design, projeto
+   "SaaS Base Platform Design System"). Valor novo ou alterado nasce lá e
+   desce para cá — não o contrário.
+
+   Estilo de componente Angular ganha por especificidade (o atributo
+   _ngcontent), então uma tela que já define .page-header localmente
+   continua igual; estas valem para quem não define.
+   ============================================ */
+
+/* Chip de feature role — a "chave de módulo" que o membro carrega. */
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
+  color: var(--color-primary-700);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.page-header__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ============================================
    Utilities
    ============================================ */
 .full-width { width: 100%; }

@@ -100,10 +100,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
       title: 'Administração',
       items: [
         {
-          label: 'Permissões por Role',
-          icon: 'security',
-          route: '/admin/permissions',
-          resourceCode: 'Permission.Management'
+          label: 'Roles',
+          icon: 'admin_panel_settings',
+          route: '/admin/roles',
+          resourceCode: 'Role.Management'
         },
         {
           label: 'Membros',

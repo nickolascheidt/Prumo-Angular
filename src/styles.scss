@@ -253,6 +253,14 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
   font-weight: var(--font-medium);
 }
 
+/* Chave que o membro NÃO tem. Nasceu aqui e não no design system: o kit só
+   desenha chips de roles concedidas, e a tela de membros precisa mostrar as
+   duas faces para a caixa de seleção fazer sentido. Empurrar de volta. */
+.role-chip--off {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+
 .page-header {
   display: flex;
   align-items: center;

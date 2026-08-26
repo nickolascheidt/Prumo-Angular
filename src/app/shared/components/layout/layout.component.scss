@@ -64,32 +64,48 @@
   font-size: 14px;
 }
 
-.user-trigger__info {
-  display: flex; flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.15;
-  /* Nome e e-mail longos truncam em vez de esticar o botão pela toolbar. */
+/* Só o nome no chip; o e-mail vive no cabeçalho do menu. Trunca em vez de esticar
+   o botão pela toolbar. */
+.user-trigger__name {
+  font-size: 13px;
+  font-weight: 500;
   min-width: 0;
-  max-width: 180px;
-}
-
-.user-trigger__name,
-.user-trigger__email {
-  max-width: 100%;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.user-trigger__name { font-size: 13px; font-weight: 500; }
-.user-trigger__email { font-size: 11px; opacity: 0.8; }
 .user-trigger__chev {
   font-size: 18px; width: 18px; height: 18px;
   flex-shrink: 0;
 }
 
 @media (max-width: 600px) {
-  .user-trigger__info { display: none; }
+  .user-trigger__name { display: none; }
+}
+
+/* Cabeçalho do menu: onde o e-mail cabe. `disabled` no item deixa o texto apagado,
+   então a cor é reafirmada. */
+.user-menu__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  min-width: 200px;
+  max-width: 280px;
+  line-height: 1.3;
+}
+
+.user-menu__name {
+  font-weight: var(--font-medium);
+  color: var(--color-text);
+}
+
+.user-menu__email {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidenav-container {

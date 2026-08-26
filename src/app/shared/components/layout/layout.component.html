@@ -17,15 +17,23 @@
     <button type="button" [matMenuTriggerFor]="userMenu" class="user-trigger"
             [attr.aria-label]="'Menu de ' + (user.fullName || user.email)">
       <span class="user-trigger__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</span>
-      <span class="user-trigger__info">
-        <span class="user-trigger__name">{{ user.fullName }}</span>
-        <span class="user-trigger__email">{{ user.email }}</span>
-      </span>
+      <!-- Só o nome aqui. O e-mail desce para o cabeçalho do menu: duas linhas de texto
+           num chip da altura da toolbar ficam apertadas, e o e-mail é longo. -->
+      <span class="user-trigger__name">{{ user.fullName || user.email }}</span>
       <mat-icon class="user-trigger__chev">expand_more</mat-icon>
     </button>
   </ng-container>
 
   <mat-menu #userMenu="matMenu" xPosition="before">
+    <!-- O e-mail vive aqui, onde há largura para ele, em vez de espremido no chip.
+         Sem `mat-menu-item`: aquele atributo impõe layout de item clicável (linha única,
+         altura fixa) e cola o e-mail no nome. Isto é só um cabeçalho. -->
+    <div class="user-menu__header" *ngIf="currentUser$ | async as user">
+      <span class="user-menu__name">{{ user.fullName }}</span>
+      <span class="user-menu__email">{{ user.email }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
     <!-- "Configurações" ficou oculto: era um mat-menu-item sem (click), que não fazia
          nada. Decisão do backlog (item 6): ocultar em vez de inventar uma tela no MVP. -->
     <button mat-menu-item (click)="switchTenant()">

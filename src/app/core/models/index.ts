@@ -217,6 +217,27 @@ export interface UserResourcePermissions {
   resourcePermissions: Record<string, PermissionLevel>;
 }
 
+/**
+ * Role administrável na tela de Roles: as canônicas do sistema e as que o tenant criou.
+ *
+ * Não confundir com o enum `TenantRole`, que é o **cargo** administrativo
+ * (Owner/Admin/Member). Esta é a "chave de módulo" — o conjunto de acessos.
+ */
+export interface ManagedRole {
+  id: string;
+  name: string;
+  description?: string;
+  /** Role do sistema: não pode ser excluída nem ter o nome reaproveitado. */
+  isCanonical: boolean;
+  /** Quantos membros deste tenant carregam a role. */
+  memberCount: number;
+}
+
+export interface CreateTenantRoleRequest {
+  name: string;
+  description?: string;
+}
+
 export interface AssignResourcePermissionRequest {
   roleId: string;
   resourceId: string;

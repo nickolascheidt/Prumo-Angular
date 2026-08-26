@@ -12,7 +12,7 @@ import { DashboardAccountingComponent } from './modules/dashboard/accounting/das
 import { DashboardFinanceComponent } from './modules/dashboard/finance/dashboard-finance.component';
 import { DashboardHrComponent } from './modules/dashboard/hr/dashboard-hr.component';
 import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-admin.component';
-import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
+import { RolesComponent } from './modules/admin/roles/roles.component';
 import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
 import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
@@ -85,8 +85,11 @@ export const routes: Routes = [
         canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
       { path: 'accounts-payable/:id/edit', component: AccountsPayableFormComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
-      { path: 'admin/permissions', component: PermissionsManagementComponent,
-        canActivate: [resourceAccessGuard], data: { resource: 'Permission.Management', requiredLevel: PermissionLevel.Read } },
+      { path: 'admin/roles', component: RolesComponent,
+        canActivate: [resourceAccessGuard], data: { resource: 'Role.Management', requiredLevel: PermissionLevel.Read } },
+      // A tela de permissões virou a tela de roles: criar a role e definir o que ela
+      // alcança são o mesmo trabalho.
+      { path: 'admin/permissions', redirectTo: 'admin/roles', pathMatch: 'full' },
       { path: 'admin/members', component: TenantMembersComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
       // As duas telas antigas foram fundidas em /admin/members. O redirect existe só

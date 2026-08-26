@@ -18,6 +18,8 @@ import {
   ResourcePermission,
   UserResourcePermissions,
   AssignResourcePermissionRequest,
+  ManagedRole,
+  CreateTenantRoleRequest,
   CreateResourceRequest,
   UpdateResourceRequest,
   PermissionLevel,
@@ -216,6 +218,23 @@ export class ApiService {
 
   assignResourcePermission(data: AssignResourcePermissionRequest): Observable<PermissionActionResponse> {
     return this.http.post<PermissionActionResponse>(`${this.apiUrl}/resources/assign`, data);
+  }
+
+  // ----- Roles do tenant -----
+
+  getTenantRoles(tenantId: string): Observable<ManagedRole[]> {
+    return this.http.get<ManagedRole[]>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles`);
+  }
+
+  createTenantRole(tenantId: string, data: CreateTenantRoleRequest): Observable<ManagedRole> {
+    return this.http.post<ManagedRole>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles`, data);
+  }
+
+  deleteTenantRole(tenantId: string, roleId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles/${encodeURIComponent(roleId)}`);
   }
 
   removeResourcePermission(roleId: string, resourceId: string): Observable<void> {

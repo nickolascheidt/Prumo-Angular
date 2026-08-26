@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(awk 'NR<=32 || NR>=232' src/app/modules/admin/users-roles-management.component.ts)",
-      "Bash(mv /tmp/ur.ts src/app/modules/admin/users-roles-management.component.ts)"
+      "Bash(mv /tmp/ur.ts src/app/modules/admin/users-roles-management.component.ts)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(git checkout *)",
+      "Bash(git *)",
+      "Bash(npx ng *)"
     ]
   }
 }

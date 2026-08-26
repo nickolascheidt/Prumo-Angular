@@ -1,0 +1,118 @@
+<div class="roles-page">
+  <section class="page-header">
+    <div class="page-header__icon"><mat-icon>admin_panel_settings</mat-icon></div>
+    <div class="page-header__text">
+      <h1>Roles</h1>
+      <p>Uma role é um conjunto de acessos. O nível define o que ela alcança em cada módulo.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> Nova role
+    </button>
+  </section>
+
+  <div class="layout">
+    <!-- Coluna esquerda: as roles -->
+    <mat-card class="roles-card">
+      @if (loadingRoles) {
+        <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else {
+        <ul class="role-list">
+          @for (role of roles; track role.id) {
+            <li class="role-item"
+                [class.role-item--active]="selectedRole?.id === role.id"
+                (click)="selectRole(role)">
+              <div class="role-item__main">
+                <span class="role-item__name">{{ role.name }}</span>
+                @if (role.isCanonical) {
+                  <span class="system-badge"
+                        matTooltip="Role do sistema: existe em todos os tenants e não pode ser excluída.">
+                    sistema
+                  </span>
+                }
+              </div>
+              <div class="role-item__meta">
+                <span class="muted">
+                  {{ role.memberCount }} {{ role.memberCount === 1 ? 'membro' : 'membros' }}
+                </span>
+                @if (!role.isCanonical) {
+                  <button mat-icon-button color="warn"
+                          matTooltip="Excluir role"
+                          (click)="deleteRole(role, $event)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                }
+              </div>
+            </li>
+          } @empty {
+            <li class="empty">Nenhuma role.</li>
+          }
+        </ul>
+      }
+    </mat-card>
+
+    <!-- Coluna direita: a grade de níveis -->
+    <mat-card class="grid-card">
+      @if (!selectedRole) {
+        <div class="placeholder">
+          <mat-icon>tune</mat-icon>
+          <p>Escolha uma role à esquerda para definir o que ela alcança.</p>
+        </div>
+      } @else {
+        <div class="grid-head">
+          <div>
+            <h3>{{ selectedRole.name }}</h3>
+            @if (selectedRole.description) {
+              <p class="muted">{{ selectedRole.description }}</p>
+            }
+          </div>
+          <span class="granted-count">
+            {{ grantedCount() }} de {{ grid.length }} recursos
+          </span>
+        </div>
+
+        @if (loadingGrid) {
+          <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
+        } @else {
+          <table mat-table [dataSource]="grid" class="level-grid">
+            <ng-container matColumnDef="resource">
+              <th mat-header-cell *matHeaderCellDef>Recurso</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="resource-cell">
+                  <span>{{ row.resource.name }}</span>
+                  <span class="muted code">{{ row.resource.code }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="level">
+              <th mat-header-cell *matHeaderCellDef class="level-col">Nível</th>
+              <td mat-cell *matCellDef="let row" class="level-col">
+                <mat-button-toggle-group
+                    [value]="row.level"
+                    [disabled]="isSaving(row)"
+                    (change)="onLevelChange(row, $event.value)"
+                    hideSingleSelectionIndicator>
+                  @for (level of levels; track level.value) {
+                    <mat-button-toggle [value]="level.value">{{ level.label }}</mat-button-toggle>
+                  }
+                </mat-button-toggle-group>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="gridColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: gridColumns;"></tr>
+          </table>
+
+          <p class="footnote">
+            <mat-icon>lightbulb</mat-icon>
+            <span>
+              <strong>Ler</strong> abre a tela e recusa quem tentar salvar;
+              <strong>Escrever</strong> permite criar e editar;
+              <strong>Total</strong> inclui excluir.
+            </span>
+          </p>
+        }
+      }
+    </mat-card>
+  </div>
+</div>

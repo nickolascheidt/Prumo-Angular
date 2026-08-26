@@ -48,8 +48,13 @@ export interface TenantMember {
   userId: string;
   email: string;
   fullName?: string;
+  /** Cargo administrativo no tenant. */
   role: TenantRole;
   joinedAt: string;
+  /** Feature roles concedidas neste tenant — as "chaves de módulo". */
+  roles: string[];
+  /** Role global do Identity. Não é uma feature role e não se revoga por esta tela. */
+  isMasterAdmin: boolean;
 }
 
 export interface AddTenantMemberRequest {
@@ -243,6 +248,8 @@ export interface AppUserSummary {
   email: string;
   fullName: string;
   roles: string[];
+  /** Role global do Identity — explica a contagem 0 de quem manda em tudo. */
+  isMasterAdmin?: boolean;
   createdAt?: string;
   lastLoginAt?: string;
 }

@@ -13,8 +13,6 @@ import { DashboardFinanceComponent } from './modules/dashboard/finance/dashboard
 import { DashboardHrComponent } from './modules/dashboard/hr/dashboard-hr.component';
 import { DashboardAdminComponent } from './modules/dashboard/admin/dashboard-admin.component';
 import { PermissionsManagementComponent } from './modules/admin/permissions-management.component';
-import { UsersRolesManagementComponent } from './modules/admin/users-roles-management.component';
-import { TenantManagementComponent } from './modules/admin/tenant-management.component';
 import { AccountsPayableListComponent } from './modules/accounts-payable/list/accounts-payable-list.component';
 import { AccountsPayableFormComponent } from './modules/accounts-payable/form/accounts-payable-form.component';
 import { ChartOfAccountsComponent } from './modules/finance/chart-of-accounts/chart-of-accounts.component';
@@ -89,11 +87,13 @@ export const routes: Routes = [
         canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
       { path: 'admin/permissions', component: PermissionsManagementComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'Permission.Management', requiredLevel: PermissionLevel.Read } },
-      { path: 'admin/users-roles', component: UsersRolesManagementComponent,
-        canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
-      { path: 'admin/tenant', component: TenantManagementComponent },
       { path: 'admin/members', component: TenantMembersComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
+      // As duas telas antigas foram fundidas em /admin/members. O redirect existe só
+      // para não quebrar link salvo; /admin/tenant era a única rota admin sem guard,
+      // e o destino tem.
+      { path: 'admin/users-roles', redirectTo: 'admin/members', pathMatch: 'full' },
+      { path: 'admin/tenant', redirectTo: 'admin/members', pathMatch: 'full' },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'ChartOfAccounts.Management', requiredLevel: PermissionLevel.Read } },
       { path: 'finance/general-ledger', component: GeneralLedgerComponent,

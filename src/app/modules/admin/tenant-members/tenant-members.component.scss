@@ -1,0 +1,134 @@
+/* .page-header e .page-header__icon vêm das classes base em styles.scss. */
+
+.members-page { padding: var(--page-padding); }
+
+.page-header {
+  margin-bottom: var(--space-6);
+
+  &__text {
+    flex: 1;
+
+    h1 { margin: 0; }
+    p { margin: var(--space-1) 0 0; font-size: var(--text-base); }
+  }
+}
+
+.search-field {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: var(--space-4);
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-12);
+}
+
+.members-table {
+  width: 100%;
+  background: var(--color-surface);
+}
+
+.col-expand { width: 40px; }
+
+.expand-icon {
+  color: var(--color-text-subtle);
+  transition: transform 160ms ease;
+
+  &--open { transform: rotate(90deg); }
+}
+
+.member-row {
+  cursor: pointer;
+
+  &:hover { background: var(--color-surface-alt); }
+  &--open { background: var(--color-surface-alt); }
+}
+
+/* A linha de detalhe existe sempre no DOM; o que anima é a altura. Sem isto o
+   mat-table pisca ao expandir, porque a linha entra e sai do layout. */
+.detail-row { height: 0; }
+
+.detail {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 200ms ease;
+
+  &--open { max-height: 320px; }
+
+  &__inner { padding: var(--space-4) var(--space-4) var(--space-5) 56px; }
+  &__note { margin: var(--space-3) 0 0; font-size: var(--text-sm); }
+
+  h4 {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+}
+
+.keys-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    flex-shrink: 0;
+  }
+}
+
+.master-badge {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  background: var(--color-warn-light);
+  color: var(--color-warn);
+}
+
+.role-select { width: 130px; }
+
+.role-static { color: var(--color-text-muted); }
+
+.muted { color: var(--color-text-muted); }
+
+.empty-row {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
+}
+
+.tenant-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--text-base);
+
+  mat-icon { color: var(--color-text-subtle); }
+}

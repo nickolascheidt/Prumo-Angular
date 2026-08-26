@@ -106,17 +106,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
           resourceCode: 'Permission.Management'
         },
         {
-          label: 'Roles por Usuário',
-          icon: 'manage_accounts',
-          route: '/admin/users-roles',
+          label: 'Membros',
+          icon: 'group',
+          route: '/admin/members',
           resourceCode: 'User.Management'
-        },
-        {
-          label: 'Tenant',
-          icon: 'business',
-          route: '/admin/tenant'
-        },
-        { label: 'Membros do Tenant', icon: 'group', route: '/admin/members', resourceCode: 'User.Management' }
+        }
       ]
     }
   ];

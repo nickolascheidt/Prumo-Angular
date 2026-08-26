@@ -35,8 +35,12 @@ import { MatIconModule } from '@angular/material/icon';
 
         <p class="hint">
           <mat-icon>info</mat-icon>
-          A role nasce <strong>sem acesso nenhum</strong>. Depois de criar, defina o nível
-          dela em cada recurso.
+          <!-- O texto precisa ser UM flex item, senão o <strong> vira uma coluna
+               própria e a frase quebra em pedaços. -->
+          <span>
+            A role nasce <strong>sem acesso nenhum</strong>. Depois de criar, defina o
+            nível dela em cada recurso.
+          </span>
         </p>
       </form>
     </mat-dialog-content>

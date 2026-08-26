@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-  PermissionItem,
-  RolePermissionsResponse,
-  GrantPermissionRequest,
-  PermissionAuditLog,
   UserResourcePermissions,
   PermissionLevel,
   normalizeUserResourcePermissions
@@ -23,41 +19,6 @@ export class PermissionService {
   public userResourcePermissions$ = this.userResourcePermissionsSubject.asObservable();
 
   constructor(private apiService: ApiService) {}
-
-  /**
-   * Get all available permissions in the system
-   */
-  getAllPermissions(): Observable<PermissionItem[]> {
-    return this.apiService.getPermissions();
-  }
-
-  /**
-   * Get permissions for a specific role
-   */
-  getPermissionsByRole(roleName: string): Observable<RolePermissionsResponse> {
-    return this.apiService.getRolePermissions(roleName);
-  }
-
-  /**
-   * Grant a permission to a role
-   */
-  grantPermissionToRole(roleName: string, request: GrantPermissionRequest): Observable<any> {
-    return this.apiService.grantPermissionToRole(roleName, request);
-  }
-
-  /**
-   * Revoke a permission from a role
-   */
-  revokePermissionFromRole(roleName: string, permissionName: string, reason?: string): Observable<any> {
-    return this.apiService.revokePermissionFromRole(roleName, permissionName, reason);
-  }
-
-  /**
-   * Get permission audit log
-   */
-  getPermissionAudit(top?: number): Observable<PermissionAuditLog[]> {
-    return this.apiService.getPermissionAudit(undefined, top || 100);
-  }
 
   /**
    * Set current user permissions

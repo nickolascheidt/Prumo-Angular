@@ -1,4 +1,4 @@
-import { TenantMembersComponent } from './tenant-members.component';
+import { TenantMembersComponent, toTenantRole } from './tenant-members.component';
 import { TenantMember, TenantRole } from '@core/models';
 
 function member(over: Partial<TenantMember> = {}): TenantMember {
@@ -46,5 +46,26 @@ describe('TenantMembersComponent.canManage', () => {
 
   it('não deixa gerenciar quando nem se sabe o próprio cargo', () => {
     expect(screenAs(-1).canManage(member())).toBe(false);
+  });
+});
+
+describe('toTenantRole', () => {
+  // A API manda "Owner"/"Admin"/"Member", não 2/1/0. Tratar a string como número
+  // fazia todo canManage dar false e escondia os controles de gestão da tela.
+  it('converte a string que a API realmente manda', () => {
+    expect(toTenantRole('Owner')).toBe(TenantRole.Owner);
+    expect(toTenantRole('Admin')).toBe(TenantRole.Admin);
+    expect(toTenantRole('Member')).toBe(TenantRole.Member);
+  });
+
+  it('deixa passar o número, para o dia em que o backend mudar de ideia', () => {
+    expect(toTenantRole(TenantRole.Owner)).toBe(TenantRole.Owner);
+    expect(toTenantRole(0)).toBe(TenantRole.Member);
+  });
+
+  it('cai para o menor privilégio quando não reconhece o valor', () => {
+    expect(toTenantRole('Sindico')).toBe(TenantRole.Member);
+    expect(toTenantRole(null)).toBe(TenantRole.Member);
+    expect(toTenantRole(undefined)).toBe(TenantRole.Member);
   });
 });

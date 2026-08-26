@@ -140,7 +140,8 @@
     <footer class="tenant-footer">
       <mat-icon>business</mat-icon>
       @if (tenant) {
-        <span>Tenant: <strong>{{ tenant.name }}</strong> <span class="muted">({{ tenant.slug }})</span></span>
+        <!-- &nbsp; porque o Angular colapsa o espaço entre tags (preserveWhitespaces). -->
+        <span>Tenant: <strong>{{ tenant.name }}</strong>&nbsp;<span class="muted">({{ tenant.slug }})</span></span>
       } @else {
         <span class="muted">Dados do tenant indisponíveis.</span>
       }

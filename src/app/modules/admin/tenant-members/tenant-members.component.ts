@@ -19,6 +19,24 @@ import { AddMemberDialogComponent } from './add-member-dialog.component';
 
 const ROLE_LABELS: Record<number, string> = { 0: 'Membro', 1: 'Admin', 2: 'Owner' };
 
+/**
+ * A API serializa TenantRole como string ("Owner"), enquanto o enum do Angular é
+ * numérico — então `ROLE_LABELS[m.role]` dava "Desconhecido" e todo
+ * `myRole === TenantRole.Admin` era falso, escondendo os controles de gestão.
+ * É a mesma armadilha que derrubou o menu inteiro em 22aba79 com PermissionLevel.
+ *
+ * Valor irreconhecível vira Member, o menor privilégio: fail-closed.
+ */
+export function toTenantRole(value: TenantRole | string | null | undefined): TenantRole {
+  if (typeof value === 'number') {
+    return value;
+  }
+  const parsed = typeof value === 'string'
+    ? TenantRole[value as keyof typeof TenantRole]
+    : undefined;
+  return typeof parsed === 'number' ? parsed : TenantRole.Member;
+}
+
 @Component({
   selector: 'app-tenant-members',
   standalone: true,
@@ -80,8 +98,9 @@ export class TenantMembersComponent implements OnInit {
     this.loading = true;
     this.api.getTenantMembers(this.tenantId).subscribe({
       next: members => {
-        this.members = members;
-        this.myRole = members.find(m => m.userId === this.currentUserId)?.role ?? -1;
+        // Normaliza na fronteira: daqui para dentro role é sempre o enum numérico.
+        this.members = members.map(m => ({ ...m, role: toTenantRole(m.role) }));
+        this.myRole = this.members.find(m => m.userId === this.currentUserId)?.role ?? -1;
         this.applyFilter();
         this.loading = false;
       },

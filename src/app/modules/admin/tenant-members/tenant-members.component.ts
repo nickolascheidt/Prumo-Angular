@@ -14,28 +14,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService, AuthService } from '@core/services';
-import { Tenant, TenantMember, TenantRole } from '@core/models';
+import { Tenant, TenantMember, TenantRole, toTenantRole, tenantRoleLabel } from '@core/models';
 import { AddMemberDialogComponent } from './add-member-dialog.component';
-
-const ROLE_LABELS: Record<number, string> = { 0: 'Membro', 1: 'Admin', 2: 'Owner' };
-
-/**
- * A API serializa TenantRole como string ("Owner"), enquanto o enum do Angular é
- * numérico — então `ROLE_LABELS[m.role]` dava "Desconhecido" e todo
- * `myRole === TenantRole.Admin` era falso, escondendo os controles de gestão.
- * É a mesma armadilha que derrubou o menu inteiro em 22aba79 com PermissionLevel.
- *
- * Valor irreconhecível vira Member, o menor privilégio: fail-closed.
- */
-export function toTenantRole(value: TenantRole | string | null | undefined): TenantRole {
-  if (typeof value === 'number') {
-    return value;
-  }
-  const parsed = typeof value === 'string'
-    ? TenantRole[value as keyof typeof TenantRole]
-    : undefined;
-  return typeof parsed === 'number' ? parsed : TenantRole.Member;
-}
 
 @Component({
   selector: 'app-tenant-members',
@@ -155,7 +135,7 @@ export class TenantMembersComponent implements OnInit {
   // ----- regras de exibição -----
 
   roleLabel(role: TenantRole): string {
-    return ROLE_LABELS[role] ?? 'Desconhecido';
+    return tenantRoleLabel(role);
   }
 
   /**

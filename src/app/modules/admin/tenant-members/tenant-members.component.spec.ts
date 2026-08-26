@@ -1,5 +1,5 @@
-import { TenantMembersComponent, toTenantRole } from './tenant-members.component';
-import { TenantMember, TenantRole } from '@core/models';
+import { TenantMembersComponent } from './tenant-members.component';
+import { TenantMember, TenantRole, toTenantRole } from '@core/models';
 
 function member(over: Partial<TenantMember> = {}): TenantMember {
   return {

@@ -3,6 +3,7 @@ import { Router, CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot } fr
 import { AuthService } from '../services/auth.service';
 import { PermissionService } from '../services/permission.service';
 import { PermissionLevel } from '../models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,14 @@ export class ResourceAccessGuard {
       return true;
     }
 
-    // Access denied - redirect to dashboard
-    console.warn(
-      `⚠️ Access denied to resource: ${resourceCode} (required level: ${requiredLevel})`
-    );
+    // Access denied - redirect to dashboard.
+    // O aviso é diagnóstico de desenvolvimento: em produção ele só contaria a
+    // estranhos o que existe e o que faz falta para alcançar.
+    if (!environment.production) {
+      console.warn(
+        `Acesso negado ao recurso: ${resourceCode} (nível exigido: ${requiredLevel})`
+      );
+    }
     this.router.navigate(['/dashboard']);
     return false;
   }
@@ -83,10 +88,12 @@ export const resourceAccessGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Access denied - redirect to dashboard
-  console.warn(
-    `⚠️ Access denied to resource: ${resourceCode} (required level: ${requiredLevel})`
-  );
+  // Access denied - redirect to dashboard. Ver a nota no guard de classe acima.
+  if (!environment.production) {
+    console.warn(
+      `Acesso negado ao recurso: ${resourceCode} (nível exigido: ${requiredLevel})`
+    );
+  }
   router.navigate(['/dashboard']);
   return false;
 };

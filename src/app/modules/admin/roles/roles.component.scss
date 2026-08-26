@@ -22,6 +22,27 @@
 
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
+
+  /* Empilhado, a grade fica estreita demais para recurso e níveis lado a lado:
+     o nome do recurso vai em cima e os botões de nível embaixo. */
+  .level-grid {
+    tr.mat-mdc-row, tr.mat-mdc-header-row { height: auto; }
+
+    td.mat-mdc-cell { padding: var(--space-2) var(--space-1); }
+  }
+
+  .level-col { text-align: left; }
+
+  /* Os quatro níveis cabem numa linha só se encolherem um pouco; sem isto o
+     "Total" quebra sozinho para a linha de baixo. */
+  /* ::ng-deep porque o rótulo é markup interno do Material e não recebe o atributo
+     de escopo do componente. Limitado a .level-grid para não vazar. */
+  ::ng-deep mat-button-toggle-group .mat-button-toggle-label-content {
+    padding: 0 var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .resource-cell .code { display: none; }
 }
 
 .loading {

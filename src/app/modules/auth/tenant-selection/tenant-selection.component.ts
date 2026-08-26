@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '@core/services';
-import { TenantMembership, TenantRole } from '@core/models';
+import { TenantMembership, TenantRole, tenantRoleLabel } from '@core/models';
 
 @Component({
   selector: 'app-tenant-selection',
@@ -17,7 +16,6 @@ import { TenantMembership, TenantRole } from '@core/models';
   imports: [
     CommonModule,
     MatCardModule,
-    MatListModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -77,6 +75,6 @@ export class TenantSelectionComponent implements OnInit {
   }
 
   roleLabel(role: TenantRole): string {
-    return TenantRole[role];
+    return tenantRoleLabel(role);
   }
 }

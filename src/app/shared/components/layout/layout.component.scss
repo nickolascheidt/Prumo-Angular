@@ -31,19 +31,31 @@
 .spacer { flex: 1; }
 
 .user-trigger {
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 10px;
-  padding: 4px 12px 4px 4px !important;
+  padding: 4px 12px 4px 4px;
   height: 44px;
-  border-radius: var(--radius-pill) !important;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
   color: var(--color-text-inverse);
   background: rgba(255, 255, 255, 0.1);
+  font-family: inherit;
+  transition: background 160ms ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.18); }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-text-inverse);
+    outline-offset: 2px;
+  }
 }
-.user-trigger:hover { background: rgba(255, 255, 255, 0.18); }
 
 .user-trigger__avatar {
   width: 34px; height: 34px;
+  /* Sem isto o avatar encolhe quando o nome é longo, virando uma elipse. */
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--gradient-accent);
   color: var(--color-text-inverse);
@@ -56,10 +68,25 @@
   display: flex; flex-direction: column;
   align-items: flex-start;
   line-height: 1.15;
+  /* Nome e e-mail longos truncam em vez de esticar o botão pela toolbar. */
+  min-width: 0;
+  max-width: 180px;
 }
+
+.user-trigger__name,
+.user-trigger__email {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .user-trigger__name { font-size: 13px; font-weight: 500; }
 .user-trigger__email { font-size: 11px; opacity: 0.8; }
-.user-trigger__chev { font-size: 18px; width: 18px; height: 18px; }
+.user-trigger__chev {
+  font-size: 18px; width: 18px; height: 18px;
+  flex-shrink: 0;
+}
 
 @media (max-width: 600px) {
   .user-trigger__info { display: none; }

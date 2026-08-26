@@ -122,50 +122,6 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/auth/users/${encodeURIComponent(userId)}`);
   }
 
-  // Permission Endpoints
-  getPermissions(): Observable<PermissionItem[]> {
-    return this.http.get<PermissionItem[]>(`${this.apiUrl}/permissions`);
-  }
-
-  getPermissionCatalog(): Observable<PermissionCatalog> {
-    return this.http.get<PermissionCatalog>(`${this.apiUrl}/permissions/catalog`);
-  }
-
-  /** Roles canônicas configuráveis na tela de Permissões por Role. Nunca chumbe esta
-   *  lista no frontend: foi assim que a role fantasma "Usuario" sobreviveu. */
-  getConfigurableRoles(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/permissions/roles`);
-  }
-
-  getRolePermissions(roleName: string): Observable<RolePermissionsResponse> {
-    return this.http.get<RolePermissionsResponse>(`${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}`);
-  }
-
-  grantPermissionToRole(roleName: string, data: GrantPermissionRequest): Observable<PermissionActionResponse> {
-    return this.http.post<PermissionActionResponse>(`${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}/grant`, data);
-  }
-
-  revokePermissionFromRole(roleName: string, permissionName: string, reason?: string): Observable<PermissionActionResponse> {
-    let params = new HttpParams();
-    if (reason?.trim()) {
-      params = params.set('reason', reason.trim());
-    }
-
-    return this.http.delete<PermissionActionResponse>(
-      `${this.apiUrl}/permissions/roles/${encodeURIComponent(roleName)}/revoke/${encodeURIComponent(permissionName)}`,
-      { params }
-    );
-  }
-
-  getPermissionAudit(roleName?: string, take: number = 100): Observable<PermissionAuditLog[]> {
-    let params = new HttpParams().set('take', take);
-    if (roleName?.trim()) {
-      params = params.set('roleName', roleName.trim());
-    }
-
-    return this.http.get<PermissionAuditLog[]>(`${this.apiUrl}/permissions/audit`, { params });
-  }
-
   // Resource Endpoints
   getResources(): Observable<Resource[]> {
     return this.http.get<Resource[]>(`${this.apiUrl}/resources`);

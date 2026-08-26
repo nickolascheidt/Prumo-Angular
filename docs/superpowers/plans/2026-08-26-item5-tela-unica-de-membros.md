@@ -1176,3 +1176,84 @@ membro na carga da lista.
 `api.service.ts`, não mexe em `PermissionsController` (aquele controller não tem
 `{tenantId}` na rota — é item próprio, junto do item 3), e não traz as outras classes base
 do design system além de `.role-chip`.
+
+---
+
+## Registro de execução (2026-08-26)
+
+Executado inline, na branch `feature/item5-single-member-screen`. Seis commits:
+`0715aec` (classes base) · `cead526` (a tela) · `152664a` (spec) · `825458c`
+(rotas/menu) · `0292f6c` (deleções) · `98ae114` (o bug do enum).
+
+**Resultado:** 3 telas → 1, **9 arquivos apagados** (862 linhas), suíte Angular
+**9 testes** (eram 0 nesta área), backend **101/101 inalterado**, build de produção
+limpo, `check-tokens.sh` limpo.
+
+### O bug que só o smoke test pegou — e que o plano não previu
+
+`GET /members` serializa `role` como **string** (`"Owner"`), mas `TenantRole` no
+Angular é enum **numérico**. Consequência na tela: `ROLE_LABELS[m.role]` dava
+**"Desconhecido"** para todo mundo, e — pior — `myRole === TenantRole.Admin` era
+sempre falso, então **o dropdown de cargo e o botão de remover simplesmente não
+apareciam** para um admin que tinha direito a ambos.
+
+**É herdado, não introduzido.** A tela antiga (`3f40a72`) indexava o mesmo
+`Record<number, string>` e comparava `myRole === 1 || myRole === 2`. Ou seja,
+`/admin/members` **já** mostrava "Desconhecido" e seus botões de gestão **nunca**
+apareciam. A fusão só tornou o defeito visível.
+
+É a terceira aparição desta armadilha no repo — `22aba79` (2026-08-05) foi
+`PermissionLevel` chegando `"Full"` e negando todo item de menu gateado por
+recurso. **A lição que vale para o próximo endpoint: o enum atravessa o wire como
+string; normalize na fronteira.** Aqui isso é `toTenantRole`, com fallback para
+`Member` (menor privilégio, fail-closed), coberto por 3 testes.
+
+### Três correções ao plano
+
+1. **A `.role-chip` do plano era invenção.** O design system **já tinha** a classe,
+   tokenizada, em `colors_and_type.css` — com gradiente e `--radius-pill`, não a
+   borda que eu havia escrito. Usada verbatim. `.page-header`/`.page-header__icon`
+   vieram junto, porque a tela nova as usa.
+2. **Os nomes de token do plano não existiam:** `--color-primary-surface`,
+   `--color-primary-border`, `--color-on-primary`, `--color-warn-surface`. Os reais
+   são `--color-primary-light`, `--color-text-inverse`, `--color-warn-light` (e não
+   há token de borda para o chip). Conferir contra o `:root` antes de escrever, e
+   não confiar na memória de nomes.
+3. **`.role-chip--off` não existe no design system** e nasceu aqui — o kit só
+   desenha chips concedidos. **Pendente: empurrar de volta** para o
+   `colors_and_type.css`, como foi feito com `--gradient-toolbar` em 2026-08-24.
+
+### Verificado na app viva (PG 17 em `docker compose`, API em :5201)
+
+| O quê | Resultado |
+|---|---|
+| Menu de Administração | **2 entradas** (Permissões por Role, Membros). "Tenant" e "Roles por Usuário" sumiram |
+| Lista | 4 membros, selo `master` no admin, rodapé `Tenant: Papagaio (ppg)` |
+| Linha expansível | abre, chevron gira, `Funcionario` marcado — bate com `roles` do payload |
+| Conceder `RH` | chip acende; **API e Postgres** confirmam `["Funcionario","RH"]` |
+| Revogar `RH` | volta a `["Funcionario"]` no Postgres |
+| Trocar cargo → Admin | snackbar correto; `TenantUsers.Role = 1` no banco (o backend **aceita o enum numérico** no PUT) |
+| Reverter → Membro | `Role = 0` |
+| Dropdown não colapsa a linha | confirmado — o `$event.stopPropagation()` faz o trabalho |
+| Owner / si mesmo | cargo vira **texto estático**, sem dropdown e sem remover |
+| Member sem chaves | `/admin/members` **expulsa para o dashboard**; menu fica só com "Dashboard" |
+| `/admin/tenant` e `/admin/users-roles` | **redirecionam** para `/admin/members` |
+| Remover membro | some da lista; **a conta sobrevive** (lookup responde, `AspNetUsers`=1, `TenantUsers`=0) |
+
+### Gotchas de ambiente que custaram tempo
+
+- **`ng test --watch=false` não encerra o processo neste repo** e o output fica
+  **bufferizado até você matá-lo** — parece travado quando não está. Rodar
+  destacado, esperar o `TOTAL:` aparecer no log e então `pkill -f "ng.js test"`.
+  O Karma **funciona**: ChromeHeadless sobe normalmente.
+- **`UID` é readonly no bash** — usar outro nome de variável em script de shell.
+- **O Angular colapsa o espaço entre tags** (`preserveWhitespaces` é false por
+  padrão): `</strong> <span>` virou `Papagaio(ppg)`. Precisa de `&nbsp;`.
+- Docker Desktop não estava de pé; `docker compose` falha com "pipe não encontrado"
+  até iniciar o `Docker Desktop.exe`.
+
+### Sujeira deixada de propósito
+
+O usuário de teste `descartavel@teste.local` **continua no banco de dev**, sem
+vínculo com tenant nenhum — é o que prova a semântica de "remover do tenant não
+apaga a conta". Apagar de vez fica a critério do usuário.

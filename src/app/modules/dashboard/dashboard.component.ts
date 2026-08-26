@@ -24,10 +24,14 @@ export class DashboardComponent {
 
   readonly tabs: DashTab[] = [
     { label: 'Visão Geral', route: 'overview' },
-    { label: 'Contabilidade', route: 'accounting', resourceCode: 'GeneralLedger.Management' },
-    { label: 'Financeiro', route: 'finance', resourceCode: 'AccountsPayable.Entries' },
-    { label: 'RH', route: 'hr', resourceCode: 'HR.Employees' },
-    { label: 'Administração', route: 'admin', resourceCode: 'User.Management' }
+    // Cada aba tem recurso próprio, e não o do módulo correspondente: assim dá para
+    // conceder o painel de RH sem conceder a tela de funcionários, e vice-versa.
+    // Precisa casar com o guard da rota em app.routes.ts — se divergirem, a aba
+    // aparece e a rota barra.
+    { label: 'Contabilidade', route: 'accounting', resourceCode: 'Dashboard.Accounting' },
+    { label: 'Financeiro', route: 'finance', resourceCode: 'Dashboard.Finance' },
+    { label: 'RH', route: 'hr', resourceCode: 'Dashboard.HR' },
+    { label: 'Administração', route: 'admin', resourceCode: 'Dashboard.Admin' }
   ];
 
   constructor(private authService: AuthService) {

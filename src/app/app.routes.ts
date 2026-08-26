@@ -57,25 +57,25 @@ export const routes: Routes = [
             path: 'accounting',
             component: DashboardAccountingComponent,
             canActivate: [resourceAccessGuard],
-            data: { resource: 'GeneralLedger.Management', requiredLevel: PermissionLevel.Read }
+            data: { resource: 'Dashboard.Accounting', requiredLevel: PermissionLevel.Read }
           },
           {
             path: 'finance',
             component: DashboardFinanceComponent,
             canActivate: [resourceAccessGuard],
-            data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Read }
+            data: { resource: 'Dashboard.Finance', requiredLevel: PermissionLevel.Read }
           },
           {
             path: 'hr',
             component: DashboardHrComponent,
             canActivate: [resourceAccessGuard],
-            data: { resource: 'HR.Employees', requiredLevel: PermissionLevel.Read }
+            data: { resource: 'Dashboard.HR', requiredLevel: PermissionLevel.Read }
           },
           {
             path: 'admin',
             component: DashboardAdminComponent,
             canActivate: [resourceAccessGuard],
-            data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read }
+            data: { resource: 'Dashboard.Admin', requiredLevel: PermissionLevel.Read }
           }
         ]
       },

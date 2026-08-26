@@ -50,7 +50,7 @@ src/app/
 
 **Login → bootstrap sequence** the frontend must follow:
 1. `POST /api/auth/login` → store JWT
-2. `GET /api/auth/me` → roles + module-level permissions
+2. `GET /api/auth/me` → roles (its `permissions` array is empty since item 3B)
 3. `GET /api/resources/my-permissions` → UI resources with `PermissionLevel` per resource; this drives menu visibility and button enable/disable
 
 **Backend errors** use the envelope `{ "message": "..." }`. Watch for `429` from rate limits (`public` policy = 10/min on login/register; `authenticated` = 100/60s). JWT clock skew is zero, so `401` can mean a token that expired seconds ago.
@@ -58,17 +58,49 @@ src/app/
 **Auth** uses JWT tokens stored in `localStorage` under the keys:
 - `prumo_token`
 - `prumo_user`
-- `prumo_permissions`
 - `prumo_resource_permissions`
+- `prumo_tenant_id`
+- `prumo_permissions` — leftover from the system retired in item 3B; arrives empty now
 
-**Permissions** follow a dual system:
-1. **Module permissions** — dot-notation strings (e.g., `"employees.view"`, supports `*` wildcard) checked via `PermissionService.userHasPermission()`
-2. **Resource permissions** — `PermissionLevel`: None/Read/Write/Full checked via `userCanAccessResource()`, `userCanReadResource()`, etc.
+**Permissions**: there is one system, **resource permissions** — `PermissionLevel`
+(None/Read/Write/Full) per resource code, checked with `userCanAccessResource()`. It drives
+menu visibility, route guards, and matches what the API enforces.
 
-The backend permission *catalog* still lists modules (`employees`, `worklogs`, `payments`, `products`, `customers`, `stock`) but the corresponding domain controllers do not exist yet — this frontend is a base platform with only auth/permissions/resources implemented end-to-end. New domain features need both a backend controller and a frontend module.
+The old dual system is gone. Dot-notation strings (`employees.view`) and everything that
+read them were retired in backlog item 3B, on both sides: they gated nothing, and no
+component ever called `hasPermission()`.
 
-**Route protection**: All routes except `/auth/login` require `authGuard`. Admin routes additionally require the `'Administrador'` role via `route.data['roles']`. For resource-level gating, use `resourceAccessGuard` with `data: { resource: 'code', requiredLevel: PermissionLevel.Read }`.
+> **Enums cross the wire as strings.** `PermissionLevel` arrives as `"Read"`, `TenantRole`
+> as `"Owner"`. Comparing the raw value against the numeric enum is always false, and the
+> failure is silent — controls just stop rendering. This has bitten four times. Normalize
+> at the boundary with `toPermissionLevel` / `toTenantRole` from `core/models`; never
+> compare a payload value to an enum member directly.
+
+> **Testing authorization with the master admin proves nothing.** `admin@SBP.com` bypasses
+> every check twice over — global `Administrador` role and Owner of each tenant. Use a
+> Member with a limited role.
+
+**Route protection**: All routes except `/auth/login` require `authGuard`. Resource-level
+gating uses `resourceAccessGuard` with
+`data: { resource: 'code', requiredLevel: PermissionLevel.Read }` — this is the normal way,
+and every admin route uses it.
+
+Each dashboard tab has its **own** resource (`Dashboard.HR`, `Dashboard.Accounting`, …)
+rather than borrowing the module's, so the panel and the module screen can be granted
+independently. The tab list in `DashboardComponent` and the route guard are two separate
+gates on the same thing — **change both**, or a tab shows up and the route then refuses it.
 
 **Component pattern**: All feature components are standalone. Forms open in Material dialogs. Data is loaded in `ngOnInit()` with a loading spinner. Use `.subscribe()` for HTTP calls — not async pipe.
 
-**New feature module checklist**: Create a standalone component under `modules/`, add the route to `app.routes.ts` with the appropriate guard and `data` (roles/permissions), add navigation link in `LayoutComponent` with role visibility.
+**New feature module checklist**: create a standalone component under `modules/`; add the
+route to `app.routes.ts` with `resourceAccessGuard` and its `data`; add the nav entry in
+`LayoutComponent` with the matching `resourceCode`; and declare the resource in the
+backend's `TenantBootstrapSeeder` — without that last step the screen is invisible to
+everyone, because the resource it gates on does not exist.
+
+**Styling Angular Material internals**: `mat-button` and `mat-list-item` nest their content
+in wrappers of their own (`.mdc-button__label`, `.mdc-list-item__primary-text`) that
+component styles cannot reach — `display: flex` on the host does not reach the children.
+Three layouts broke this way. Prefer plain markup with `matMenuTriggerFor` over fighting
+the wrapper; use `::ng-deep`, scoped tightly, only when the Material component is genuinely
+needed.

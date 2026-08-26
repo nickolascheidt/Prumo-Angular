@@ -1,6 +1,16 @@
 # Prumo ERP — Visão Geral do Sistema
 
-Este documento descreve a arquitetura, regras de negócio e todos os endpoints da API REST do backend. Ele foi criado para orientar o desenvolvimento do **frontend**.
+Este documento descreve a arquitetura, regras de negócio e os endpoints da API REST do
+backend. Ele existe para orientar o desenvolvimento do **frontend**.
+
+> **Revisado em 2026-08-26.** Nesta revisão foram removidas seções que descreviam coisas
+> que já não existiam: os endpoints `/api/permissions/*` (aposentados no item 3B) e as
+> API keys (removidas em maio). Documentação que descreve um endpoint morto é pior que
+> documentação faltando — manda escrever código contra o que não responde.
+>
+> **A fonte da verdade continua sendo o código**, em `Prumo.Api/Controllers`. Ao mexer em
+> autorização, confira também `docs/MVP-BACKLOG.md` no repo do backend, seção
+> "Onde o projeto está".
 
 ---
 
@@ -54,36 +64,57 @@ SaaSBasePlatform/
 
 ## Sistema de Permissões
 
-Existem **dois sistemas de autorização** que funcionam em conjunto:
+Existe **um** sistema de autorização: **`ResourcePermission`** — (role × recurso) → nível.
 
-### 1. Permissões por Módulo (string-based)
+> Até 2026-08-26 havia um segundo, de permissões em string (`employees.view` e afins).
+> Ele foi **aposentado no item 3B do backlog** porque não gateava nada: nenhum endpoint
+> usava `[Authorize(Policy=…)]` e o frontend nunca lia os claims. Os endpoints
+> `/api/permissions/*` **não existem mais**.
 
-Permissões seguem o padrão `[módulo].[ação]`. Suportam **wildcard**: `employees.*` concede todas as permissões do módulo `employees`.
-
-| Módulo | Permissões disponíveis |
-|---|---|
-| `employees` | `employees.view`, `employees.create`, `employees.edit`, `employees.delete`, `employees.manage_payments` |
-| `worklogs` | `worklogs.view`, `worklogs.create`, `worklogs.edit`, `worklogs.delete` |
-| `payments` | `payments.view`, `payments.create`, `payments.delete`, `payments.view_reports` |
-| `products` | `products.view`, `products.create`, `products.edit`, `products.delete` |
-| `customers` | `customers.view`, `customers.create`, `customers.edit`, `customers.delete` |
-| `stock` | `stock.view`, `stock.manage`, `stock.view_reports` |
-
-### 2. Permissões por Recurso de UI (ResourcePermission)
-
-Cada recurso representa uma **tela ou seção do frontend**. Roles recebem um nível de acesso (`PermissionLevel`) por recurso.
+Cada recurso representa uma **tela ou seção do frontend**. Roles recebem um nível de
+acesso por recurso.
 
 | PermissionLevel | Valor | Significado |
 |---|---|---|
 | `None` | 0 | Usuário não vê nem sabe que o recurso existe |
 | `Read` | 1 | Pode visualizar |
 | `Write` | 2 | Pode visualizar e editar |
-| `Full` | 3 | Acesso total (incluindo exclusão e configurações) |
+| `Full` | 3 | Acesso total (incluindo exclusão) |
 
-**Como o frontend deve usar isso:**
+**O nível exigido vem do verbo HTTP.** O atributo `[TenantModule]` no backend infere:
+
+| Verbo | Nível exigido |
+|---|---|
+| `GET`, `HEAD`, `OPTIONS` | `Read` |
+| `POST`, `PUT`, `PATCH` | `Write` |
+| `DELETE` | `Full` |
+
+É assim que se expressa **"vê mas não edita"**: nível `Read` num recurso abre a tela e
+devolve **403** em qualquer escrita.
+
+> ⚠️ **A API serializa enums como string.** `PermissionLevel` chega `"Read"`, não `1`, e
+> `TenantRole` chega `"Owner"`, não `2`. Comparar o valor cru com o enum numérico é sempre
+> falso, e a falha é **silenciosa** — os controles simplesmente somem da tela. Já aconteceu
+> quatro vezes neste projeto. Normalize na fronteira (`toPermissionLevel`, `toTenantRole`).
+
+**Como o frontend usa isso:**
 1. Chamar `GET /api/resources/my-permissions` logo após o login.
-2. A resposta contém `allowedResources` (lista de recursos que o usuário pode ver) e `resourcePermissions` (mapa `resourceCode → PermissionLevel`).
-3. Usar esses dados para construir o menu de navegação e habilitar/desabilitar botões de ação.
+2. A resposta traz `allowedResources` e `resourcePermissions` (mapa `resourceCode → nível`).
+3. Esses dados montam o menu e habilitam/desabilitam os botões de ação.
+
+> ⚠️ **O master admin não passa por nenhuma checagem.** A role global `Administrador` e o
+> cargo Owner/Admin do tenant devolvem `Full` direto. Testar gating com uma conta dessas
+> não prova nada.
+
+**Recursos semeados** (`TenantBootstrapSeeder`, 16 por tenant): `Dashboard.Main`,
+`Dashboard.Accounting`, `Dashboard.Finance`, `Dashboard.HR`, `Dashboard.Admin`,
+`User.Management`, `Role.Management`, `Permission.Management`, `System.Configuration`,
+`ChartOfAccounts.Management`, `GeneralLedger.Management`, `HR.Employees`, `HR.WorkLogs`,
+`HR.Payments`, `HR.PaymentPeriods`, `AccountsPayable.Entries`.
+
+**Auditoria:** toda mudança de nível é registrada em `ResourcePermissionAuditLog` (role,
+recurso, de que nível para qual, por quem). O acesso de suporte do master admin vai para
+`SupportAccessLog`.
 
 ---
 
@@ -446,99 +477,53 @@ Atribui ou atualiza o nível de permissão de uma role sobre um recurso.
 
 ---
 
-### Permissions — `/api/permissions`
+### Roles do tenant — `/api/tenants/{tenantId}/roles`
 
-> Gerencia permissões de módulo (string-based) associadas às roles.
-> Todos os endpoints requerem autenticação e permissão de recurso `permissions`.
+Substitui `/api/permissions/*`, removido no item 3B. É o que a tela **Roles**
+(`/admin/roles`) consome.
 
-#### `GET /api/permissions`
-Lista todas as permissões disponíveis no sistema.
+Todos exigem o recurso `Role.Management`, com o nível inferido do verbo.
 
-- **Auth:** Requerida + recurso `permissions` com nível `Read`
-- **Respostas:**
-  - `200 OK` → `PermissionDto[]`
+#### `GET /api/tenants/{tenantId}/roles`
+Roles visíveis para o tenant: as canônicas do sistema **mais** as que ele criou.
 
-**`PermissionDto`:**
+- **Auth:** requerida + `Role.Management` nível `Read`
+- **200:**
 ```json
-{
-  "id": "guid",
-  "name": "string (ex: employees.view)",
-  "description": "string"
-}
-```
-
----
-
-#### `GET /api/permissions/roles/{roleName}`
-Retorna as permissões atribuídas a uma role específica.
-
-- **Auth:** Requerida + recurso `permissions` com nível `Read`
-- **Respostas:**
-  - `200 OK` → `RolePermissionsDto`
-  - `404 Not Found`
-
-**`RolePermissionsDto`:**
-```json
-{
-  "roleName": "string",
-  "permissions": [{ "id": "guid", "name": "string", "description": "string" }]
-}
-```
-
----
-
-#### `POST /api/permissions/roles/{roleName}/grant`
-Concede uma permissão a uma role.
-
-- **Auth:** Requerida + recurso `permissions` com nível `Full`
-- **Body:**
-  ```json
+[
   {
-    "permissionName": "employees.view",
-    "reason": "string (opcional)"
+    "id": "guid",
+    "name": "Leitura",
+    "description": "string | null",
+    "isCanonical": false,
+    "memberCount": 2
   }
-  ```
-- **Respostas:**
-  - `200 OK`
-  - `400 Bad Request`
-  - `404 Not Found`
-
----
-
-#### `DELETE /api/permissions/roles/{roleName}/revoke/{permissionName}`
-Revoga uma permissão de uma role.
-
-- **Auth:** Requerida + recurso `permissions` com nível `Full`
-- **Query:** `reason` (string, opcional)
-- **Respostas:**
-  - `200 OK`
-  - `400 Bad Request`
-  - `404 Not Found`
-
----
-
-#### `GET /api/permissions/audit`
-Retorna o histórico de auditoria de mudanças em permissões.
-
-- **Auth:** Requerida + recurso `permissions` com nível `Read`
-- **Query:**
-  - `roleName` (string, opcional — filtra por role)
-  - `take` (int, default: 100)
-- **Respostas:**
-  - `200 OK` → `PermissionAuditDto[]`
-
-**`PermissionAuditDto`:**
-```json
-{
-  "id": "guid",
-  "roleName": "string",
-  "permissionName": "string",
-  "action": "Granted | Revoked",
-  "performedByUserEmail": "string",
-  "performedAt": "datetime",
-  "reason": "string"
-}
+]
 ```
+`isCanonical: true` = role do sistema: visível em todo tenant e **não pode ser excluída**.
+`memberCount` conta só os membros **deste** tenant.
+
+#### `POST /api/tenants/{tenantId}/roles`
+Cria uma role pertencente ao tenant.
+
+- **Auth:** requerida + `Role.Management` nível `Write`
+- **Body:** `{ "name": "string (máx 64)", "description": "string | null" }`
+- **201:** o `TenantRoleDto` criado
+- **400:** nome vazio, nome já usado **neste** tenant, ou nome de role canônica
+  (`"RH"`, `"Financeiro"`… são reservados)
+
+> A role **nasce sem acesso nenhum** — zero `ResourcePermission`. É fail-closed de
+> propósito: quem cria concede os níveis depois, na grade.
+
+> Dois tenants **podem** ter roles de mesmo nome. A unicidade vale dentro do tenant.
+
+#### `DELETE /api/tenants/{tenantId}/roles/{roleId}`
+Exclui uma role do tenant.
+
+- **Auth:** requerida + `Role.Management` nível `Full`
+- **204:** excluída, junto de todos os níveis de acesso dela
+- **400:** é role do sistema, ou ainda está atribuída a algum membro
+- **404:** não existe, ou pertence a outro tenant
 
 ---
 
@@ -571,15 +556,20 @@ Como fallback, o middleware aceita o header `X-Tenant-Id` para resolver o tenant
 | POST | `/api/tenants/{tenantId}/members` | JWT + Owner/Admin | Body: `{ userId, role }` |
 | DELETE | `/api/tenants/{tenantId}/members/{userId}` | JWT + Owner/Admin | Remove membro |
 
-### Endpoints de API Keys — `/api/tenants/{tenantId}/api-keys`
+### Endpoints de roles de membro — `/api/tenants/{tenantId}/members/{userId}/roles`
 
-API keys são tenant-scoped. Tipos: `Anon=0`, `Service=1`. A chave bruta só é retornada na criação.
+As "chaves de módulo" que o membro carrega naquele tenant.
 
 | Método | Rota | Auth |
 |---|---|---|
-| POST | `/api/tenants/{tenantId}/api-keys` | JWT + Owner/Admin |
-| GET  | `/api/tenants/{tenantId}/api-keys` | JWT + Owner/Admin |
-| DELETE | `/api/tenants/{tenantId}/api-keys/{apiKeyId}` | JWT + Owner/Admin |
+| GET | `/members/{userId}/roles` | JWT + Owner/Admin |
+| POST | `/members/{userId}/roles` | JWT + Owner/Admin — body `{ roleName }` |
+| DELETE | `/members/{userId}/roles/{roleName}` | JWT + Owner/Admin |
+| GET | `/assignable-roles` | JWT + membro — canônicas **mais** as criadas por este tenant |
+
+> **API keys foram removidas** (migration `RemoveApiKeys`, 2026-05-28). Não existe mais
+> `/api/tenants/{tenantId}/api-keys` — este documento as descrevia muito depois de elas
+> terem sumido.
 
 ---
 

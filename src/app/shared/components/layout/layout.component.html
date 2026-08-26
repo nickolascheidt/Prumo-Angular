@@ -11,12 +11,16 @@
   <span class="spacer"></span>
 
   <ng-container *ngIf="currentUser$ | async as user">
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-trigger">
-      <div class="user-trigger__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</div>
-      <div class="user-trigger__info">
+    <!-- Botão nativo em vez de mat-button: o mat-button embrulha o conteúdo num
+         .mdc-button__label que o estilo do componente não alcança, e avatar, nome e
+         chevron acabavam empilhados e sobrepostos. -->
+    <button type="button" [matMenuTriggerFor]="userMenu" class="user-trigger"
+            [attr.aria-label]="'Menu de ' + (user.fullName || user.email)">
+      <span class="user-trigger__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</span>
+      <span class="user-trigger__info">
         <span class="user-trigger__name">{{ user.fullName }}</span>
         <span class="user-trigger__email">{{ user.email }}</span>
-      </div>
+      </span>
       <mat-icon class="user-trigger__chev">expand_more</mat-icon>
     </button>
   </ng-container>

@@ -53,7 +53,15 @@ import { MatIconModule } from '@angular/material/icon';
     </mat-dialog-actions>
   `,
   styles: [`
-    .form { display: flex; flex-direction: column; gap: var(--space-2); min-width: 340px; }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      min-width: 340px;
+      /* O mat-dialog-content corta o topo do primeiro campo sem esta folga:
+         o label flutuante do outline fica na borda do scroll. */
+      padding-top: var(--space-2);
+    }
     .hint {
       display: flex;
       align-items: flex-start;

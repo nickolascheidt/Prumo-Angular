@@ -208,10 +208,6 @@ export class AuthService {
     const token = response.token;
     const user = response.user;
 
-    console.log('✅ Login bem-sucedido!');
-    console.log('🔑 Token recebido:', token.substring(0, 20) + '...');
-    console.log('👤 Usuário:', user.email);
-
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));
 

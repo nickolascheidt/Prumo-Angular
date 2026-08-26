@@ -10,8 +10,11 @@
       <mat-spinner diameter="36"></mat-spinner>
     </div>
 
-    <mat-list *ngIf="!isLoading && memberships.length">
-      <mat-list-item *ngFor="let m of memberships" class="tenant-item">
+    <!-- Lista simples em vez de mat-list: o mat-list-item aninha o conteúdo em dois
+         wrappers próprios (__content > __primary-text) que o estilo do componente não
+         alcança, e o botão acabava empilhado sob o nome do tenant. -->
+    <div class="tenant-list" *ngIf="!isLoading && memberships.length">
+      <div class="tenant-item" *ngFor="let m of memberships">
         <div class="tenant-item__info">
           <strong>{{ m.tenantName }}</strong>
           <small>{{ m.tenantSlug }} · {{ roleLabel(m.role) }}</small>
@@ -21,8 +24,8 @@
                 (click)="select(m.tenantId)">
           Entrar
         </button>
-      </mat-list-item>
-    </mat-list>
+      </div>
+    </div>
 
     <p *ngIf="!isLoading && !memberships.length" class="empty-msg">
       Sua conta não tem acesso a nenhum tenant. Contate um administrador.

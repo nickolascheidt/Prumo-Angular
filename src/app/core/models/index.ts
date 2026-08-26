@@ -23,6 +23,35 @@ export enum TenantRole {
   Owner = 2
 }
 
+/**
+ * A API serializa TenantRole como string ("Owner"), enquanto o enum daqui é numérico.
+ * Tratar a string como número já quebrou três telas: o cargo virava "Desconhecido" na
+ * lista de membros, os controles de gestão sumiam, e a seleção de tenant mostrava "2"
+ * no lugar de "Owner".
+ *
+ * Valor irreconhecível vira Member — o menor privilégio.
+ */
+export function toTenantRole(value: TenantRole | string | null | undefined): TenantRole {
+  if (typeof value === 'number') {
+    return value >= TenantRole.Member && value <= TenantRole.Owner ? value : TenantRole.Member;
+  }
+  const parsed = typeof value === 'string'
+    ? TenantRole[value as keyof typeof TenantRole]
+    : undefined;
+  return typeof parsed === 'number' ? parsed : TenantRole.Member;
+}
+
+const TENANT_ROLE_LABELS: Record<TenantRole, string> = {
+  [TenantRole.Member]: 'Membro',
+  [TenantRole.Admin]: 'Admin',
+  [TenantRole.Owner]: 'Owner'
+};
+
+/** Rótulo do cargo, aceitando tanto o número quanto a string que a API manda. */
+export function tenantRoleLabel(value: TenantRole | string | null | undefined): string {
+  return TENANT_ROLE_LABELS[toTenantRole(value)];
+}
+
 export interface Tenant {
   id: string;
   name: string;

@@ -136,6 +136,35 @@
       </tr>
     </table>
 
+    <!-- Convites que ainda não viraram membro: o e-mail não tem conta no Prumo. -->
+    @if (pendingInvitations.length > 0) {
+      <section class="invitations">
+        <h3 class="invitations__title">
+          <mat-icon>schedule_send</mat-icon>
+          <span>Convites aguardando cadastro ({{ pendingInvitations.length }})</span>
+        </h3>
+        <p class="invitations__hint">
+          Estes e-mails ainda não têm conta. Cada um entra automaticamente ao se cadastrar
+          com o mesmo endereço.
+        </p>
+
+        <ul class="invitations__list">
+          @for (invitation of pendingInvitations; track invitation.id) {
+            <li class="invitations__item">
+              <span class="invitations__email">{{ invitation.email }}</span>
+              <span class="invitations__role">{{ roleLabel(invitation.role) }}</span>
+              <span class="invitations__date">{{ invitation.createdAt | date:'dd/MM/yyyy' }}</span>
+              <button mat-icon-button
+                      matTooltip="Cancelar convite"
+                      (click)="cancelInvitation(invitation)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
     <!-- Rodapé só-leitura: preserva o único conteúdo exclusivo de /admin/tenant. -->
     <footer class="tenant-footer">
       <mat-icon>business</mat-icon>

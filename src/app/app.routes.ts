@@ -6,6 +6,12 @@ import { AuthService } from './core/services';
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { TenantSelectionComponent } from './modules/auth/tenant-selection/tenant-selection.component';
+import { RegisterComponent } from './modules/auth/register/register.component';
+import { CheckEmailComponent } from './modules/auth/check-email/check-email.component';
+import { ConfirmEmailComponent } from './modules/auth/confirm-email/confirm-email.component';
+import { ForgotPasswordComponent } from './modules/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './modules/auth/reset-password/reset-password.component';
+import { AwaitingInvitationComponent } from './modules/auth/awaiting-invitation/awaiting-invitation.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { DashboardOverviewComponent } from './modules/dashboard/overview/dashboard-overview.component';
 import { DashboardAccountingComponent } from './modules/dashboard/accounting/dashboard-accounting.component';
@@ -39,6 +45,14 @@ export const routes: Routes = [
     path: 'auth',
     children: [
       { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      // Sem guard: são os destinos dos links de e-mail, e quem os abre ainda não tem
+      // sessão. O que protege cada um é o token na URL, checado pela API.
+      { path: 'check-email', component: CheckEmailComponent },
+      { path: 'confirm-email', component: ConfirmEmailComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'awaiting-invitation', component: AwaitingInvitationComponent },
       { path: 'select-tenant', component: TenantSelectionComponent, canActivate: [tenantSelectionGuard] }
     ]
   },

@@ -1,0 +1,21 @@
+<app-auth-shell title="Confirme seu e-mail" subtitle="Falta um passo" icon="mark_email_unread">
+  <div class="auth-status">
+    <mat-icon>outgoing_mail</mat-icon>
+    <p class="auth-note">
+      Enviamos um link de confirmação<ng-container *ngIf="email">&nbsp;para <strong>{{ email }}</strong></ng-container>.
+      Abra o link para ativar sua conta.
+    </p>
+  </div>
+
+  <button
+    mat-stroked-button
+    class="auth-btn auth-btn--block"
+    [disabled]="isResending || !email"
+    (click)="resend()">
+    Reenviar e-mail
+  </button>
+
+  <div class="auth-links">
+    <a routerLink="/auth/login">Voltar para o login</a>
+  </div>
+</app-auth-shell>

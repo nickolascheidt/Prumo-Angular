@@ -14,7 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService, AuthService } from '@core/services';
-import { Tenant, TenantMember, TenantRole, toTenantRole, tenantRoleLabel } from '@core/models';
+import { Tenant, TenantInvitation, TenantMember, TenantRole, toTenantRole, tenantRoleLabel } from '@core/models';
 import { AddMemberDialogComponent } from './add-member-dialog.component';
 
 @Component({
@@ -35,6 +35,8 @@ export class TenantMembersComponent implements OnInit {
 
   members: TenantMember[] = [];
   filteredMembers: TenantMember[] = [];
+  /** Convites a e-mails que ainda não têm conta. Somem quando a pessoa se cadastra. */
+  pendingInvitations: TenantInvitation[] = [];
   tenant: Tenant | null = null;
   availableRoles: string[] = [];
 
@@ -70,6 +72,7 @@ export class TenantMembersComponent implements OnInit {
     this.loadTenant();
     this.loadAssignableRoles();
     this.loadMembers();
+    this.loadInvitations();
   }
 
   // ----- carregamento -----
@@ -88,6 +91,28 @@ export class TenantMembersComponent implements OnInit {
         this.loading = false;
         this.showError('Não foi possível carregar os membros', error);
       }
+    });
+  }
+
+  loadInvitations(): void {
+    this.api.getPendingInvitations(this.tenantId).subscribe({
+      next: invitations => this.pendingInvitations = invitations.map(
+        i => ({ ...i, role: toTenantRole(i.role) })
+      ),
+      // Convite pendente é informação acessória: falhar em carregá-la não deve estragar a
+      // tela de membros, que é o que a pessoa veio ver.
+      error: () => this.pendingInvitations = []
+    });
+  }
+
+  cancelInvitation(invitation: TenantInvitation): void {
+    this.api.cancelInvitation(this.tenantId, invitation.id).subscribe({
+      next: () => {
+        this.snack.open(`Convite para ${invitation.email} cancelado.`, 'Fechar', { duration: 4000 });
+        this.loadInvitations();
+      },
+      error: (error: HttpErrorResponse) =>
+        this.showError('Não foi possível cancelar o convite', error)
     });
   }
 
@@ -217,7 +242,13 @@ export class TenantMembersComponent implements OnInit {
     this.dialog.open(AddMemberDialogComponent, {
       width: '420px',
       data: { tenantId: this.tenantId }
-    }).afterClosed().subscribe(added => { if (added) this.loadMembers(); });
+    }).afterClosed().subscribe(added => {
+      if (!added) return;
+      // Recarrega as duas listas: o e-mail pode ter virado membro (se já tinha conta) ou
+      // convite pendente (se não tinha), e o diálogo não diz qual à tela.
+      this.loadMembers();
+      this.loadInvitations();
+    });
   }
 
   removeMember(member: TenantMember): void {

@@ -91,12 +91,36 @@ export interface AddTenantMemberRequest {
   role: TenantRole;
 }
 
-export interface CreateTenantUserRequest {
+export interface RegisterRequest {
   email: string;
   password: string;
   fullName: string;
-  phoneNumber?: string;
+  phoneNumber?: string | null;
+}
+
+/** O cadastro responde 202 e não traz token: confirmar o e-mail vem antes de entrar. */
+export interface RegistrationResult {
+  userId: string;
+  email: string;
+}
+
+export interface InviteMemberRequest {
+  email: string;
   role: TenantRole;
+}
+
+export interface InviteMemberResult {
+  /** Verdadeiro quando o e-mail já tinha conta e a pessoa virou membro na hora. */
+  joinedImmediately: boolean;
+  userId: string | null;
+  email: string;
+}
+
+export interface TenantInvitation {
+  id: string;
+  email: string;
+  role: TenantRole;
+  createdAt: string;
 }
 
 export interface TenantMemberRoles {

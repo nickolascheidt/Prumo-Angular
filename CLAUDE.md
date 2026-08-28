@@ -80,7 +80,23 @@ component ever called `hasPermission()`.
 > every check twice over — global `Administrador` role and Owner of each tenant. Use a
 > Member with a limited role.
 
-**Route protection**: All routes except `/auth/login` require `authGuard`. Resource-level
+**Auth routes are public by design.** Besides `/auth/login`, the item 8 screens
+(`register`, `check-email`, `confirm-email`, `forgot-password`, `reset-password`,
+`awaiting-invitation`) have no guard: they are the destinations of email links, opened by
+people who have no session yet. What protects `confirm-email` and `reset-password` is the
+single-use token in the URL, checked by the API.
+
+The shared frame (background, orbs, card, brand) is `AuthShellComponent`; form styles come
+from the `_auth-forms.scss` partial. Six screens copying the same SCSS would guarantee one
+gets left behind.
+
+**Login has one branch that is not an error.** A 403 carrying
+`code: 'email_not_confirmed'` means the password was right and the address was never
+confirmed — route to `/auth/check-email`, never show it as a credential failure. And zero
+memberships routes to `/auth/awaiting-invitation`: the account is fine, nobody has added it
+to a company yet.
+
+**Route protection**: All other routes require `authGuard`. Resource-level
 gating uses `resourceAccessGuard` with
 `data: { resource: 'code', requiredLevel: PermissionLevel.Read }` — this is the normal way,
 and every admin route uses it.

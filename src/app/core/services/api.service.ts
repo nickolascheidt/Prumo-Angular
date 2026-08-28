@@ -64,7 +64,11 @@ import {
   CreateHrPaymentRequest,
   UserLookupResult,
   UpdateMemberRoleRequest,
-  CreateTenantUserRequest,
+  InviteMemberRequest,
+  InviteMemberResult,
+  TenantInvitation,
+  RegisterRequest,
+  RegistrationResult,
   TenantMemberRoles,
   AssignFeatureRoleRequest
 } from '../models';
@@ -83,12 +87,33 @@ export class ApiService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials);
   }
 
-  register(data: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, data);
+  /**
+   * Responde 202 e **não** devolve sessão: a conta nasce sem e-mail confirmado, e
+   * confirmar é pré-requisito para entrar.
+   */
+  register(data: RegisterRequest): Observable<RegistrationResult> {
+    return this.http.post<RegistrationResult>(`${this.apiUrl}/auth/register`, data);
   }
 
-  registerAdmin(data: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register/admin`, data);
+  registerAdmin(data: RegisterRequest): Observable<RegistrationResult> {
+    return this.http.post<RegistrationResult>(`${this.apiUrl}/auth/register/admin`, data);
+  }
+
+  confirmEmail(userId: string, token: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/confirm-email`, { userId, token });
+  }
+
+  resendConfirmation(email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/resend-confirmation`, { email });
+  }
+
+  /** Sempre 202, exista o e-mail ou não — a resposta não pode revelar quais contas existem. */
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(userId: string, token: string, newPassword: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/reset-password`, { userId, token, newPassword });
   }
 
   getCurrentUser(): Observable<any> {
@@ -225,8 +250,26 @@ export class ApiService {
     return this.http.post<void>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members`, data);
   }
 
-  createTenantUser(tenantId: string, data: CreateTenantUserRequest): Observable<TenantMember> {
-    return this.http.post<TenantMember>(`${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/users`, data);
+  /**
+   * Adiciona pelo e-mail. Conta existente entra na hora; e-mail sem conta vira convite
+   * pendente. Substituiu `createTenantUser`, em que o admin escolhia a senha do membro.
+   */
+  inviteMember(tenantId: string, data: InviteMemberRequest): Observable<InviteMemberResult> {
+    return this.http.post<InviteMemberResult>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/invitations`, data
+    );
+  }
+
+  getPendingInvitations(tenantId: string): Observable<TenantInvitation[]> {
+    return this.http.get<TenantInvitation[]>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/invitations`
+    );
+  }
+
+  cancelInvitation(tenantId: string, invitationId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/invitations/${encodeURIComponent(invitationId)}`
+    );
   }
 
   removeTenantMember(tenantId: string, userId: string): Observable<void> {

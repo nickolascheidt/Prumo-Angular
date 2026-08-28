@@ -1,0 +1,61 @@
+// Estilos de formulário compartilhados pelas telas de autenticação.
+//
+// Ficam num partial e não no `auth-shell` porque o conteúdo é projetado por
+// `<ng-content>`: a encapsulação do Angular aplica o SCSS do shell só ao template dele,
+// não ao que vem de fora. Um partial dá reúso sem `::ng-deep` e sem classe global nova.
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-btn {
+  height: 46px;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+.auth-links a {
+  color: var(--color-primary-700);
+  text-decoration: none;
+  cursor: pointer;
+}
+.auth-links a:hover { text-decoration: underline; }
+
+.auth-note {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.auth-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.auth-status mat-icon {
+  font-size: 44px;
+  width: 44px;
+  height: 44px;
+}
+.auth-status--ok mat-icon { color: var(--color-success); }
+.auth-status--error mat-icon { color: var(--color-error); }
+
+::ng-deep .auth-btn .mat-mdc-progress-spinner circle {
+  stroke: var(--color-text-inverse) !important;
+}
+
+.auth-btn--block { width: 100%; }

@@ -1,0 +1,17 @@
+<app-auth-shell title="Aguardando convite" subtitle="Sua conta está pronta" icon="hourglass_top">
+  <div class="auth-status">
+    <mat-icon>group_add</mat-icon>
+    <p class="auth-note">
+      Sua conta<ng-container *ngIf="email">&nbsp;(<strong>{{ email }}</strong>)</ng-container>
+      ainda não faz parte de nenhuma empresa.
+    </p>
+    <p class="auth-note">
+      Peça a um administrador para adicionar <strong>este mesmo e-mail</strong>. Assim que
+      isso acontecer, é só entrar de novo — a empresa aparece sozinha.
+    </p>
+  </div>
+
+  <button mat-stroked-button class="auth-btn auth-btn--block" (click)="signOut()">
+    Sair
+  </button>
+</app-auth-shell>

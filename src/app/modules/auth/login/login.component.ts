@@ -8,8 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services';
+import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,9 @@ import { AuthService } from '@core/services';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RouterLink,
+    AuthShellComponent
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -68,6 +71,16 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
+
+        // A senha está certa e o e-mail nunca foi confirmado. A API manda um `code`
+        // próprio justamente para esta tela não tratar o caso como senha errada.
+        if (error?.error?.code === 'email_not_confirmed') {
+          this.router.navigate(['/auth/check-email'], {
+            queryParams: { email: this.loginForm.value.email }
+          });
+          return;
+        }
+
         const message = error?.error?.message || 'Erro ao realizar login';
         this.snackBar.open(message, 'Fechar', { duration: 5000, panelClass: 'error-snackbar' });
       }
@@ -85,12 +98,10 @@ export class LoginComponent implements OnInit {
       next: (memberships) => {
         if (memberships.length === 0) {
           this.isLoading = false;
-          this.authService.logout();
-          this.snackBar.open(
-            'Sua conta não tem acesso a nenhum tenant. Contate um administrador.',
-            'Fechar',
-            { duration: 6000, panelClass: 'error-snackbar' }
-          );
+          // Não é erro de credencial: a conta está certa e só falta alguém adicioná-la a
+          // uma empresa. Antes isto era um snackbar vermelho seguido de logout, que lia
+          // como falha de senha.
+          this.router.navigate(['/auth/awaiting-invitation']);
           return;
         }
 

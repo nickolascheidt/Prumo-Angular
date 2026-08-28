@@ -1,41 +1,31 @@
-<div class="login-page">
-  <div class="login-page__bg-orb login-page__bg-orb--1"></div>
-  <div class="login-page__bg-orb login-page__bg-orb--2"></div>
+<app-auth-shell>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <mat-icon matPrefix>mail_outline</mat-icon>
+      <input matInput formControlName="email" type="email" placeholder="seu@email.com" autocomplete="email">
+      <mat-error>Email inválido</mat-error>
+    </mat-form-field>
 
-  <mat-card class="login-card">
-    <div class="login-card__brand">
-      <div class="login-card__logo">
-        <mat-icon>hub</mat-icon>
-      </div>
-      <h1>Prumo ERP</h1>
-      <p>Sistema de Gestão de Funcionários</p>
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Senha</mat-label>
+      <mat-icon matPrefix>lock_outline</mat-icon>
+      <input matInput formControlName="password" type="password" placeholder="Sua senha" autocomplete="current-password">
+      <mat-error>Senha obrigatória (mínimo 6 caracteres)</mat-error>
+    </mat-form-field>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <mat-icon matPrefix>mail_outline</mat-icon>
-        <input matInput formControlName="email" type="email" placeholder="seu@email.com" autocomplete="email">
-        <mat-error>Email inválido</mat-error>
-      </mat-form-field>
+    <button
+      mat-flat-button
+      color="primary"
+      class="auth-btn"
+      [disabled]="isLoading || loginForm.invalid">
+      <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      <span *ngIf="!isLoading">Entrar</span>
+    </button>
+  </form>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Senha</mat-label>
-        <mat-icon matPrefix>lock_outline</mat-icon>
-        <input matInput formControlName="password" type="password" placeholder="Sua senha" autocomplete="current-password">
-        <mat-error>Senha obrigatória (mínimo 6 caracteres)</mat-error>
-      </mat-form-field>
-
-      <button
-        mat-flat-button
-        color="primary"
-        class="login-btn"
-        [disabled]="isLoading || loginForm.invalid">
-        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-        <span *ngIf="!isLoading">Entrar</span>
-      </button>
-    </form>
-
-    <p class="login-card__footer">© 2026 Prumo</p>
-  </mat-card>
-</div>
+  <div class="auth-links">
+    <a routerLink="/auth/register">Criar conta</a>
+    <a routerLink="/auth/forgot-password">Esqueci minha senha</a>
+  </div>
+</app-auth-shell>

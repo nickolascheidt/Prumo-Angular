@@ -20,7 +20,9 @@ npx ng test --include='src/app/path/to/component.spec.ts'
 ## Tech Stack
 
 - **Angular 18** with standalone components (no NgModules for features)
-- **Angular Material 18** — deeppurple-amber theme; Primary `#673ab7`, Accent `#f5576c`, Warn `#ff6f00`
+- **Angular Material 18** — tema M2 próprio em `src/styles/_prumo-theme.scss` (identidade
+  Prumo, direção "Azul de Prumo"); Primary `#1b5c86`, Accent `#0f9b8e`, Warn `#b3402f`.
+  Não é mais um prebuilt: as rampas 50–900 são geradas e ancoradas nos tokens do handoff.
 - **TypeScript 5.5** with strict mode
 - **ReactiveFormsModule** (FormBuilder) for all forms
 - **RxJS BehaviorSubjects** in services for state (no NgRx)
@@ -120,3 +122,21 @@ component styles cannot reach — `display: flex` on the host does not reach the
 Three layouts broke this way. Prefer plain markup with `matMenuTriggerFor` over fighting
 the wrapper; use `::ng-deep`, scoped tightly, only when the Material component is genuinely
 needed.
+
+> **`::ng-deep` in `src/styles.scss` is dead code, not a no-op.** Angular only strips that
+> pseudo-selector from *component* styles. In the global sheet it ships verbatim, and the
+> browser drops the whole rule as an unknown pseudo-element — verified in Chrome: of
+> `::ng-deep .a {} .b {}` only `.b` survives parsing. Eight Material overrides sat there
+> never applying until the Prumo rebrand. Global styles have no encapsulation to pierce:
+> write the plain selector.
+
+> **Material's MDC class names are not the directive names.** `mat-flat-button` emits
+> `.mat-mdc-unelevated-button` and `mat-stroked-button` emits `.mat-mdc-outlined-button` —
+> there is no `.mat-mdc-stroked-button`, and an override list naming it silently covers
+> nothing. Target `.mat-mdc-button-base` (excluding `.mat-mdc-icon-button`, `.mat-mdc-fab`
+> and `.mat-mdc-mini-fab`, which must stay round) instead of enumerating variants.
+
+**Icons come from the classic Material Icons font**, not Material Symbols. Names added in
+the Symbols era (`event_upcoming`, `calendar_month`, …) are not ligatures there: they do
+not collapse into a glyph, they render letter by letter and overflow the box. Check a name
+exists before using it.

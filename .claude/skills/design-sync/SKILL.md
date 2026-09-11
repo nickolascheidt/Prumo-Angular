@@ -12,6 +12,20 @@ O design system vive no **Claude Design**, projeto **"SaaS Base Platform Design
 System"**, id `019df28f-17ee-750e-a62f-64153583d01b`. O arquivo canônico é
 `colors_and_type.css`.
 
+> **Desde o rebranding (2026-09-10) os VALORES vêm de outro lugar.** A identidade
+> Prumo (direção "Azul de Prumo" 1c + selo 2e) está no projeto **"Análise de
+> direções Prumo"**, id `e13239f1-eaf4-4b3e-bd2f-9bf43dbd1698`, arquivo
+> `design_handoff_prumo_identidade/colors_and_type.prumo-azul.css`. Aquele projeto
+> é `PROJECT_TYPE_PROJECT` e **não aparece em `list_projects`** — chegue nele por
+> `get_file` com o id acima. Enquanto os dois não forem reconciliados, o handoff
+> ganha: é o que está no código.
+
+> O `:root` do `styles.scss` não é mais o único lugar de cor. O tema Material
+> vive em `src/styles/_prumo-theme.scss`, com duas rampas M2 de 50–900 ancoradas
+> nos tokens 500/600/700 do handoff. Mudou um desses três? A rampa precisa ser
+> regerada, senão o token e o tema discordam — e o desacordo aparece só no ripple
+> e no foco, que ninguém olha.
+
 **Ele é a fonte da verdade.** `src/styles.scss` é um espelho: o bloco `:root`
 dele deve conter exatamente o mesmo conjunto de tokens, com os mesmos valores.
 
@@ -34,7 +48,12 @@ Quando o usuário disser "mudei X no Claude Design, replica no front":
    ./.claude/skills/design-sync/check-tokens.sh
    ```
 
-   Esse script lista tokens definidos, tokens usados, órfãos e hex chumbado.
+   O script varre `.scss`, `.ts` e `.html` de componente e falha em hex
+   chumbado, `rgb()/rgba()` de marca, gradiente (a identidade Prumo os
+   aposentou) e `var(--token)` órfão. `token-exempt` na linha ou na de cima
+   isenta — só para cor que é **dado** (a cor que o usuário escolheu para a
+   categoria), nunca para decisão de design.
+
    Para o diff de **valores** (não só de nomes), compare o `:root` remoto com o
    local lado a lado — o script só cobre nomes.
 3. **Mostre o diff ao usuário antes de aplicar.** Token removido lá em cima é

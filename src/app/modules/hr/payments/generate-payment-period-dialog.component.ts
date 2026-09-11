@@ -76,7 +76,7 @@ import { Employee, GeneratePaymentPeriodRequest, PaymentPeriodSummary } from '@c
     .date-row mat-form-field { flex: 1; }
     .hint { margin: 0; color: var(--color-text-muted); font-size: 13px; }
     .employee-summary {
-      background: #f5f5f5; border-left: 4px solid var(--color-primary);
+      background: var(--color-surface-alt); border-left: 4px solid var(--color-primary);
       padding: 12px 16px; border-radius: 4px; font-size: 13px; display: flex; flex-direction: column; gap: 4px;
     }
   `]

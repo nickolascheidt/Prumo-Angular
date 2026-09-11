@@ -1,12 +1,13 @@
 .dashboard {
   padding: 28px;
-  max-width: 1280px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
   gap: 24px;
 }
 
-/* Hero */
+/* Hero — cor chapada. Era --gradient-primary (roxo→índigo); a identidade Prumo
+   aposentou os gradientes. */
 .hero {
   display: flex;
   align-items: center;
@@ -14,27 +15,37 @@
   gap: 24px;
   padding: 28px 32px;
   border-radius: var(--radius-xl);
-  background: var(--gradient-primary);
+  background: var(--color-primary-700);
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-hero);
 }
 .hero__eyebrow {
   display: inline-block;
-  font-size: 11px;
-  letter-spacing: 1.5px;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  opacity: 0.85;
+  color: var(--color-on-dark-label);
   margin-bottom: 8px;
 }
-.hero h1 { margin: 0; font-size: 26px; font-weight: 600; color: var(--color-text-inverse); }
-.hero p { margin: 6px 0 0; opacity: 0.9; font-size: 14px; }
+.hero h1 {
+  margin: 0;
+  font-size: var(--text-4xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-inverse);
+}
+.hero p {
+  margin: 6px 0 0;
+  font-size: var(--text-base);
+  color: var(--color-on-dark-body);
+}
 .hero__avatar {
-  width: 64px; height: 64px;
+  width: 56px; height: 56px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
   display: flex; align-items: center; justify-content: center;
-  font-size: 26px; font-weight: 600;
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
   flex-shrink: 0;
 }
 
@@ -42,7 +53,7 @@
 .stats-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 .stat {
   display: flex; align-items: center; gap: 14px;
@@ -61,35 +72,162 @@
 .stat__icon--primary { background: var(--color-primary-light); color: var(--color-primary-600); }
 .stat__icon--accent  { background: var(--color-accent-light); color: var(--color-accent); }
 .stat__icon--info    { background: var(--color-info-light); color: var(--color-info); }
-.stat__body { display: flex; flex-direction: column; line-height: 1.2; }
-.stat__label { font-size: 12px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.stat__value { font-size: 20px; font-weight: 600; color: var(--color-text); margin-top: 4px; }
+.stat__icon--warn    { background: var(--color-warn-light); color: var(--color-warn); }
+.stat__body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.stat__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+.stat__value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  margin-top: 4px;
+}
 
-/* Cards */
-.cards-grid {
+/* A IBM Plex Mono entra só nos pesos 400 e 500, que é o que o handoff manda
+   carregar. Pedir 600 aqui não traz um 600: o navegador engorda o 500 por conta
+   própria, e negrito sintético numa monoespaçada borra o dígito justo na coluna
+   onde ele precisa ser lido. */
+.stat__value.num { font-weight: var(--font-medium); }
+
+/* Painéis */
+.panels {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: 1.5fr 1fr;
+  align-items: start;
 }
-.info-card { padding: 22px !important; }
-.info-card__head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.info-card__head h3 { margin: 0; font-size: 16px; font-weight: 600; }
-.info-card__icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: var(--color-primary-light); color: var(--color-primary-600);
-  display: flex; align-items: center; justify-content: center;
-}
-.info-card__icon--accent { background: var(--color-accent-light); color: var(--color-accent); }
+/* Sem o painel de vencimentos não há duas colunas a equilibrar: a de apoio
+   ocupa a largura toda em vez de deixar metade da tela vazia. */
+.panels--single { grid-template-columns: 1fr; }
 
-.info-card__body p { color: var(--color-text-muted); margin: 0 0 14px; line-height: 1.5; }
+.panel { padding: 22px !important; }
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.panel__head h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+}
+.panel__more {
+  font-size: var(--text-base);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.panel__more:hover { text-decoration: underline; }
+
+.panel__loading { display: flex; justify-content: center; padding: 24px; }
+.panel__empty {
+  margin: 0;
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
+.due-row {
+  display: grid;
+  grid-template-columns: 104px 1fr 140px 108px;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  border-bottom: 1px solid var(--color-border);
+}
+.due-row:last-child { border-bottom: none; }
+
+.due-row__date { color: var(--color-text-muted); }
+/* A descrição é a única coluna elástica: sem o min-width:0 ela empurra as
+   outras em vez de truncar, porque item de grid não encolhe abaixo do conteúdo. */
+.due-row__desc {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-base);
+}
+.due-row__amount { color: var(--color-text); }
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+
+  &--pending   { background: var(--chip-pending-bg); color: var(--chip-pending-text); }
+  &--overdue   { background: var(--chip-overdue-bg); color: var(--chip-overdue-text); }
+  &--paid      { background: var(--chip-paid-bg); color: var(--chip-paid-text); }
+  &--cancelled { background: var(--chip-cancelled-bg); color: var(--chip-cancelled-text); }
+}
+
+.side {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
 
 .role-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .role-chip {
   padding: 5px 12px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
+  background: var(--color-primary-light);
   color: var(--color-primary-700);
-  font-size: 13px; font-weight: 500;
+  font-size: 13px;
+  font-weight: var(--font-medium);
 }
-.empty-state { color: var(--color-text-subtle); font-style: italic; margin: 0; }
+
+/* Empilhados na coluna estreita, lado a lado quando o painel de vencimentos não
+   está lá para dividir a largura. Sem isto, três botões de 40px esticam por mil
+   pixels e o rótulo fica boiando no canto esquerdo. */
+.shortcuts {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  mat-icon {
+    font-size: 20px; width: 20px; height: 20px;
+    color: var(--color-primary);
+  }
+
+  &:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 900px) {
+  .panels { grid-template-columns: 1fr; }
+  .due-row { grid-template-columns: 92px 1fr 108px; }
+  /* O chip cai fora na largura estreita: a data já diz se está perto, e manter
+     quatro colunas espremeria a descrição a nada. */
+  .due-row .status-chip { display: none; }
+}

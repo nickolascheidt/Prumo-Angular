@@ -20,12 +20,12 @@ import { forkJoin } from 'rxjs';
     .tile { flex: 1; min-width: 180px; }
     .tile mat-card-content { display: flex; flex-direction: column; align-items: center; padding: 16px; gap: 8px; }
     .tile-icon { font-size: 36px; width: 36px; height: 36px; }
-    .tile-icon.emp { color: #5c6bc0; }
-    .tile-icon.pay { color: #26a69a; }
+    .tile-icon.emp { color: var(--color-primary); }
+    .tile-icon.pay { color: var(--color-accent); }
     .tile-value { font-size: 22px; font-weight: 600; }
-    .tile-label { font-size: 13px; color: #757575; }
+    .tile-label { font-size: 13px; color: var(--color-text-muted); }
     .payments-card { margin-bottom: 24px; }
-    .no-data { color: #9e9e9e; text-align: center; padding: 32px; }
+    .no-data { color: var(--color-text-subtle); text-align: center; padding: 32px; }
   `]
 })
 export class DashboardHrComponent implements OnInit {

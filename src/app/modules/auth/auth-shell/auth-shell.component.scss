@@ -3,41 +3,80 @@
 .auth-page {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 24px;
+  padding: 40px 24px 24px;
   background: var(--gradient-login);
   overflow: hidden;
 }
 
-.auth-page__bg-orb {
+/* A massa circular atrás do cartão. Ancorada fora da tela nos dois eixos: o que
+   se vê é um arco, não um círculo — um círculo inteiro viraria uma bolha. */
+.auth-page__wash {
   position: absolute;
+  width: 720px;
+  height: 720px;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.45;
+  background: var(--color-login-orb-a);
+  opacity: 0.5;
+  left: -120px;
+  bottom: -260px;
   pointer-events: none;
 }
-.auth-page__bg-orb--1 {
-  width: 420px; height: 420px;
-  background: var(--color-login-orb-a);
-  top: -120px; left: -100px;
+
+/* As duas verticais: o fio do prumo, sugerido e não desenhado. */
+.auth-page__plumb {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 76%;
+  pointer-events: none;
 }
-.auth-page__bg-orb--2 {
-  width: 380px; height: 380px;
-  background: var(--color-login-orb-b);
-  bottom: -120px; right: -80px;
+.auth-page__plumb--near {
+  right: 8%;
+  background: rgba(255, 255, 255, 0.1);
+}
+.auth-page__plumb--far {
+  right: 18%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.auth-page__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 96px;
+  width: 100%;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 420px;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.auth-brand__word {
+  font-size: 44px;
+  font-weight: var(--font-medium);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color-text-inverse);
+  line-height: 1;
 }
 
 .auth-card {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 420px;
-  padding: 40px 36px 28px;
+  width: 420px;
+  flex-shrink: 0;
+  padding: 36px 34px !important;
   border-radius: var(--radius-2xl) !important;
   background: var(--color-surface) !important;
-  backdrop-filter: blur(10px);
   box-shadow: var(--shadow-xl) !important;
 }
 
@@ -54,16 +93,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gradient-primary);
-  color: var(--color-text-inverse);
+  background: var(--color-primary-700);
+  color: var(--color-brand-mint);
   box-shadow: var(--shadow-primary);
 }
 .auth-card__logo mat-icon { font-size: 30px; width: 30px; height: 30px; }
 
 .auth-card__brand h1 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
   color: var(--color-text);
 }
 .auth-card__brand p {
@@ -72,9 +111,43 @@
   color: var(--color-text-muted);
 }
 
-.auth-card__footer {
-  margin: 24px 0 0;
+/* O rodapé saiu de dentro do cartão: sobre o branco ele competia com os links
+   do formulário, e a cor que a identidade dá a ele é de texto sobre escuro. */
+.auth-page__footer {
+  position: relative;
+  z-index: 1;
+  margin: 32px 0 0;
   text-align: center;
-  font-size: 12px;
-  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+  color: var(--color-on-dark-muted);
+}
+
+/* Abaixo de dois blocos de 420px mais o intervalo de 96px a coluna de marca não
+   cabe ao lado do cartão. Ela vai para cima dele e encolhe — sumir com a marca
+   justo na tela que apresenta o produto seria o pior dos dois. */
+@media (max-width: 980px) {
+  .auth-page__content {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .auth-brand {
+    width: auto;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .auth-brand__word {
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+
+  .auth-page__plumb { display: none; }
+}
+
+@media (max-width: 460px) {
+  .auth-card {
+    width: 100%;
+    padding: 28px 22px !important;
+  }
 }

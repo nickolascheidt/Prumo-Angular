@@ -13,9 +13,23 @@
       <div class="stat__icon stat__icon--primary"><mat-icon>shield</mat-icon></div>
       <div class="stat__body">
         <span class="stat__label">Roles atribuídas</span>
-        <span class="stat__value">{{ user.roles.length || 0 }}</span>
+        <span class="stat__value num">{{ user.roles.length || 0 }}</span>
       </div>
     </div>
+
+    <!-- O quarto card só existe para quem alcança Contas a Pagar: um "0 a vencer"
+         para quem não pode abrir a tela seria um número sem sentido nem destino. -->
+    <div class="stat" *ngIf="canSeePayables">
+      <!-- `event`, e não `event_upcoming`: a segunda só existe no Material Symbols,
+           e o app carrega a Material Icons clássica. Ligadura que a fonte não
+           conhece não colapsa — sai desenhada letra a letra e vaza da caixa. -->
+      <div class="stat__icon stat__icon--warn"><mat-icon>event</mat-icon></div>
+      <div class="stat__body">
+        <span class="stat__label">A vencer em 30 dias</span>
+        <span class="stat__value num">{{ upcomingCount }}</span>
+      </div>
+    </div>
+
     <div class="stat">
       <div class="stat__icon stat__icon--accent"><mat-icon>verified_user</mat-icon></div>
       <div class="stat__body">
@@ -23,6 +37,7 @@
         <span class="stat__value">Ativo</span>
       </div>
     </div>
+
     <div class="stat">
       <div class="stat__icon stat__icon--info"><mat-icon>schedule</mat-icon></div>
       <div class="stat__body">
@@ -32,36 +47,57 @@
     </div>
   </section>
 
-  <section class="cards-grid">
-    <mat-card class="info-card">
-      <div class="info-card__head">
-        <div class="info-card__icon"><mat-icon>badge</mat-icon></div>
-        <h3>Suas Roles</h3>
+  <section class="panels" [class.panels--single]="!canSeePayables || upcomingFailed">
+    <mat-card class="panel" *ngIf="canSeePayables && !upcomingFailed">
+      <div class="panel__head">
+        <h3>Próximos vencimentos</h3>
+        <a class="panel__more" routerLink="/accounts-payable">Ver todos</a>
       </div>
-      <div class="info-card__body">
+
+      <div class="panel__loading" *ngIf="isLoadingUpcoming">
+        <mat-spinner diameter="28"></mat-spinner>
+      </div>
+
+      <ng-container *ngIf="!isLoadingUpcoming">
+        <div class="due-row" *ngFor="let entry of upcoming">
+          <span class="due-row__date num">{{ entry.dueDate | date: 'dd/MM/yyyy' }}</span>
+          <span class="due-row__desc" [title]="entry.description">{{ entry.description }}</span>
+          <span class="due-row__amount num num--value">{{ entry.amount | currency: 'BRL' }}</span>
+          <span class="status-chip" [ngClass]="'status-chip--' + statusOf(entry)">
+            {{ statusLabel(entry) }}
+          </span>
+        </div>
+
+        <p class="panel__empty" *ngIf="!upcoming.length">
+          Nada vencendo nos próximos 30 dias.
+        </p>
+      </ng-container>
+    </mat-card>
+
+    <div class="side">
+      <mat-card class="panel">
+        <div class="panel__head"><h3>Suas roles</h3></div>
         <div class="role-chips" *ngIf="user.roles?.length; else noRoles">
           <span class="role-chip" *ngFor="let role of user.roles">{{ role }}</span>
         </div>
         <ng-template #noRoles>
-          <p class="empty-state">Nenhuma role atribuída</p>
+          <p class="panel__empty">Nenhuma role atribuída</p>
         </ng-template>
-      </div>
-    </mat-card>
+      </mat-card>
 
-    <mat-card class="info-card info-card--admin" *ngIf="user.roles?.includes('Administrador')">
-      <div class="info-card__head">
-        <div class="info-card__icon info-card__icon--accent">
-          <mat-icon>admin_panel_settings</mat-icon>
+      <mat-card class="panel" *ngIf="shortcuts.length">
+        <div class="panel__head"><h3>Atalhos</h3></div>
+        <!-- Âncora simples com cara de botão stroked, e não `mat-stroked-button`:
+             o botão do Material embrulha o conteúdo num `.mdc-button__label` que
+             o estilo do componente não alcança, e ícone + rótulo acabariam
+             empilhados. Já quebrou três layouts neste repo. -->
+        <div class="shortcuts">
+          <a class="shortcut" *ngFor="let s of shortcuts" [routerLink]="s.route">
+            <mat-icon>{{ s.icon }}</mat-icon>
+            <span>{{ s.label }}</span>
+          </a>
         </div>
-        <h3>Administração</h3>
-      </div>
-      <div class="info-card__body">
-        <p>Acesse o painel para gerenciar usuários, roles, permissões e recursos.</p>
-        <a mat-flat-button color="primary" routerLink="/admin/permissions">
-          Abrir painel admin
-          <mat-icon iconPositionEnd>arrow_forward</mat-icon>
-        </a>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
   </section>
 </div>

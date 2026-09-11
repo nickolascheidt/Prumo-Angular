@@ -15,15 +15,15 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-    color: var(--color-text-inverse);
+    background: var(--color-primary-700);
+    color: var(--color-brand-mint);
     display: flex; align-items: center; justify-content: center;
     mat-icon { font-size: 24px; width: 24px; height: 24px; }
   }
 
   &__text {
     h1 { margin: 0; font-size: 22px; }
-    p  { margin: 4px 0 0; color: rgba(0, 0, 0, 0.6); }
+    p  { margin: 4px 0 0; color: var(--color-text-muted); }
   }
 }
 

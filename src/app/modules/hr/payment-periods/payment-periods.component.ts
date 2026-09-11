@@ -19,10 +19,10 @@ import { PaymentPeriodSummary, HrPaymentStatus } from '@core/models';
     .page-container { padding: 24px; }
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .page-header h1 { margin: 0; }
-    .subtitle { color: #757575; font-size: 14px; margin-top: 4px; }
+    .subtitle { color: var(--color-text-muted); font-size: 14px; margin-top: 4px; }
     .full-table { width: 100%; }
     .spinner-wrap { display: flex; justify-content: center; padding: 48px; }
-    .no-data { color: #9e9e9e; text-align: center; padding: 32px; }
+    .no-data { color: var(--color-text-subtle); text-align: center; padding: 32px; }
   `],
   template: `
     <div class="page-container">

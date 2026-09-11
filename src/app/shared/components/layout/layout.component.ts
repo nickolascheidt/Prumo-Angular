@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+import { PrumoMarkComponent } from '../brand/prumo-mark.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@core/services';
 import { Router } from '@angular/router';
@@ -41,7 +42,8 @@ interface NavigationSection {
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    PrumoMarkComponent
   ],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']

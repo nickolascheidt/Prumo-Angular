@@ -99,13 +99,13 @@ import { Employee, PaymentPeriodSummary, HrPaymentMethod, HrPaymentStatus, Creat
     .loading-row { display: flex; align-items: center; gap: 10px; color: var(--color-text-muted); font-size: 13px; }
     .no-periods {
       display: flex; align-items: center; gap: 10px; padding: 16px;
-      background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; color: #555;
+      background: var(--color-warn-light); border: 1px solid var(--color-warn); border-radius: 6px; color: var(--color-text-muted);
     }
     .period-info {
       display: flex; justify-content: space-between; padding: 10px 16px;
-      background: #e8f5e9; border-left: 4px solid #2e7d32; border-radius: 4px;
+      background: var(--color-success-light); border-left: 4px solid var(--color-success); border-radius: 4px;
     }
-    .amount { font-weight: 700; color: #2e7d32; font-size: 16px; }
+    .amount { font-weight: 700; color: var(--color-success); font-size: 16px; }
   `]
 })
 export class PaymentFormDialogComponent implements OnInit {

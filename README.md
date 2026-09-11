@@ -7,7 +7,7 @@ Angular 18 SPA for Prumo — a multi-tenant ERP with accounts payable, financial
 | Layer | Technology |
 |---|---|
 | Framework | Angular 18 (standalone components) |
-| UI Library | Angular Material 18 (deeppurple-amber theme) |
+| UI Library | Angular Material 18 (tema Prumo próprio, M2) |
 | Language | TypeScript 5.5 (strict mode) |
 | Forms | ReactiveFormsModule / FormBuilder |
 | State | RxJS BehaviorSubjects (no NgRx) |

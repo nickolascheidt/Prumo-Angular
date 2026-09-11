@@ -19,17 +19,17 @@ import { AccountsPayableSummary } from '@core/models';
     .tile { flex: 1; min-width: 180px; }
     .tile mat-card-content { display: flex; flex-direction: column; align-items: center; padding: 16px; gap: 8px; }
     .tile-icon { font-size: 36px; width: 36px; height: 36px; }
-    .tile-icon.pending { color: #f57c00; }
-    .tile-icon.paid    { color: #388e3c; }
-    .tile-icon.total   { color: #1976d2; }
+    .tile-icon.pending { color: var(--color-warn); }
+    .tile-icon.paid    { color: var(--color-success); }
+    .tile-icon.total   { color: var(--color-info); }
     .tile-value { font-size: 22px; font-weight: 600; }
-    .tile-label { font-size: 13px; color: #757575; }
+    .tile-label { font-size: 13px; color: var(--color-text-muted); }
     .category-card { margin-bottom: 24px; }
     .cat-row { display: grid; grid-template-columns: 180px 1fr 120px; align-items: center; gap: 12px; margin-bottom: 10px; }
     .cat-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .cat-bar { height: 8px; border-radius: 4px; }
-    .cat-amount { font-size: 13px; text-align: right; color: #424242; }
-    .no-data { color: #9e9e9e; text-align: center; padding: 32px; }
+    .cat-amount { font-size: 13px; text-align: right; color: var(--color-text); }
+    .no-data { color: var(--color-text-subtle); text-align: center; padding: 32px; }
   `]
 })
 export class DashboardFinanceComponent implements OnInit {

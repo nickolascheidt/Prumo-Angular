@@ -47,7 +47,8 @@ export interface CategoryQuickCreateDialogData {
 
         <mat-form-field appearance="outline">
           <mat-label>Cor (opcional)</mat-label>
-          <input matInput formControlName="color" placeholder="#673ab7" maxlength="9">
+          <!-- token-exempt: exemplo de formato num campo de cor livre, nao cor da UI -->
+          <input matInput formControlName="color" placeholder="#1b5c86" maxlength="9">
         </mat-form-field>
 
         <mat-form-field appearance="outline">

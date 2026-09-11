@@ -1,74 +1,97 @@
-/* Angular Material Theme */
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+// O tema Material do Prumo. Precisa vir antes de tudo: `@use` só é aceito no
+// topo do arquivo, e o tema tem que ser emitido antes dos overrides abaixo,
+// senão eles perdem a disputa de ordem para as regras que o Material gera.
+@use './styles/prumo-theme';
 
 /* ============================================
-   Design Tokens
+   Design Tokens — identidade Prumo (direção "Azul de Prumo" 1c + selo 2e)
 
-   Espelho do design system "SaaS Base Platform Design System"
-   (claude.ai/design, projeto 019df28f-17ee-750e-a62f-64153583d01b),
-   arquivo `colors_and_type.css`. Aquele projeto é a fonte da verdade:
-   token novo ou valor alterado nasce lá e desce para cá.
+   Espelho do handoff `colors_and_type.prumo-azul.css` (Claude Design, projeto
+   "Análise de direções Prumo", e13239f1-eaf4-4b3e-bd2f-9bf43dbd1698), que por
+   sua vez substituiu os valores do design system. Aquele projeto é a fonte da
+   verdade: token novo ou valor alterado nasce lá e desce para cá.
 
-   NÃO chumbe hex em .scss de componente — referencie um token daqui.
-   Se o valor que você precisa não existe, ele nasce no design system
-   primeiro, não como exceção local.
+   NÃO chumbe hex em componente — nem em .scss, nem em `styles: []` de .ts, nem
+   em [style.color] de .html. Referencie um token daqui. Se o valor que você
+   precisa não existe, ele nasce no design system primeiro, não como exceção
+   local. O guard `.claude/skills/design-sync/check-tokens.sh` cobre os três.
    ============================================ */
 :root {
-  /* Marca */
-  --color-primary: #673ab7;
-  --color-primary-600: #5e35b1;
-  --color-primary-700: #512da8;
-  --color-primary-light: rgba(102, 126, 234, 0.12);
+  /* Marca — azul-aço */
+  --color-primary: #1b5c86;
+  --color-primary-600: #164d70;
+  --color-primary-700: #10314a;
+  --color-primary-light: rgba(27, 92, 134, 0.12);
 
-  --color-accent: #f5576c;
-  --color-accent-light: rgba(245, 87, 108, 0.12);
+  /* Verde-cobre: ação positiva (pago, conciliado, confirmado) */
+  --color-accent: #0f9b8e;
+  --color-accent-light: rgba(15, 155, 142, 0.14);
+
+  /* Cor de apoio da marca — só no selo sobre fundo escuro */
+  --color-brand-mint: #4bb8a9;
 
   /* Semânticas */
-  --color-warn: #ff6f00;
-  --color-warn-light: rgba(255, 111, 0, 0.12);
-  --color-success: #16a34a;
-  --color-success-light: rgba(22, 163, 74, 0.12);
-  --color-info: #0284c7;
-  --color-info-light: rgba(2, 132, 199, 0.12);
-  --color-error: #c62828;
-  --color-error-light: rgba(198, 40, 40, 0.12);
+  --color-warn: #c07807;
+  --color-warn-light: rgba(192, 120, 7, 0.12);
+  --color-success: #0f7a70;
+  --color-success-light: rgba(15, 122, 112, 0.14);
+  --color-info: #1b5c86;
+  --color-info-light: rgba(27, 92, 134, 0.12);
+  --color-error: #b3402f;
+  --color-error-light: rgba(179, 64, 47, 0.12);
 
-  /* Gradientes */
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
-  --gradient-login: linear-gradient(135deg, #667eea 0%, #764ba2 60%, #5e35b1 100%);
-  --gradient-toolbar: linear-gradient(135deg, #5e35b1 0%, #764ba2 100%);
+  /* Gradientes — aposentados na identidade Prumo. Os tokens continuam
+     existindo para não quebrar quem os consome, mas são cor chapada. Ao mexer
+     num componente, troque por --color-* direto. */
+  --gradient-primary: #1b5c86;
+  --gradient-accent: #0f9b8e;
+  --gradient-surface: #ffffff;
+  --gradient-login: #10314a;
+  --gradient-toolbar: #10314a;
 
-  /* Orbes decorativos do fundo do login */
-  --color-login-orb-a: #f093fb;
-  --color-login-orb-b: #4facfe;
+  /* Login — a massa circular de baixo contraste atrás do card */
+  --color-login-orb-a: #1b5c86;
+  --color-login-orb-b: #0f9b8e;
 
   /* Superfícies */
-  --color-bg: #f4f6fb;
+  --color-bg: #f2f6f9;
   --color-surface: #ffffff;
-  --color-surface-alt: #f8fafc;
-  --color-border: #e6ebf2;
-  --color-border-strong: #cfd6e2;
+  --color-surface-alt: #f7fafc;
+  --color-border: #dce5ec;
+  --color-border-strong: #c3d2dd;
 
   /* Texto */
-  --color-text: #1f2937;
-  --color-text-muted: #5b6577;
-  --color-text-subtle: #8a93a4;
+  --color-text: #0e2233;
+  --color-text-muted: #55697a;
+  --color-text-subtle: #7b8b99;
   --color-text-inverse: #ffffff;
+  /* Texto sobre o azul profundo — hero do dashboard e rodapé do login. Branco a
+     60% de opacidade cinzaria; a identidade pede azuis claros de verdade, um
+     por nível de ênfase. */
+  --color-on-dark-body: #c7d8e4;
+  --color-on-dark-label: #8fb0c6;
+  --color-on-dark-muted: #7d97ab;
 
   /* Chips de status */
-  --chip-pending-bg: #fff3e0;
-  --chip-pending-text: #e65100;
-  --chip-overdue-bg: #ffebee;
-  --chip-overdue-text: #c62828;
-  --chip-paid-bg: #e8f5e9;
-  --chip-paid-text: #2e7d32;
-  --chip-cancelled-bg: #eeeeee;
-  --chip-cancelled-text: #616161;
+  --chip-pending-bg: #fdf0d5;
+  --chip-pending-text: #8a5c07;
+  --chip-overdue-bg: #fbe2dd;
+  --chip-overdue-text: #b3402f;
+  --chip-paid-bg: #dcf0ec;
+  --chip-paid-text: #0f7a70;
+  --chip-cancelled-bg: #eef1f4;
+  --chip-cancelled-text: #616e7a;
+
+  /* Neutros de apoio — nasceram aqui para dar destino aos cinzas que estavam
+     chumbados em `styles: []` de componente (tabelas de dica, divisores de
+     bloco informativo). Empurrar para o design system no próximo sync. */
+  --color-neutral-100: #eef1f4;
+  --color-neutral-300: #c3d2dd;
+  --color-neutral-500: #7b8b99;
 
   /* Tipografia */
   --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-icon: 'Material Icons';
 
   --text-xs: 11px;
@@ -118,13 +141,13 @@
   --radius-2xl: 20px;
   --radius-pill: 999px;
 
-  /* Sombras */
+  /* Sombras — só as duas tingidas de roxo mudaram */
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
   --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
   --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
   --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.25);
-  --shadow-primary: 0 8px 16px rgba(102, 126, 234, 0.4);
-  --shadow-hero: 0 12px 32px rgba(102, 126, 234, 0.25);
+  --shadow-primary: 0 8px 16px rgba(16, 49, 74, 0.28);
+  --shadow-hero: 0 12px 32px rgba(16, 49, 74, 0.22);
   --shadow-toolbar: 0 2px 12px rgba(15, 23, 42, 0.15);
 
   /* Layout */
@@ -172,49 +195,64 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
 /* ============================================
    Material overrides
    ============================================ */
-::ng-deep {
-  .mat-mdc-card {
-    border-radius: var(--radius-lg) !important;
-    box-shadow: var(--shadow-md) !important;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface) !important;
-  }
-
-  .mat-mdc-raised-button,
-  .mat-mdc-stroked-button,
-  .mat-mdc-button {
-    border-radius: var(--radius-md) !important;
-    letter-spacing: 0.3px;
-    font-weight: 500;
-    text-transform: none;
-  }
-
-  .mat-mdc-form-field { width: 100%; }
-
-  .error-snackbar {
-    background-color: var(--color-accent) !important;
-    color: white !important;
-  }
-
-  .mat-mdc-table {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-  }
-
-  .mat-mdc-header-cell {
-    font-weight: 600;
-    background-color: var(--color-surface-alt);
-    color: var(--color-text-muted);
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    font-size: 12px;
-  }
-
-  .mat-mdc-row:hover { background-color: var(--color-surface-alt); }
-
-  .mat-mdc-paginator { background-color: var(--color-surface); }
+/* Sem `::ng-deep`. Esta é a folha GLOBAL, e o Angular só processa esse
+   pseudo-seletor em estilo de componente — aqui ele saía literal no CSS
+   final, onde o navegador o trata como pseudo-elemento desconhecido e
+   descarta a regra inteira. Os oito overrides abaixo nunca chegaram a valer.
+   Alcançar as classes do Material daqui não precisa de prefixo nenhum: estilo
+   global não tem encapsulação para furar. */
+.mat-mdc-card {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface) !important;
 }
+
+/* `.mat-mdc-button-base` e não a lista de variantes: a lista anterior citava
+   `.mat-mdc-stroked-button`, que não existe no Material com MDC (lá é
+   `.mat-mdc-outlined-button`), e não citava `.mat-mdc-unelevated-button`, que é
+   o que `mat-flat-button` emite — justamente o botão "Entrar" do login. Mirar na
+   classe que toda variante carrega resolve as cinco de uma vez e não apodrece
+   quando o Material renomeia uma delas.
+
+   As exceções são as redondas por natureza: arredondar um `mat-icon-button` ou
+   um FAB em 10px transforma um círculo num quadrado de cantos moles. */
+.mat-mdc-button-base:not(.mat-mdc-icon-button):not(.mat-mdc-fab):not(.mat-mdc-mini-fab) {
+  border-radius: var(--radius-md) !important;
+  letter-spacing: var(--tracking-normal);
+  font-weight: var(--font-medium);
+  text-transform: none;
+}
+
+.mat-mdc-form-field { width: 100%; }
+
+/* `--color-error`, não `--color-accent`. Isto pegava carona no accent antigo,
+   que era um rosa-avermelhado (#f5576c) e passava por vermelho de erro. Na
+   identidade Prumo o accent é o verde-cobre da ação bem-sucedida: a mesma regra
+   pintaria "falha ao salvar" de verde. */
+.error-snackbar {
+  background-color: var(--color-error) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+.mat-mdc-table {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.mat-mdc-row:hover { background-color: var(--color-surface-alt); }
+
+.mat-mdc-paginator { background-color: var(--color-surface); }
 
 /* ============================================
    Scrollbar
@@ -231,9 +269,9 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
 /* ============================================
    Classes base do design system
 
-   Espelho de colors_and_type.css (Claude Design, projeto
-   "SaaS Base Platform Design System"). Valor novo ou alterado nasce lá e
-   desce para cá — não o contrário.
+   Espelho de colors_and_type.prumo-azul.css (Claude Design, projeto
+   "Análise de direções Prumo"). Valor novo ou alterado nasce lá e desce
+   para cá — não o contrário.
 
    Estilo de componente Angular ganha por especificidade (o atributo
    _ngcontent), então uma tela que já define .page-header localmente
@@ -247,7 +285,7 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
   gap: var(--space-1);
   padding: 5px 12px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
+  background: var(--color-primary-light);
   color: var(--color-primary-700);
   font-size: var(--text-base);
   font-weight: var(--font-medium);
@@ -271,12 +309,30 @@ h1, h2, h3, h4 { color: var(--color-text); font-weight: 600; }
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: var(--gradient-primary);
-  color: var(--color-text-inverse);
+  background: var(--color-primary-700);
+  color: var(--color-brand-mint);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+/* ============================================
+   Números tabulares
+
+   Valor, data e ID em mono de largura fixa: em coluna, o alinhamento dos
+   dígitos é o que deixa a ordem de grandeza legível de relance. Aplicar
+   coluna por coluna — nunca na tabela inteira, que arrastaria descrição e
+   nome de fornecedor junto.
+   ============================================ */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+.num--value {
+  text-align: right;
+  font-size: 14px;
 }
 
 /* ============================================

@@ -1,0 +1,151 @@
+// Tema Material do Prumo — identidade "Azul de Prumo" (direção 1c).
+//
+// Por que este arquivo existe: até o rebranding, `styles.scss` importava
+// `@angular/material/prebuilt-themes/deeppurple-amber.css`. Trocar os tokens
+// do `:root` repinta o que é nosso — cards, chips, page headers, nav — mas não
+// alcança o que o Material desenha por dentro: o ripple do botão, a borda de
+// foco do `mat-form-field`, o `mat-checkbox` marcado, o `mat-radio`, o
+// `mat-slide-toggle`, o `mat-datepicker`. Esses saem do tema, e sem uma paleta
+// própria continuariam roxos numa interface azul.
+//
+// As rampas 50–900 foram geradas a partir dos três valores que o handoff fixa
+// (500/600/700), subindo em HSL para preservar a matiz nos degraus claros e
+// descendo em luz linear nos escuros. Cada degrau escolhe seu texto pela
+// luminância relativa (WCAG): nenhum par cai abaixo de 4:1.
+//
+// Regerar: `scratchpad/ramp.py` no repo de trabalho — mas o normal é NÃO
+// regerar. Cor nova nasce no Claude Design e desce por `colors_and_type`.
+
+@use '@angular/material' as mat;
+
+// Os dois textos possíveis sobre um degrau da rampa.
+$prumo-ink: #0e2233; // sobre fundo claro — é o --color-text
+$prumo-ink-inverse: #ffffff; // sobre fundo escuro
+
+$prumo-primary-palette: (
+  50:    #f3f7f9,
+  100:   #e4eef4,
+  200:   #c8deec,
+  300:   #9fc9e4,
+  400:   #5da9da,
+  500:   #1b5c86,
+  600:   #164d70,
+  700:   #10314a,
+  800:   #0c293f,
+  900:   #092134,
+  A100:  #cde5f4,
+  A200:  #a6d1ed,
+  A400:  #449fd9,
+  A700:  #1b5c86,
+  contrast: (
+    50:    $prumo-ink,
+    100:   $prumo-ink,
+    200:   $prumo-ink,
+    300:   $prumo-ink,
+    400:   $prumo-ink,
+    500:   $prumo-ink-inverse,
+    600:   $prumo-ink-inverse,
+    700:   $prumo-ink-inverse,
+    800:   $prumo-ink-inverse,
+    900:   $prumo-ink-inverse,
+    A100:  $prumo-ink,
+    A200:  $prumo-ink,
+    A400:  $prumo-ink,
+    A700:  $prumo-ink-inverse,
+  ),
+);
+
+// Verde-cobre. Os degraus claros levam a saturação amortecida: o teal da marca
+// puxado para claridade alta com saturação cheia vira um verde-neon que não
+// pertence à identidade.
+$prumo-accent-palette: (
+  50:    #f4f8f8,
+  100:   #e7f0f0,
+  200:   #d0e4e2,
+  300:   #afd5d1,
+  400:   #79bfb8,
+  500:   #0f9b8e,
+  600:   #0f8a7e,
+  700:   #0f7a70,
+  800:   #0b6960,
+  900:   #085850,
+  A100:  #d6ebe9,
+  A200:  #b6ddda,
+  A400:  #65b8b1,
+  A700:  #0f9b8e,
+  contrast: (
+    50:    $prumo-ink,
+    100:   $prumo-ink,
+    200:   $prumo-ink,
+    300:   $prumo-ink,
+    400:   $prumo-ink,
+    500:   $prumo-ink,
+    600:   $prumo-ink-inverse,
+    700:   $prumo-ink-inverse,
+    800:   $prumo-ink-inverse,
+    900:   $prumo-ink-inverse,
+    A100:  $prumo-ink,
+    A200:  $prumo-ink,
+    A400:  $prumo-ink,
+    A700:  $prumo-ink,
+  ),
+);
+
+$prumo-warn-palette: (
+  50:    #f9f4f4,
+  100:   #f2e7e6,
+  200:   #e8d0cc,
+  300:   #dcafa8,
+  400:   #ca796d,
+  500:   #b3402f,
+  600:   #9c3728,
+  700:   #822d21,
+  800:   #70251b,
+  900:   #5e1e15,
+  A100:  #efd6d2,
+  A200:  #e4b6af,
+  A400:  #c76557,
+  A700:  #b3402f,
+  contrast: (
+    50:    $prumo-ink,
+    100:   $prumo-ink,
+    200:   $prumo-ink,
+    300:   $prumo-ink,
+    400:   $prumo-ink,
+    500:   $prumo-ink-inverse,
+    600:   $prumo-ink-inverse,
+    700:   $prumo-ink-inverse,
+    800:   $prumo-ink-inverse,
+    900:   $prumo-ink-inverse,
+    A100:  $prumo-ink,
+    A200:  $prumo-ink,
+    A400:  $prumo-ink,
+    A700:  $prumo-ink-inverse,
+  ),
+);
+
+// `m2-*` e não `define-palette`: na v17 a API M2 foi movida para trás desse
+// prefixo quando a M3 chegou, e os nomes sem prefixo saíram na v18. Conferido
+// contra `node_modules/@angular/material/core/m2/_index.scss`.
+$prumo-primary: mat.m2-define-palette($prumo-primary-palette, 500, 300, 800);
+$prumo-accent: mat.m2-define-palette($prumo-accent-palette, 500, 300, 800);
+$prumo-warn: mat.m2-define-palette($prumo-warn-palette, 500, 300, 800);
+
+// Roboto continua a fonte da interface: a direção 1c mexe em cor e marca, não
+// em tipografia. A mono entra só na classe `.num`, fora do tema.
+$prumo-typography: mat.m2-define-typography-config(
+  $font-family: "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+);
+
+$prumo-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $prumo-primary,
+    accent: $prumo-accent,
+    warn: $prumo-warn,
+  ),
+  typography: $prumo-typography,
+  density: 0,
+));
+
+@include mat.core();
+@include mat.all-component-themes($prumo-theme);

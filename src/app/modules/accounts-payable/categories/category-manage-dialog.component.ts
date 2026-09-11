@@ -66,6 +66,7 @@ export interface CategoryManageDialogData {
       <ul *ngIf="!loading && categories.length" class="category-list">
         <li *ngFor="let c of categories" class="category-item">
           <ng-container *ngIf="editingId !== c.id; else editTpl">
+            <!-- token-exempt: a cor vem do dado; o cinza e o estado "sem cor" -->
             <span class="swatch" [style.background]="c.color || '#9e9e9e'"></span>
             <div class="info">
               <strong>{{ c.name }}</strong>

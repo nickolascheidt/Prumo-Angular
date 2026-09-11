@@ -3,8 +3,10 @@
     <mat-icon>menu</mat-icon>
   </button>
 
+  <!-- `inverse`: a toolbar e o quadrado do selo padrão saem do mesmo token
+       (--color-primary-700), então sobre ela o selo some e sobra um P solto. -->
   <div class="brand">
-    <div class="brand__logo"><mat-icon>hub</mat-icon></div>
+    <app-prumo-mark [size]="30" variant="inverse" label=""></app-prumo-mark>
     <span class="brand__title">Prumo</span>
   </div>
 

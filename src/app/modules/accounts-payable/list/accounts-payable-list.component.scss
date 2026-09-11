@@ -14,15 +14,15 @@
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-    color: var(--color-text-inverse);
+    background: var(--color-primary-700);
+    color: var(--color-brand-mint);
     display: flex; align-items: center; justify-content: center;
     mat-icon { font-size: 28px; width: 28px; height: 28px; }
   }
 
   &__text {
     h1 { margin: 0; font-size: 22px; }
-    p  { margin: 4px 0 0; color: rgba(0, 0, 0, 0.6); }
+    p  { margin: 4px 0 0; color: var(--color-text-muted); }
   }
 
   .spacer { flex: 1; }
@@ -47,9 +47,12 @@
 
   .full-table { width: 100%; }
   .loading { display: flex; justify-content: center; padding: 32px; }
-  .empty { text-align: center; color: rgba(0, 0, 0, 0.6); padding: 24px; }
+  .empty { text-align: center; color: var(--color-text-muted); padding: 24px; }
 
-  .num { text-align: right; }
+  /* `.num` era local e significava "alinhe à direita". Virou token global e
+     passou a significar "isto é um número" — fonte tabular, alinhamento à parte.
+     Mantida aqui, ela jogaria também as colunas de data para a direita; quem
+     alinha valor agora é `.num--value`. */
   .actions-col { width: 48px; text-align: right; }
 }
 

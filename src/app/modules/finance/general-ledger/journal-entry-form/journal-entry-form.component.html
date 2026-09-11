@@ -55,7 +55,7 @@
     <div style="margin-top:16px; display:flex; gap:32px">
       <span>Débitos: <strong>{{ totalDebit | currency:'BRL' }}</strong></span>
       <span>Créditos: <strong>{{ totalCredit | currency:'BRL' }}</strong></span>
-      <span [style.color]="isBalanced ? '#4caf50' : '#f44336'">
+      <span [style.color]="isBalanced ? 'var(--color-success)' : 'var(--color-error)'">
         <mat-icon style="vertical-align:middle; font-size:18px">
           {{ isBalanced ? 'check_circle' : 'error' }}
         </mat-icon>

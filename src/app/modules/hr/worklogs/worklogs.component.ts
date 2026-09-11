@@ -104,7 +104,7 @@ import { WorklogFormDialogComponent } from './worklog-form-dialog.component';
     .full-table { width: 100%; }
     .spinner-wrap { display: flex; justify-content: center; padding: 48px; }
     .no-data { text-align: center; color: var(--color-text-muted); padding: 48px; }
-    .assigned { color: #2e7d32; font-weight: 500; font-size: 12px; }
+    .assigned { color: var(--color-success); font-weight: 500; font-size: 12px; }
   `]
 })
 export class WorklogsComponent implements OnInit {

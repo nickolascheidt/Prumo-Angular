@@ -87,12 +87,12 @@ import { Employee, WorkLog, CreateWorkLogRequest, UpdateWorkLogRequest } from '@
     .form-row mat-form-field { flex: 1; }
     .info-box {
       display: flex; justify-content: space-between; padding: 10px 14px;
-      background: #e3f2fd; border-radius: 6px; font-size: 14px;
+      background: var(--color-info-light); border-radius: 6px; font-size: 14px;
     }
-    .amount { color: #2e7d32; }
+    .amount { color: var(--color-success); }
     .summary-box {
       display: flex; align-items: center; justify-content: space-around;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--color-primary);
       color: white; padding: 14px; border-radius: 8px; font-weight: 600;
     }
     .total { font-size: 20px; }

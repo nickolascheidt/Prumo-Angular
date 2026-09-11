@@ -66,12 +66,12 @@ interface HintRow {
   styles: [`
     .hints-card { margin-bottom: 24px; }
     .hints-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .hints-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; font-weight: 500; }
-    .hints-table td { padding: 8px 12px; border-bottom: 1px solid #f5f5f5; }
-    .hints-table td.code { font-family: monospace; color: #555; }
-    .status-ok   { display: flex; align-items: center; gap: 4px; color: #388e3c; font-size: 13px; }
-    .status-warn { display: flex; align-items: center; gap: 4px; color: #f57c00; font-size: 13px; }
-    .status-info { display: flex; align-items: center; gap: 4px; color: #9e9e9e; font-size: 13px; }
+    .hints-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--color-border-strong); font-weight: 500; }
+    .hints-table td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); }
+    .hints-table td.code { font-family: var(--font-mono); color: var(--color-text-muted); }
+    .status-ok   { display: flex; align-items: center; gap: 4px; color: var(--color-success); font-size: 13px; }
+    .status-warn { display: flex; align-items: center; gap: 4px; color: var(--color-warn); font-size: 13px; }
+    .status-info { display: flex; align-items: center; gap: 4px; color: var(--color-text-subtle); font-size: 13px; }
   `]
 })
 export class AccountsHintsComponent {

@@ -790,12 +790,6 @@ export interface CreateHrPaymentRequest {
   notes?: string | null;
 }
 
-export interface UserLookupResult {
-  userId: string;
-  email: string;
-  fullName: string | null;
-}
-
 export interface UpdateMemberRoleRequest {
   role: number;
 }

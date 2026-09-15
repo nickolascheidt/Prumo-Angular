@@ -31,7 +31,9 @@ import { AddMemberDialogComponent } from './add-member-dialog.component';
 })
 export class TenantMembersComponent implements OnInit {
   readonly displayedColumns = ['expand', 'name', 'email', 'role', 'joinedAt', 'actions'];
-  readonly roleOptions = [TenantRole.Member, TenantRole.Admin, TenantRole.Owner];
+  // Sem Owner: a API recusa promover a Owner e recusa inserir membro como Owner
+  // (o cargo só nasce com o tenant). Oferecer a opção era convidar para o 400.
+  readonly roleOptions = [TenantRole.Member, TenantRole.Admin];
 
   members: TenantMember[] = [];
   filteredMembers: TenantMember[] = [];

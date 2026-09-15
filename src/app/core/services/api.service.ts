@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   LoginRequest,
   AuthResponse,
@@ -62,7 +61,6 @@ import {
   GeneratePaymentPeriodRequest,
   HrPayment,
   CreateHrPaymentRequest,
-  UserLookupResult,
   UpdateMemberRoleRequest,
   InviteMemberRequest,
   InviteMemberResult,
@@ -276,12 +274,6 @@ export class ApiService {
     return this.http.delete<void>(
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/members/${encodeURIComponent(userId)}`
     );
-  }
-
-  lookupUserByEmail(email: string): Observable<UserLookupResult | null> {
-    return this.http.get<UserLookupResult>(
-      `${this.apiUrl}/auth/users/lookup?email=${encodeURIComponent(email)}`
-    ).pipe(catchError(() => of(null)));
   }
 
   updateMemberRole(tenantId: string, userId: string, request: UpdateMemberRoleRequest): Observable<void> {

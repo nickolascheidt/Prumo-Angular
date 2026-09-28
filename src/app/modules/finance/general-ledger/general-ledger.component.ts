@@ -157,7 +157,7 @@ export class GeneralLedgerComponent implements OnInit, OnDestroy {
   }
 
   get canCreate(): boolean {
-    return this.auth.hasRole('Administrador');
+    return this.auth.isMasterAdmin();
   }
 
   private toIso(d: Date | string): string {

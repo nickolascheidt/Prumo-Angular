@@ -120,7 +120,7 @@ export class ChartOfAccountsComponent implements OnInit {
   }
 
   get canManage(): boolean {
-    return this.auth.hasRole('Administrador');
+    return this.auth.isMasterAdmin();
   }
 
   get analyticAccounts(): Account[] {

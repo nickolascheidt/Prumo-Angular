@@ -95,7 +95,7 @@ export class AuthService {
    * Check if the user is a master (cross-tenant) administrator
    */
   isMasterAdmin(): boolean {
-    return this.hasRole('Administrador');
+    return this.hasRole('Administrator');
   }
 
   /**

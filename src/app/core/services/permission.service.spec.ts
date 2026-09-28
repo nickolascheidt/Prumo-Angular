@@ -10,14 +10,14 @@ describe('PermissionService resource access', () => {
   const apiPayload = {
     userId: 'u1',
     email: 'admin@SBP.com',
-    fullName: 'Administrador do Sistema',
-    roles: ['Administrador'],
+    fullName: 'System Administrator',
+    roles: ['Administrator'],
     allowedResources: [
       {
         id: 'r1',
         code: 'HR.Employees',
-        name: 'Funcionários',
-        module: 'RH',
+        name: 'Employees',
+        module: 'HR',
         displayOrder: 40,
         userPermissionLevel: 'Full'
       }

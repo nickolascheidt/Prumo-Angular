@@ -121,7 +121,7 @@ export const routes: Routes = [
         canActivate: [resourceAccessGuard], data: { resource: 'HR.WorkLogs', requiredLevel: PermissionLevel.Read } },
       { path: 'hr/payments', component: HrPaymentsComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'HR.Payments', requiredLevel: PermissionLevel.Read } },
-      { path: 'hr/periodos', component: PaymentPeriodsComponent,
+      { path: 'hr/payment-periods', component: PaymentPeriodsComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'HR.PaymentPeriods', requiredLevel: PermissionLevel.Read } }
     ]
   }

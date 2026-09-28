@@ -1,3 +1,3 @@
-// A moldura (fundo, orbes, cartão, marca) vive no AuthShellComponent desde o item 8 —
-// eram seis telas repetindo o mesmo SCSS, e a sexta ficaria para trás no próximo ajuste.
+// The frame (background, card, brand) lives in AuthShellComponent — six screens were
+// repeating the same SCSS, and the sixth would fall behind on the next tweak.
 @use '../auth-forms' as *;

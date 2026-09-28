@@ -1,4 +1,4 @@
-/* .page-header e .page-header__icon vêm das classes base em styles.scss. */
+/* .page-header and .page-header__icon come from the base classes in styles.scss. */
 
 .roles-page { padding: var(--page-padding); }
 
@@ -23,8 +23,8 @@
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
 
-  /* Empilhado, a grade fica estreita demais para recurso e níveis lado a lado:
-     o nome do recurso vai em cima e os botões de nível embaixo. */
+  /* Stacked, the grid gets too narrow for resource and levels side by side: the
+     resource name goes on top and the level buttons below. */
   .level-grid {
     tr.mat-mdc-row, tr.mat-mdc-header-row { height: auto; }
 
@@ -33,10 +33,10 @@
 
   .level-col { text-align: left; }
 
-  /* Os quatro níveis cabem numa linha só se encolherem um pouco; sem isto o
-     "Total" quebra sozinho para a linha de baixo. */
-  /* ::ng-deep porque o rótulo é markup interno do Material e não recebe o atributo
-     de escopo do componente. Limitado a .level-grid para não vazar. */
+  /* The four levels fit on one line only if they shrink a little; without this
+     "Full" wraps to the next line on its own. */
+  /* ::ng-deep because the label is Material's internal markup and does not get the
+     component's scope attribute. Limited to .level-grid so it does not leak. */
   ::ng-deep mat-button-toggle-group .mat-button-toggle-label-content {
     padding: 0 var(--space-2);
     font-size: var(--text-sm);
@@ -51,7 +51,7 @@
   padding: var(--space-8);
 }
 
-/* ----- lista de roles ----- */
+/* ----- role list ----- */
 
 .roles-card { padding: var(--space-2); }
 
@@ -113,7 +113,7 @@
   color: var(--color-text-muted);
 }
 
-/* ----- grade de níveis ----- */
+/* ----- level grid ----- */
 
 .grid-card { padding: var(--space-5); }
 

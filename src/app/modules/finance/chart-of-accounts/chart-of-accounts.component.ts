@@ -58,11 +58,11 @@ export class ChartOfAccountsComponent implements OnInit {
   readonly displayedColumns = ['code', 'name', 'type', 'kind', 'active', 'actions'];
 
   readonly accountTypeLabels: Record<AccountType, string> = {
-    [AccountType.Asset]: 'Ativo',
-    [AccountType.Liability]: 'Passivo',
-    [AccountType.Equity]: 'Patrimônio Líquido',
-    [AccountType.Revenue]: 'Receita',
-    [AccountType.Expense]: 'Despesa'
+    [AccountType.Asset]: 'Asset',
+    [AccountType.Liability]: 'Liability',
+    [AccountType.Equity]: 'Equity',
+    [AccountType.Revenue]: 'Revenue',
+    [AccountType.Expense]: 'Expense'
   };
 
   private tenantId: string | null = null;
@@ -98,7 +98,7 @@ export class ChartOfAccountsComponent implements OnInit {
       },
       error: err => {
         this.loading = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao carregar plano de contas', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to load the chart of accounts', 'Close', { duration: 5000 });
       }
     });
 
@@ -145,13 +145,13 @@ export class ChartOfAccountsComponent implements OnInit {
 
   deactivate(account: Account): void {
     if (!this.tenantId) return;
-    if (!confirm(`Desativar a conta "${account.code} – ${account.name}"?`)) return;
+    if (!confirm(`Deactivate the account "${account.code} – ${account.name}"?`)) return;
     this.api.deactivateAccount(this.tenantId, account.id).subscribe({
       next: () => {
-        this.snackBar.open('Conta desativada', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Account deactivated', 'Close', { duration: 2500 });
         this.loadAll();
       },
-      error: err => this.snackBar.open(err?.error?.message || 'Erro ao desativar', 'Fechar', { duration: 5000 })
+      error: err => this.snackBar.open(err?.error?.message || 'Failed to deactivate', 'Close', { duration: 5000 })
     });
   }
 
@@ -162,12 +162,12 @@ export class ChartOfAccountsComponent implements OnInit {
     this.api.updateGlSettings(this.tenantId, payload).subscribe({
       next: settings => {
         this.glSettings = settings;
-        this.snackBar.open('Configurações salvas', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Settings saved', 'Close', { duration: 2500 });
         this.savingSettings = false;
       },
       error: err => {
         this.savingSettings = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao salvar configurações', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to save the settings', 'Close', { duration: 5000 });
       }
     });
   }

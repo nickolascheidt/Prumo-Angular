@@ -21,51 +21,51 @@ import { Employee, GeneratePaymentPeriodRequest, PaymentPeriodSummary } from '@c
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule,
     MatSelectModule, MatProgressSpinnerModule, MatIconModule
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-US' }],
   template: `
     <h2 mat-dialog-title>
       <mat-icon style="vertical-align:middle;margin-right:8px">event_note</mat-icon>
-      Gerar Período de Pagamento
+      Generate payment period
     </h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="gen-form">
-        <p class="hint">Selecione o funcionário e o período. O sistema irá agrupar os registros de horas não atribuídos.</p>
+        <p class="hint">Pick the employee and the period. The system groups the work logs not yet assigned to a period.</p>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Funcionário *</mat-label>
+          <mat-label>Employee *</mat-label>
           <mat-select formControlName="employeeId" (selectionChange)="onEmployeeChange()">
             <mat-option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</mat-option>
           </mat-select>
-          <mat-error>Selecione um funcionário</mat-error>
+          <mat-error>Select an employee</mat-error>
         </mat-form-field>
         <div class="date-row">
           <mat-form-field appearance="outline">
-            <mat-label>Data Inicial *</mat-label>
+            <mat-label>Start date *</mat-label>
             <input matInput [matDatepicker]="startPicker" formControlName="startDate" readonly>
             <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker></mat-datepicker>
-            <mat-error>Data inicial é obrigatória</mat-error>
+            <mat-error>Start date is required</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Data Final *</mat-label>
+            <mat-label>End date *</mat-label>
             <input matInput [matDatepicker]="endPicker" formControlName="endDate" readonly>
             <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker></mat-datepicker>
-            <mat-error>Data final é obrigatória</mat-error>
+            <mat-error>End date is required</mat-error>
           </mat-form-field>
         </div>
         <div class="employee-summary" *ngIf="selectedEmployee">
           <div><strong>{{ selectedEmployee.fullName }}</strong></div>
           <div>CPF: {{ selectedEmployee.cpf }}</div>
-          <div>Taxa: R$ {{ selectedEmployee.hourlyRate | number:'1.2-2' }}/h</div>
+          <div>Rate: R$ {{ selectedEmployee.hourlyRate | number:'1.2-2' }}/h</div>
         </div>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()" [disabled]="isGenerating">Cancelar</button>
+      <button mat-button (click)="onCancel()" [disabled]="isGenerating">Cancel</button>
       <button mat-raised-button color="primary" (click)="onGenerate()"
         [disabled]="form.invalid || isGenerating || form.hasError('dateRange')">
         <mat-spinner diameter="18" *ngIf="isGenerating" style="display:inline-block;margin-right:6px"></mat-spinner>
-        {{ isGenerating ? 'Gerando...' : 'Gerar Período' }}
+        {{ isGenerating ? 'Generating...' : 'Generate period' }}
       </button>
     </mat-dialog-actions>
   `,
@@ -128,10 +128,10 @@ export class GeneratePaymentPeriodDialogComponent implements OnInit {
     this.api.generatePaymentPeriod(this.tenantId, req).subscribe({
       next: (result: PaymentPeriodSummary) => {
         this.isGenerating = false;
-        alert(`Período gerado!\n${this.selectedEmployee?.fullName}\n${result.totalHours}h — R$ ${result.totalAmount}`);
+        alert(`Period generated!\n${this.selectedEmployee?.fullName}\n${result.totalHours}h — R$ ${result.totalAmount}`);
         this.dialogRef.close(result);
       },
-      error: (err) => { this.isGenerating = false; alert(err.error?.message ?? 'Erro ao gerar período.'); }
+      error: (err) => { this.isGenerating = false; alert(err.error?.message ?? 'Failed to generate the period.'); }
     });
   }
 

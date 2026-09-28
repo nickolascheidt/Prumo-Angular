@@ -49,10 +49,10 @@
   .loading { display: flex; justify-content: center; padding: 32px; }
   .empty { text-align: center; color: var(--color-text-muted); padding: 24px; }
 
-  /* `.num` era local e significava "alinhe à direita". Virou token global e
-     passou a significar "isto é um número" — fonte tabular, alinhamento à parte.
-     Mantida aqui, ela jogaria também as colunas de data para a direita; quem
-     alinha valor agora é `.num--value`. */
+  /* `.num` used to be local and meant "align right". It became a global token and
+     now means "this is a number" — tabular font, alignment separate. Kept here, it
+     would also push the date columns to the right; value alignment is now
+     `.num--value`. */
   .actions-col { width: 48px; text-align: right; }
 }
 

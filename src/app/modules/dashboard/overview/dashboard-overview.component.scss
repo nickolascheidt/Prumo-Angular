@@ -6,8 +6,8 @@
   gap: 24px;
 }
 
-/* Hero — cor chapada. Era --gradient-primary (roxo→índigo); a identidade Prumo
-   aposentou os gradientes. */
+/* Hero — flat color. It used to be --gradient-primary (purple→indigo); the Prumo
+   identity retired gradients. */
 .hero {
   display: flex;
   align-items: center;
@@ -87,21 +87,20 @@
   margin-top: 4px;
 }
 
-/* A IBM Plex Mono entra só nos pesos 400 e 500, que é o que o handoff manda
-   carregar. Pedir 600 aqui não traz um 600: o navegador engorda o 500 por conta
-   própria, e negrito sintético numa monoespaçada borra o dígito justo na coluna
-   onde ele precisa ser lido. */
+/* IBM Plex Mono only comes in weights 400 and 500. Asking for 600 here does not bring
+   a 600: the browser fattens the 500 on its own, and synthetic bold in a monospace
+   blurs the digit right in the column where it has to be read. */
 .stat__value.num { font-weight: var(--font-medium); }
 
-/* Painéis */
+/* Panels */
 .panels {
   display: grid;
   gap: 20px;
   grid-template-columns: 1.5fr 1fr;
   align-items: start;
 }
-/* Sem o painel de vencimentos não há duas colunas a equilibrar: a de apoio
-   ocupa a largura toda em vez de deixar metade da tela vazia. */
+/* Without the due-dates panel there are no two columns to balance: the side column
+   takes the full width instead of leaving half the screen empty. */
 .panels--single { grid-template-columns: 1fr; }
 
 .panel { padding: 22px !important; }
@@ -143,8 +142,8 @@
 .due-row:last-child { border-bottom: none; }
 
 .due-row__date { color: var(--color-text-muted); }
-/* A descrição é a única coluna elástica: sem o min-width:0 ela empurra as
-   outras em vez de truncar, porque item de grid não encolhe abaixo do conteúdo. */
+/* The description is the only elastic column: without min-width:0 it pushes the
+   others instead of truncating, because a grid item does not shrink below its content. */
 .due-row__desc {
   min-width: 0;
   overflow: hidden;
@@ -186,9 +185,9 @@
   font-weight: var(--font-medium);
 }
 
-/* Empilhados na coluna estreita, lado a lado quando o painel de vencimentos não
-   está lá para dividir a largura. Sem isto, três botões de 40px esticam por mil
-   pixels e o rótulo fica boiando no canto esquerdo. */
+/* Stacked in the narrow column, side by side when the due-dates panel is not there
+   to share the width. Without this, three 40px buttons stretch across a thousand
+   pixels and the label floats in the left corner. */
 .shortcuts {
   display: grid;
   gap: 8px;
@@ -227,7 +226,7 @@
 @media (max-width: 900px) {
   .panels { grid-template-columns: 1fr; }
   .due-row { grid-template-columns: 92px 1fr 108px; }
-  /* O chip cai fora na largura estreita: a data já diz se está perto, e manter
-     quatro colunas espremeria a descrição a nada. */
+  /* The chip drops out at narrow widths: the date already says whether it is close,
+     and keeping four columns would squeeze the description to nothing. */
   .due-row .status-chip { display: none; }
 }

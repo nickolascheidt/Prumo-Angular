@@ -7,10 +7,10 @@ import { AuthService } from '@core/services';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
 /**
- * Onde para quem confirmou o e-mail e não pertence a empresa nenhuma.
+ * Where someone lands after confirming their e-mail when they belong to no company.
  *
- * Antes do item 8 essa pessoa levava um snackbar e um logout imediato, o que parecia erro
- * de senha. Não é erro: a conta está certa, só falta alguém adicioná-la.
+ * This used to be a snackbar and an immediate logout, which looked like a wrong password.
+ * It is not an error: the account is fine, someone just has to add it.
  */
 @Component({
   selector: 'app-awaiting-invitation',

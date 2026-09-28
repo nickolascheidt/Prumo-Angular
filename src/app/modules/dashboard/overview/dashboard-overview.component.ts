@@ -35,16 +35,16 @@ export class DashboardOverviewComponent implements OnInit {
   isLoadingUpcoming = false;
   upcomingFailed = false;
 
-  /** Quantos vencem na janela consultada. Alimenta o quarto stat card. */
+  /** How many fall due in the queried window. Feeds the fourth stat card. */
   upcomingCount = 0;
 
   private readonly allShortcuts: Shortcut[] = [
-    { label: 'Contas a pagar', icon: 'receipt_long', route: '/accounts-payable', resource: 'AccountsPayable.Entries' },
-    { label: 'Plano de contas', icon: 'account_tree', route: '/finance/chart-of-accounts', resource: 'ChartOfAccounts.Management' },
-    { label: 'Razão', icon: 'menu_book', route: '/finance/general-ledger', resource: 'GeneralLedger.Management' },
-    { label: 'Funcionários', icon: 'badge', route: '/hr/employees', resource: 'HR.Employees' },
-    { label: 'Apontamentos', icon: 'schedule', route: '/hr/worklogs', resource: 'HR.WorkLogs' },
-    { label: 'Membros', icon: 'group', route: '/admin/members', resource: 'User.Management' },
+    { label: 'Accounts payable', icon: 'receipt_long', route: '/accounts-payable', resource: 'AccountsPayable.Entries' },
+    { label: 'Chart of accounts', icon: 'account_tree', route: '/finance/chart-of-accounts', resource: 'ChartOfAccounts.Management' },
+    { label: 'Ledger', icon: 'menu_book', route: '/finance/general-ledger', resource: 'GeneralLedger.Management' },
+    { label: 'Employees', icon: 'badge', route: '/hr/employees', resource: 'HR.Employees' },
+    { label: 'Work logs', icon: 'schedule', route: '/hr/worklogs', resource: 'HR.WorkLogs' },
+    { label: 'Members', icon: 'group', route: '/admin/members', resource: 'User.Management' },
   ];
 
   constructor(
@@ -60,10 +60,10 @@ export class DashboardOverviewComponent implements OnInit {
   }
 
   /**
-   * A visão geral é a tela inicial de todo mundo, inclusive de quem não alcança
-   * Contas a Pagar. Sem esta trava, o painel de vencimentos dispararia uma
-   * chamada que volta 403 para esses membros — erro no console e bloco vazio
-   * numa tela que deveria ser tranquila.
+   * The overview is everyone's home screen, including those who cannot reach
+   * Accounts Payable. Without this check, the due-dates panel would fire a call that
+   * returns 403 for those members — an error in the console and an empty block on a
+   * screen that should be calm.
    */
   get canSeePayables(): boolean {
     return this.permissions.userCanAccessResource('AccountsPayable.Entries', PermissionLevel.Read);
@@ -95,13 +95,13 @@ export class DashboardOverviewComponent implements OnInit {
     }).subscribe({
       next: res => {
         this.upcoming = res.items ?? [];
-        // O total da página é 5; quem manda no contador é o total do servidor.
+        // The page total is 5; the server total is what drives the counter.
         this.upcomingCount = res.total ?? this.upcoming.length;
         this.isLoadingUpcoming = false;
       },
       error: () => {
-        // Um painel de apoio que falha não pode derrubar a tela inteira: some
-        // com o bloco e deixa o resto da visão geral de pé.
+        // A side panel that fails must not bring the whole screen down: the block goes
+        // away and the rest of the overview stays up.
         this.upcomingFailed = true;
         this.isLoadingUpcoming = false;
       }
@@ -119,6 +119,6 @@ export class DashboardOverviewComponent implements OnInit {
   }
 
   statusLabel(entry: AccountsPayableEntry): string {
-    return { overdue: 'Atrasado', paid: 'Pago', cancelled: 'Cancelado', pending: 'Pendente' }[this.statusOf(entry)];
+    return { overdue: 'Overdue', paid: 'Paid', cancelled: 'Cancelled', pending: 'Pending' }[this.statusOf(entry)];
   }
 }

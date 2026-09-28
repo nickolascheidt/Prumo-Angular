@@ -1,26 +1,26 @@
-// Tema Material do Prumo — identidade "Azul de Prumo" (direção 1c).
+// Prumo's Material theme — the "Prumo Blue" identity.
 //
-// Por que este arquivo existe: até o rebranding, `styles.scss` importava
-// `@angular/material/prebuilt-themes/deeppurple-amber.css`. Trocar os tokens
-// do `:root` repinta o que é nosso — cards, chips, page headers, nav — mas não
-// alcança o que o Material desenha por dentro: o ripple do botão, a borda de
-// foco do `mat-form-field`, o `mat-checkbox` marcado, o `mat-radio`, o
-// `mat-slide-toggle`, o `mat-datepicker`. Esses saem do tema, e sem uma paleta
-// própria continuariam roxos numa interface azul.
+// Why this file exists: until the rebranding, `styles.scss` imported
+// `@angular/material/prebuilt-themes/deeppurple-amber.css`. Changing the `:root`
+// tokens repaints what is ours — cards, chips, page headers, nav — but does not reach
+// what Material draws internally: the button ripple, the `mat-form-field` focus
+// border, a checked `mat-checkbox`, `mat-radio`, `mat-slide-toggle`, `mat-datepicker`.
+// Those come from the theme, and without a palette of our own they would stay purple
+// in a blue interface.
 //
-// As rampas 50–900 foram geradas a partir dos três valores que o handoff fixa
-// (500/600/700), subindo em HSL para preservar a matiz nos degraus claros e
-// descendo em luz linear nos escuros. Cada degrau escolhe seu texto pela
-// luminância relativa (WCAG): nenhum par cai abaixo de 4:1.
+// The 50–900 ramps were generated from the three values the design fixes (500/600/700),
+// going up in HSL to keep the hue in the light steps and down in linear light in the
+// dark ones. Each step picks its text by relative luminance (WCAG): no pair falls below
+// 4:1.
 //
-// Regerar: `scratchpad/ramp.py` no repo de trabalho — mas o normal é NÃO
-// regerar. Cor nova nasce no Claude Design e desce por `colors_and_type`.
+// New colors are born in the design system and come down from there; regenerating the
+// ramps by hand is the exception.
 
 @use '@angular/material' as mat;
 
-// Os dois textos possíveis sobre um degrau da rampa.
-$prumo-ink: #0e2233; // sobre fundo claro — é o --color-text
-$prumo-ink-inverse: #ffffff; // sobre fundo escuro
+// The two possible texts over a ramp step.
+$prumo-ink: #0e2233; // over a light background — it is --color-text
+$prumo-ink-inverse: #ffffff; // over a dark background
 
 $prumo-primary-palette: (
   50:    #f3f7f9,
@@ -55,9 +55,9 @@ $prumo-primary-palette: (
   ),
 );
 
-// Verde-cobre. Os degraus claros levam a saturação amortecida: o teal da marca
-// puxado para claridade alta com saturação cheia vira um verde-neon que não
-// pertence à identidade.
+// Copper green. The light steps get damped saturation: the brand teal pushed to high
+// lightness at full saturation turns into a neon green that does not belong to the
+// identity.
 $prumo-accent-palette: (
   50:    #f4f8f8,
   100:   #e7f0f0,
@@ -124,15 +124,15 @@ $prumo-warn-palette: (
   ),
 );
 
-// `m2-*` e não `define-palette`: na v17 a API M2 foi movida para trás desse
-// prefixo quando a M3 chegou, e os nomes sem prefixo saíram na v18. Conferido
-// contra `node_modules/@angular/material/core/m2/_index.scss`.
+// `m2-*`, not `define-palette`: in v17 the M2 API moved behind that prefix when M3
+// arrived, and the unprefixed names were removed in v18. Checked against
+// `node_modules/@angular/material/core/m2/_index.scss`.
 $prumo-primary: mat.m2-define-palette($prumo-primary-palette, 500, 300, 800);
 $prumo-accent: mat.m2-define-palette($prumo-accent-palette, 500, 300, 800);
 $prumo-warn: mat.m2-define-palette($prumo-warn-palette, 500, 300, 800);
 
-// Roboto continua a fonte da interface: a direção 1c mexe em cor e marca, não
-// em tipografia. A mono entra só na classe `.num`, fora do tema.
+// Roboto stays the interface font: the identity changes color and brand, not
+// typography. The mono only comes in through the `.num` class, outside the theme.
 $prumo-typography: mat.m2-define-typography-config(
   $font-family: "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 );

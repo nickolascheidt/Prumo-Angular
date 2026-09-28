@@ -47,7 +47,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   // Ensure resource permissions are loaded (in case they expired or weren't loaded)
   if (!authService.getUserResourcePermissions()) {
     authService.loadUserResourcePermissions().subscribe({
-      error: (err) => console.error('Erro ao carregar permissões de recursos:', err)
+      error: (err) => console.error('Failed to load resource permissions:', err)
     });
   }
 

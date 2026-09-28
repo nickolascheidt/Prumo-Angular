@@ -8,8 +8,8 @@ import { ApiService } from '@core/services';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
 /**
- * O destino do link de confirmação. Não pede nada: lê `uid` e `token` da URL, chama a API
- * e mostra o resultado.
+ * The target of the confirmation link. It asks for nothing: it reads `uid` and `token`
+ * from the URL, calls the API and shows the result.
  */
 @Component({
   selector: 'app-confirm-email',
@@ -37,7 +37,7 @@ export class ConfirmEmailComponent implements OnInit {
 
     if (!userId || !token) {
       this.state = 'error';
-      this.message = 'Este link está incompleto. Peça um novo e-mail de confirmação.';
+      this.message = 'This link is incomplete. Request a new confirmation e-mail.';
       return;
     }
 
@@ -47,10 +47,10 @@ export class ConfirmEmailComponent implements OnInit {
       },
       error: (error) => {
         this.state = 'error';
-        // Link expirado, já usado ou adulterado chegam com a mesma resposta da API —
-        // distinguir os casos diria a um estranho quais contas existem.
+        // An expired, used or tampered link all get the same API answer — telling them
+        // apart would tell a stranger which accounts exist.
         this.message = error?.error?.message
-          || 'Link inválido ou expirado. Peça um novo e-mail de confirmação.';
+          || 'Invalid or expired link. Request a new confirmation e-mail.';
       }
     });
   }

@@ -12,7 +12,7 @@
         <mat-card-content>
           <mat-icon class="tile-icon pending">pending_actions</mat-icon>
           <div class="tile-value">{{ totalPending | currency:'BRL':'symbol':'1.2-2' }}</div>
-          <div class="tile-label">A Pagar (mês)</div>
+          <div class="tile-label">To pay (month)</div>
         </mat-card-content>
       </mat-card>
 
@@ -20,7 +20,7 @@
         <mat-card-content>
           <mat-icon class="tile-icon paid">check_circle</mat-icon>
           <div class="tile-value">{{ totalPaid | currency:'BRL':'symbol':'1.2-2' }}</div>
-          <div class="tile-label">Pago (mês)</div>
+          <div class="tile-label">Paid (month)</div>
         </mat-card-content>
       </mat-card>
 
@@ -28,7 +28,7 @@
         <mat-card-content>
           <mat-icon class="tile-icon total">account_balance_wallet</mat-icon>
           <div class="tile-value">{{ grandTotal | currency:'BRL':'symbol':'1.2-2' }}</div>
-          <div class="tile-label">Total (mês)</div>
+          <div class="tile-label">Total (month)</div>
         </mat-card-content>
       </mat-card>
     </div>
@@ -37,7 +37,7 @@
     @if (categoryRows.length > 0) {
       <mat-card class="category-card">
         <mat-card-header>
-          <mat-card-title>Despesas por Categoria</mat-card-title>
+          <mat-card-title>Expenses by Category</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           @for (row of categoryRows; track row.name) {
@@ -52,7 +52,7 @@
     }
 
     @if (!summary) {
-      <p class="no-data">Nenhum dado disponível para este período.</p>
+      <p class="no-data">No data available for this period.</p>
     }
   }
 </div>

@@ -54,8 +54,8 @@ export class JournalEntryFormComponent implements OnInit {
   saving = false;
 
   readonly entryTypes = [
-    { value: JournalEntryType.Debit, label: 'Débito' },
-    { value: JournalEntryType.Credit, label: 'Crédito' }
+    { value: JournalEntryType.Debit, label: 'Debit' },
+    { value: JournalEntryType.Credit, label: 'Credit' }
   ];
 
   get lines(): FormArray {
@@ -122,7 +122,7 @@ export class JournalEntryFormComponent implements OnInit {
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     if (!this.isBalanced) {
-      this.snackBar.open('O lançamento não está balanceado (débitos ≠ créditos)', 'Fechar', { duration: 5000 });
+      this.snackBar.open('The entry is not balanced (debits ≠ credits)', 'Close', { duration: 5000 });
       return;
     }
     this.saving = true;
@@ -139,7 +139,7 @@ export class JournalEntryFormComponent implements OnInit {
     };
     this.api.createJournalEntry(this.data.tenantId, payload).subscribe({
       next: () => { this.saving = false; this.dialogRef.close(true); },
-      error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Erro ao salvar', 'Fechar', { duration: 5000 }); }
+      error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Failed to save', 'Close', { duration: 5000 }); }
     });
   }
 }

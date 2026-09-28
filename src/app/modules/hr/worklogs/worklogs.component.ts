@@ -25,20 +25,20 @@ import { WorklogFormDialogComponent } from './worklog-form-dialog.component';
     <div class="page-container">
       <div class="page-header">
         <div>
-          <h1>Horas Trabalhadas</h1>
-          <p class="subtitle">Registros de horas por funcionário</p>
+          <h1>Work Logs</h1>
+          <p class="subtitle">Hours logged per employee</p>
         </div>
         <button mat-raised-button color="primary" (click)="onNew()">
-          <mat-icon>add</mat-icon> Registrar Horas
+          <mat-icon>add</mat-icon> Log hours
         </button>
       </div>
 
       <mat-card class="filter-card">
         <mat-card-content>
           <mat-form-field appearance="outline">
-            <mat-label>Funcionário</mat-label>
+            <mat-label>Employee</mat-label>
             <mat-select [(ngModel)]="selectedEmployeeId" (ngModelChange)="onFilterChange()">
-              <mat-option value="">Todos</mat-option>
+              <mat-option value="">All</mat-option>
               <mat-option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -48,40 +48,40 @@ import { WorklogFormDialogComponent } from './worklog-form-dialog.component';
       <mat-card>
         <mat-card-content>
           <div *ngIf="isLoading" class="spinner-wrap"><mat-spinner diameter="48"></mat-spinner></div>
-          <p *ngIf="!isLoading && workLogs.length === 0" class="no-data">Nenhum registro encontrado</p>
+          <p *ngIf="!isLoading && workLogs.length === 0" class="no-data">No logs found</p>
           <table mat-table [dataSource]="workLogs" *ngIf="!isLoading && workLogs.length > 0" class="full-table">
             <ng-container matColumnDef="employeeName">
-              <th mat-header-cell *matHeaderCellDef>Funcionário</th>
+              <th mat-header-cell *matHeaderCellDef>Employee</th>
               <td mat-cell *matCellDef="let w">{{ w.employeeName }}</td>
             </ng-container>
             <ng-container matColumnDef="workDate">
-              <th mat-header-cell *matHeaderCellDef>Data</th>
-              <td mat-cell *matCellDef="let w">{{ w.workDate | date:'dd/MM/yyyy' }}</td>
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let w">{{ w.workDate | date:'mediumDate' }}</td>
             </ng-container>
             <ng-container matColumnDef="hoursWorked">
-              <th mat-header-cell *matHeaderCellDef>Horas</th>
+              <th mat-header-cell *matHeaderCellDef>Hours</th>
               <td mat-cell *matCellDef="let w">{{ w.hoursWorked | number:'1.1-2' }}h</td>
             </ng-container>
             <ng-container matColumnDef="totalAmount">
-              <th mat-header-cell *matHeaderCellDef>Valor</th>
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
               <td mat-cell *matCellDef="let w">R$ {{ w.totalAmount | number:'1.2-2' }}</td>
             </ng-container>
             <ng-container matColumnDef="period">
-              <th mat-header-cell *matHeaderCellDef>Período</th>
+              <th mat-header-cell *matHeaderCellDef>Period</th>
               <td mat-cell *matCellDef="let w">
                 <span [class.assigned]="w.paymentPeriodId">
-                  {{ w.paymentPeriodId ? 'Atribuído' : 'Livre' }}
+                  {{ w.paymentPeriodId ? 'Assigned' : 'Open' }}
                 </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let w">
-                <button mat-icon-button color="primary" (click)="onEdit(w)" title="Editar"
+                <button mat-icon-button color="primary" (click)="onEdit(w)" title="Edit"
                   [disabled]="!!w.paymentPeriodId">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="onDelete(w)" title="Excluir"
+                <button mat-icon-button color="warn" (click)="onDelete(w)" title="Delete"
                   [disabled]="!!w.paymentPeriodId">
                   <mat-icon>delete</mat-icon>
                 </button>
@@ -170,10 +170,10 @@ export class WorklogsComponent implements OnInit {
   }
 
   onDelete(w: WorkLog): void {
-    if (!this.tenantId || !confirm('Excluir este registro de horas?')) return;
+    if (!this.tenantId || !confirm('Delete this work log?')) return;
     this.api.deleteWorkLog(this.tenantId, w.employeeId, w.id).subscribe({
       next: () => this.load(),
-      error: (err) => alert(err.error?.message ?? 'Erro ao excluir registro.')
+      error: (err) => alert(err.error?.message ?? 'Failed to delete the log.')
     });
   }
 }

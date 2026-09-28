@@ -1,18 +1,18 @@
-<h2 mat-dialog-title>Lançamento Manual</h2>
+<h2 mat-dialog-title>Manual entry</h2>
 
 <mat-dialog-content>
   <form [formGroup]="form">
     <div style="display:flex; gap:16px; flex-wrap:wrap">
       <mat-form-field appearance="outline">
-        <mat-label>Data</mat-label>
+        <mat-label>Date</mat-label>
         <input matInput [matDatepicker]="datePicker" formControlName="date">
         <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex:1">
-        <mat-label>Descrição</mat-label>
+        <mat-label>Description</mat-label>
         <input matInput formControlName="description">
-        <mat-error *ngIf="form.get('description')?.hasError('required')">Obrigatório</mat-error>
+        <mat-error *ngIf="form.get('description')?.hasError('required')">Required</mat-error>
       </mat-form-field>
     </div>
 
@@ -21,7 +21,7 @@
            style="display:flex; gap:12px; align-items:flex-start; margin-bottom:8px">
 
         <mat-form-field appearance="outline" style="flex:2">
-          <mat-label>Conta</mat-label>
+          <mat-label>Account</mat-label>
           <mat-select formControlName="accountId">
             <mat-option *ngFor="let a of analyticAccounts" [value]="a.id">
               {{ a.code }} – {{ a.name }}
@@ -30,14 +30,14 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="flex:1">
-          <mat-label>Tipo</mat-label>
+          <mat-label>Type</mat-label>
           <mat-select formControlName="entryType">
             <mat-option *ngFor="let t of entryTypes" [value]="t.value">{{ t.label }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="flex:1">
-          <mat-label>Valor</mat-label>
+          <mat-label>Amount</mat-label>
           <input matInput type="number" min="0.01" step="0.01" formControlName="amount">
         </mat-form-field>
 
@@ -49,26 +49,26 @@
     </div>
 
     <button mat-stroked-button type="button" (click)="addLine()">
-      <mat-icon>add</mat-icon> Adicionar linha
+      <mat-icon>add</mat-icon> Add line
     </button>
 
     <div style="margin-top:16px; display:flex; gap:32px">
-      <span>Débitos: <strong>{{ totalDebit | currency:'BRL' }}</strong></span>
-      <span>Créditos: <strong>{{ totalCredit | currency:'BRL' }}</strong></span>
+      <span>Debits: <strong>{{ totalDebit | currency:'BRL' }}</strong></span>
+      <span>Credits: <strong>{{ totalCredit | currency:'BRL' }}</strong></span>
       <span [style.color]="isBalanced ? 'var(--color-success)' : 'var(--color-error)'">
         <mat-icon style="vertical-align:middle; font-size:18px">
           {{ isBalanced ? 'check_circle' : 'error' }}
         </mat-icon>
-        {{ isBalanced ? 'Balanceado' : 'Desbalanceado' }}
+        {{ isBalanced ? 'Balanced' : 'Unbalanced' }}
       </span>
     </div>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button mat-dialog-close>Cancel</button>
   <button mat-flat-button color="primary" (click)="save()" [disabled]="saving || !isBalanced">
     <mat-spinner *ngIf="saving" diameter="18" style="display:inline-block;margin-right:8px"></mat-spinner>
-    Salvar
+    Save
   </button>
 </mat-dialog-actions>

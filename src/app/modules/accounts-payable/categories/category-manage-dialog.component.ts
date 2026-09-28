@@ -46,12 +46,12 @@ export interface CategoryManageDialogData {
     MatTooltipModule
   ],
   template: `
-    <h2 mat-dialog-title>Gerenciar categorias</h2>
+    <h2 mat-dialog-title>Manage categories</h2>
     <mat-dialog-content class="manage-content">
       <div class="manage-toolbar">
         <button mat-flat-button color="primary" (click)="openCreate()" [disabled]="loading">
           <mat-icon>add</mat-icon>
-          <span>Nova categoria</span>
+          <span>New category</span>
         </button>
         <span class="spacer"></span>
         <span *ngIf="loading" class="loading-inline"><mat-spinner diameter="20"></mat-spinner></span>
@@ -60,23 +60,23 @@ export interface CategoryManageDialogData {
       <mat-divider></mat-divider>
 
       <p *ngIf="!loading && !categories.length" class="empty">
-        Nenhuma categoria cadastrada.
+        No categories yet.
       </p>
 
       <ul *ngIf="!loading && categories.length" class="category-list">
         <li *ngFor="let c of categories" class="category-item">
           <ng-container *ngIf="editingId !== c.id; else editTpl">
-            <!-- token-exempt: a cor vem do dado; o cinza e o estado "sem cor" -->
+            <!-- token-exempt: the color comes from the data; the grey is the "no color" state -->
             <span class="swatch" [style.background]="c.color || '#9e9e9e'"></span>
             <div class="info">
               <strong>{{ c.name }}</strong>
               <small *ngIf="c.description">{{ c.description }}</small>
             </div>
             <span class="spacer"></span>
-            <button mat-icon-button (click)="startEdit(c)" matTooltip="Editar">
+            <button mat-icon-button (click)="startEdit(c)" matTooltip="Edit">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="remove(c)" matTooltip="Excluir">
+            <button mat-icon-button color="warn" (click)="remove(c)" matTooltip="Delete">
               <mat-icon>delete</mat-icon>
             </button>
           </ng-container>
@@ -84,21 +84,21 @@ export interface CategoryManageDialogData {
           <ng-template #editTpl>
             <form [formGroup]="editForm" class="edit-form" (ngSubmit)="saveEdit(c)">
               <mat-form-field appearance="outline" class="edit-name">
-                <mat-label>Nome</mat-label>
+                <mat-label>Name</mat-label>
                 <input matInput formControlName="name" autocomplete="off" maxlength="80">
               </mat-form-field>
               <mat-form-field appearance="outline" class="edit-color">
-                <mat-label>Cor</mat-label>
+                <mat-label>Color</mat-label>
                 <input matInput formControlName="color" maxlength="9">
               </mat-form-field>
               <mat-form-field appearance="outline" class="edit-description">
-                <mat-label>Descrição</mat-label>
+                <mat-label>Description</mat-label>
                 <input matInput formControlName="description" maxlength="200">
               </mat-form-field>
-              <button mat-icon-button type="submit" color="primary" [disabled]="editForm.invalid || savingEdit" matTooltip="Salvar">
+              <button mat-icon-button type="submit" color="primary" [disabled]="editForm.invalid || savingEdit" matTooltip="Save">
                 <mat-icon>check</mat-icon>
               </button>
-              <button mat-icon-button type="button" (click)="cancelEdit()" matTooltip="Cancelar">
+              <button mat-icon-button type="button" (click)="cancelEdit()" matTooltip="Cancel">
                 <mat-icon>close</mat-icon>
               </button>
             </form>
@@ -107,7 +107,7 @@ export interface CategoryManageDialogData {
       </ul>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="close()">Fechar</button>
+      <button mat-button (click)="close()">Close</button>
     </mat-dialog-actions>
   `,
   styles: [`
@@ -162,8 +162,8 @@ export class CategoryManageDialogComponent implements OnInit {
       next: cats => (this.categories = cats),
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao carregar categorias',
-          'Fechar',
+          err?.error?.message || 'Failed to load categories',
+          'Close',
           { duration: 5000 }
         ),
       complete: () => (this.loading = false)
@@ -209,15 +209,15 @@ export class CategoryManageDialogComponent implements OnInit {
       })
       .subscribe({
         next: updated => {
-          this.snackBar.open('Categoria atualizada', 'Fechar', { duration: 2500 });
+          this.snackBar.open('Category updated', 'Close', { duration: 2500 });
           this.changed = true;
           this.editingId = null;
           this.categories = this.categories.map(x => (x.id === updated.id ? updated : x));
         },
         error: err => {
           this.snackBar.open(
-            err?.error?.message || 'Erro ao atualizar categoria',
-            'Fechar',
+            err?.error?.message || 'Failed to update the category',
+            'Close',
             { duration: 5000 }
           );
         },
@@ -226,17 +226,17 @@ export class CategoryManageDialogComponent implements OnInit {
   }
 
   remove(c: AccountsPayableCategory): void {
-    if (!confirm(`Excluir a categoria "${c.name}"? Lançamentos existentes não são afetados.`)) return;
+    if (!confirm(`Delete the category "${c.name}"? Existing entries are not affected.`)) return;
     this.api.deleteAccountsPayableCategory(this.data.tenantId, c.id).subscribe({
       next: () => {
-        this.snackBar.open('Categoria excluída', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Category deleted', 'Close', { duration: 2500 });
         this.changed = true;
         this.categories = this.categories.filter(x => x.id !== c.id);
       },
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao excluir categoria',
-          'Fechar',
+          err?.error?.message || 'Failed to delete the category',
+          'Close',
           { duration: 5000 }
         )
     });

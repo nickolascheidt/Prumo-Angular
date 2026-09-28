@@ -63,14 +63,14 @@ export class ResetPasswordComponent implements OnInit {
     this.api.resetPassword(this.userId, this.token, this.form.value.password).subscribe({
       next: () => {
         this.isLoading = false;
-        this.snackBar.open('Senha alterada. Entre com a nova senha.', 'Fechar', { duration: 5000 });
+        this.snackBar.open('Password changed. Sign in with the new password.', 'Close', { duration: 5000 });
         this.router.navigate(['/auth/login']);
       },
       error: (error) => {
         this.isLoading = false;
         const message = error?.error?.message
-          || 'Link inválido ou expirado, ou a senha não atende aos requisitos.';
-        this.snackBar.open(message, 'Fechar', { duration: 6000, panelClass: 'error-snackbar' });
+          || 'Invalid or expired link, or the password does not meet the requirements.';
+        this.snackBar.open(message, 'Close', { duration: 6000, panelClass: 'error-snackbar' });
       }
     });
   }

@@ -56,16 +56,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
   isMobile = false;
   readonly menuSections: NavigationSection[] = [
     {
-      title: 'Principal',
+      title: 'Main',
       items: [
         { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' }
       ]
     },
     {
-      title: 'Contas a Pagar',
+      title: 'Accounts Payable',
       items: [
         {
-          label: 'Lançamentos',
+          label: 'Entries',
           icon: 'request_quote',
           route: '/accounts-payable',
           resourceCode: 'AccountsPayable.Entries'
@@ -73,16 +73,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Financeiro',
+      title: 'Finance',
       items: [
         {
-          label: 'Plano de Contas',
+          label: 'Chart of Accounts',
           icon: 'account_tree',
           route: '/finance/chart-of-accounts',
           resourceCode: 'ChartOfAccounts.Management'
         },
         {
-          label: 'Razão Geral',
+          label: 'General Ledger',
           icon: 'menu_book',
           route: '/finance/general-ledger',
           resourceCode: 'GeneralLedger.Management'
@@ -90,16 +90,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'RH',
+      title: 'HR',
       items: [
-        { label: 'Funcionários', icon: 'badge', route: '/hr/employees', resourceCode: 'HR.Employees' },
-        { label: 'Horas', icon: 'schedule', route: '/hr/worklogs', resourceCode: 'HR.WorkLogs' },
-        { label: 'Pagamentos', icon: 'payments', route: '/hr/payments', resourceCode: 'HR.Payments' },
-        { label: 'Períodos', icon: 'event_note', route: '/hr/payment-periods', resourceCode: 'HR.PaymentPeriods' }
+        { label: 'Employees', icon: 'badge', route: '/hr/employees', resourceCode: 'HR.Employees' },
+        { label: 'Work Logs', icon: 'schedule', route: '/hr/worklogs', resourceCode: 'HR.WorkLogs' },
+        { label: 'Payments', icon: 'payments', route: '/hr/payments', resourceCode: 'HR.Payments' },
+        { label: 'Payment Periods', icon: 'event_note', route: '/hr/payment-periods', resourceCode: 'HR.PaymentPeriods' }
       ]
     },
     {
-      title: 'Administração',
+      title: 'Administration',
       items: [
         {
           label: 'Roles',
@@ -108,7 +108,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
           resourceCode: 'Role.Management'
         },
         {
-          label: 'Membros',
+          label: 'Members',
           icon: 'group',
           route: '/admin/members',
           resourceCode: 'User.Management'

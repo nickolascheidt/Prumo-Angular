@@ -21,98 +21,98 @@ import { Employee, ContractType, HrPaymentMethod, CreateEmployeeRequest, UpdateE
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule,
     MatSlideToggleModule, MatSelectModule, MatProgressSpinnerModule
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-US' }],
   template: `
-    <h2 mat-dialog-title>{{ isEditing ? 'Editar Funcionário' : 'Novo Funcionário' }}</h2>
+    <h2 mat-dialog-title>{{ isEditing ? 'Edit employee' : 'New employee' }}</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="employee-form">
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Nome Completo *</mat-label>
+            <mat-label>Full name *</mat-label>
             <input matInput formControlName="fullName">
-            <mat-error *ngIf="form.get('fullName')?.invalid">Nome é obrigatório</mat-error>
+            <mat-error *ngIf="form.get('fullName')?.invalid">Name is required</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>CPF *</mat-label>
             <input matInput formControlName="cpf" placeholder="000.000.000-00" [readonly]="isEditing">
-            <mat-error *ngIf="form.get('cpf')?.invalid">CPF é obrigatório</mat-error>
+            <mat-error *ngIf="form.get('cpf')?.invalid">CPF is required</mat-error>
           </mat-form-field>
         </div>
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
+            <mat-label>E-mail</mat-label>
             <input matInput formControlName="email" type="email">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Telefone</mat-label>
+            <mat-label>Phone</mat-label>
             <input matInput formControlName="phone" placeholder="(11) 99999-9999">
           </mat-form-field>
         </div>
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Data de Admissão *</mat-label>
+            <mat-label>Hire date *</mat-label>
             <input matInput formControlName="hireDate" [matDatepicker]="picker">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="form.get('hireDate')?.invalid">Data de admissão é obrigatória</mat-error>
+            <mat-error *ngIf="form.get('hireDate')?.invalid">Hire date is required</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Tipo de Contrato *</mat-label>
+            <mat-label>Contract type *</mat-label>
             <mat-select formControlName="contractType">
               <mat-option [value]="ContractType.CLT">CLT</mat-option>
-              <mat-option [value]="ContractType.Temporary">Temporário</mat-option>
-              <mat-option [value]="ContractType.Daily">Diária</mat-option>
+              <mat-option [value]="ContractType.Temporary">Temporary</mat-option>
+              <mat-option [value]="ContractType.Daily">Daily</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Taxa Horária (R$) *</mat-label>
+            <mat-label>Hourly rate (R$) *</mat-label>
             <input matInput formControlName="hourlyRate" type="number" step="0.01">
-            <mat-error *ngIf="form.get('hourlyRate')?.invalid">Taxa horária deve ser maior que zero</mat-error>
+            <mat-error *ngIf="form.get('hourlyRate')?.invalid">Hourly rate must be greater than zero</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Forma de Pagamento *</mat-label>
+            <mat-label>Payment method *</mat-label>
             <mat-select formControlName="preferredPaymentMethod">
-              <mat-option [value]="HrPaymentMethod.BankTransfer">Transferência Bancária</mat-option>
+              <mat-option [value]="HrPaymentMethod.BankTransfer">Bank transfer</mat-option>
               <mat-option [value]="HrPaymentMethod.Pix">PIX</mat-option>
-              <mat-option [value]="HrPaymentMethod.Cash">Dinheiro</mat-option>
-              <mat-option [value]="HrPaymentMethod.Check">Cheque</mat-option>
+              <mat-option [value]="HrPaymentMethod.Cash">Cash</mat-option>
+              <mat-option [value]="HrPaymentMethod.Check">Check</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div *ngIf="form.get('preferredPaymentMethod')?.value === HrPaymentMethod.Pix">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Chave PIX</mat-label>
+            <mat-label>PIX key</mat-label>
             <input matInput formControlName="pixKey">
           </mat-form-field>
         </div>
         <div class="form-row" *ngIf="form.get('preferredPaymentMethod')?.value === HrPaymentMethod.BankTransfer">
           <mat-form-field appearance="outline">
-            <mat-label>Banco</mat-label>
+            <mat-label>Bank</mat-label>
             <input matInput formControlName="bankName">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Agência</mat-label>
+            <mat-label>Branch</mat-label>
             <input matInput formControlName="bankAgency">
           </mat-form-field>
         </div>
         <div *ngIf="form.get('preferredPaymentMethod')?.value === HrPaymentMethod.BankTransfer">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Conta</mat-label>
+            <mat-label>Account</mat-label>
             <input matInput formControlName="bankAccountNumber">
           </mat-form-field>
         </div>
         <div class="toggles">
-          <mat-slide-toggle formControlName="hasSignedContract">Contrato Assinado</mat-slide-toggle>
-          <mat-slide-toggle *ngIf="isEditing" formControlName="isActive">Ativo</mat-slide-toggle>
+          <mat-slide-toggle formControlName="hasSignedContract">Signed contract</mat-slide-toggle>
+          <mat-slide-toggle *ngIf="isEditing" formControlName="isActive">Active</mat-slide-toggle>
         </div>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
       <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid || isSaving">
-        {{ isSaving ? 'Salvando...' : 'Salvar' }}
+        {{ isSaving ? 'Saving...' : 'Save' }}
       </button>
     </mat-dialog-actions>
   `,
@@ -185,7 +185,7 @@ export class EmployeeFormDialogComponent implements OnInit {
       };
       this.api.updateEmployee(this.tenantId, this.data!.id, req).subscribe({
         next: (result) => { this.isSaving = false; this.dialogRef.close(result); },
-        error: () => { this.isSaving = false; alert('Erro ao atualizar funcionário.'); }
+        error: () => { this.isSaving = false; alert('Failed to update the employee.'); }
       });
     } else {
       const req: CreateEmployeeRequest = {
@@ -206,7 +206,7 @@ export class EmployeeFormDialogComponent implements OnInit {
       };
       this.api.createEmployee(this.tenantId, req).subscribe({
         next: (result) => { this.isSaving = false; this.dialogRef.close(result); },
-        error: () => { this.isSaving = false; alert('Erro ao criar funcionário. Verifique se o CPF já está cadastrado.'); }
+        error: () => { this.isSaving = false; alert('Failed to create the employee. Check whether the CPF is already registered.'); }
       });
     }
   }

@@ -21,75 +21,75 @@ import { Employee, PaymentPeriodSummary, HrPaymentMethod, HrPaymentStatus, Creat
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule,
     MatSelectModule, MatProgressSpinnerModule, MatIconModule
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-US' }],
   template: `
-    <h2 mat-dialog-title>Registrar Pagamento</h2>
+    <h2 mat-dialog-title>Record payment</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="payment-form">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Funcionário *</mat-label>
+          <mat-label>Employee *</mat-label>
           <mat-select formControlName="employeeId" (selectionChange)="onEmployeeChange()">
             <mat-option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</mat-option>
           </mat-select>
-          <mat-error>Selecione um funcionário</mat-error>
+          <mat-error>Select an employee</mat-error>
         </mat-form-field>
 
         <div *ngIf="loadingPeriods" class="loading-row">
           <mat-spinner diameter="24"></mat-spinner>
-          <span>Carregando períodos...</span>
+          <span>Loading periods...</span>
         </div>
 
         <mat-form-field appearance="outline" class="full-width"
           *ngIf="!loadingPeriods && pendingPeriods.length > 0">
-          <mat-label>Período de Pagamento *</mat-label>
+          <mat-label>Payment period *</mat-label>
           <mat-select formControlName="paymentPeriodId" (selectionChange)="onPeriodChange()">
             <mat-option *ngFor="let p of pendingPeriods" [value]="p.id">
-              {{ p.startDate | date:'dd/MM/yyyy' }} → {{ p.endDate | date:'dd/MM/yyyy' }}
+              {{ p.startDate | date:'mediumDate' }} → {{ p.endDate | date:'mediumDate' }}
               — R$ {{ p.totalAmount | number:'1.2-2' }}
             </mat-option>
           </mat-select>
-          <mat-error>Selecione um período</mat-error>
+          <mat-error>Select a period</mat-error>
         </mat-form-field>
 
         <div class="no-periods" *ngIf="!loadingPeriods && form.get('employeeId')?.value && pendingPeriods.length === 0">
           <mat-icon>info</mat-icon>
-          <p>Nenhum período pendente. Registre horas e gere um período primeiro.</p>
+          <p>No pending period. Log hours and generate a period first.</p>
         </div>
 
         <div class="period-info" *ngIf="selectedPeriod">
-          <span>{{ selectedPeriod.totalHours }}h trabalhadas</span>
+          <span>{{ selectedPeriod.totalHours }}h worked</span>
           <span class="amount">R$ {{ selectedPeriod.totalAmount | number:'1.2-2' }}</span>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Data de Pagamento *</mat-label>
+          <mat-label>Payment date *</mat-label>
           <input matInput formControlName="paymentDate" [matDatepicker]="picker">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error>Data de pagamento é obrigatória</mat-error>
+          <mat-error>Payment date is required</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Método de Pagamento *</mat-label>
+          <mat-label>Payment method *</mat-label>
           <mat-select formControlName="paymentMethod">
             <mat-option [value]="HrPaymentMethod.Pix">PIX</mat-option>
-            <mat-option [value]="HrPaymentMethod.BankTransfer">Transferência Bancária</mat-option>
-            <mat-option [value]="HrPaymentMethod.Cash">Dinheiro</mat-option>
-            <mat-option [value]="HrPaymentMethod.Check">Cheque</mat-option>
+            <mat-option [value]="HrPaymentMethod.BankTransfer">Bank transfer</mat-option>
+            <mat-option [value]="HrPaymentMethod.Cash">Cash</mat-option>
+            <mat-option [value]="HrPaymentMethod.Check">Check</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Observações</mat-label>
+          <mat-label>Notes</mat-label>
           <textarea matInput formControlName="notes" rows="2"></textarea>
         </mat-form-field>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
       <button mat-raised-button color="primary" (click)="onSave()"
         [disabled]="form.invalid || isSaving || pendingPeriods.length === 0">
-        {{ isSaving ? 'Registrando...' : 'Registrar Pagamento' }}
+        {{ isSaving ? 'Recording...' : 'Record payment' }}
       </button>
     </mat-dialog-actions>
   `,
@@ -173,7 +173,7 @@ export class PaymentFormDialogComponent implements OnInit {
     };
     this.api.createHrPayment(this.tenantId, req).subscribe({
       next: (r) => { this.isSaving = false; this.dialogRef.close(r); },
-      error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Erro ao registrar pagamento.'); }
+      error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Failed to record the payment.'); }
     });
   }
 

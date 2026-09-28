@@ -23,15 +23,15 @@ export class DashboardComponent {
   currentUser$: Observable<User | null>;
 
   readonly tabs: DashTab[] = [
-    { label: 'Visão Geral', route: 'overview' },
-    // Cada aba tem recurso próprio, e não o do módulo correspondente: assim dá para
-    // conceder o painel de RH sem conceder a tela de funcionários, e vice-versa.
-    // Precisa casar com o guard da rota em app.routes.ts — se divergirem, a aba
-    // aparece e a rota barra.
-    { label: 'Contabilidade', route: 'accounting', resourceCode: 'Dashboard.Accounting' },
-    { label: 'Financeiro', route: 'finance', resourceCode: 'Dashboard.Finance' },
-    { label: 'RH', route: 'hr', resourceCode: 'Dashboard.HR' },
-    { label: 'Administração', route: 'admin', resourceCode: 'Dashboard.Admin' }
+    { label: 'Overview', route: 'overview' },
+    // Each tab has its own resource, not the matching module's: that way the HR
+    // dashboard can be granted without granting the employees screen, and vice versa.
+    // It has to match the route guard in app.routes.ts — if they diverge, the tab
+    // shows and the route blocks.
+    { label: 'Accounting', route: 'accounting', resourceCode: 'Dashboard.Accounting' },
+    { label: 'Finance', route: 'finance', resourceCode: 'Dashboard.Finance' },
+    { label: 'HR', route: 'hr', resourceCode: 'Dashboard.HR' },
+    { label: 'Administration', route: 'admin', resourceCode: 'Dashboard.Admin' }
   ];
 
   constructor(private authService: AuthService) {

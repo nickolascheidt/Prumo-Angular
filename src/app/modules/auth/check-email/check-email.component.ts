@@ -8,7 +8,7 @@ import { ApiService } from '@core/services';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
 /**
- * "Confirme seu e-mail". Chega-se aqui pelo cadastro e pelo login recusado com
+ * "Confirm your e-mail". Reached from sign-up and from a login refused with
  * `email_not_confirmed`.
  */
 @Component({
@@ -37,15 +37,15 @@ export class CheckEmailComponent implements OnInit {
 
     this.isResending = true;
     this.api.resendConfirmation(this.email).subscribe({
-      // A API responde 202 mesmo para endereço sem conta ou já confirmado. A mensagem
-      // aqui é a mesma nos três casos, de propósito.
+      // The API answers 202 even for an address without an account or already confirmed.
+      // The message here is the same in all three cases, on purpose.
       next: () => {
         this.isResending = false;
-        this.snackBar.open('Se houver uma confirmação pendente, o e-mail foi reenviado.', 'Fechar', { duration: 5000 });
+        this.snackBar.open('If a confirmation was pending, the e-mail has been resent.', 'Close', { duration: 5000 });
       },
       error: () => {
         this.isResending = false;
-        this.snackBar.open('Não foi possível reenviar agora. Tente de novo em instantes.', 'Fechar',
+        this.snackBar.open('Could not resend right now. Try again in a moment.', 'Close',
           { duration: 5000, panelClass: 'error-snackbar' });
       }
     });

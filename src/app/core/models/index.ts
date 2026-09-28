@@ -24,12 +24,12 @@ export enum TenantRole {
 }
 
 /**
- * A API serializa TenantRole como string ("Owner"), enquanto o enum daqui é numérico.
- * Tratar a string como número já quebrou três telas: o cargo virava "Desconhecido" na
- * lista de membros, os controles de gestão sumiam, e a seleção de tenant mostrava "2"
- * no lugar de "Owner".
+ * The API serializes TenantRole as a string ("Owner"), while the enum here is numeric.
+ * Treating the string as a number already broke three screens: the position became
+ * "Unknown" in the member list, the management controls disappeared, and tenant
+ * selection showed "2" instead of "Owner".
  *
- * Valor irreconhecível vira Member — o menor privilégio.
+ * An unrecognized value becomes Member — the least privilege.
  */
 export function toTenantRole(value: TenantRole | string | null | undefined): TenantRole {
   if (typeof value === 'number') {
@@ -42,12 +42,12 @@ export function toTenantRole(value: TenantRole | string | null | undefined): Ten
 }
 
 const TENANT_ROLE_LABELS: Record<TenantRole, string> = {
-  [TenantRole.Member]: 'Membro',
+  [TenantRole.Member]: 'Member',
   [TenantRole.Admin]: 'Admin',
   [TenantRole.Owner]: 'Owner'
 };
 
-/** Rótulo do cargo, aceitando tanto o número quanto a string que a API manda. */
+/** Position label, accepting both the number and the string the API sends. */
 export function tenantRoleLabel(value: TenantRole | string | null | undefined): string {
   return TENANT_ROLE_LABELS[toTenantRole(value)];
 }
@@ -77,12 +77,12 @@ export interface TenantMember {
   userId: string;
   email: string;
   fullName?: string;
-  /** Cargo administrativo no tenant. */
+  /** Administrative position in the tenant. */
   role: TenantRole;
   joinedAt: string;
-  /** Feature roles concedidas neste tenant — as "chaves de módulo". */
+  /** Feature roles granted in this tenant — the "module keys". */
   roles: string[];
-  /** Role global do Identity. Não é uma feature role e não se revoga por esta tela. */
+  /** Global Identity role. Not a feature role, and not revoked from this screen. */
   isMasterAdmin: boolean;
 }
 
@@ -98,7 +98,7 @@ export interface RegisterRequest {
   phoneNumber?: string | null;
 }
 
-/** O cadastro responde 202 e não traz token: confirmar o e-mail vem antes de entrar. */
+/** Sign-up answers 202 and returns no token: confirming the e-mail comes before signing in. */
 export interface RegistrationResult {
   userId: string;
   email: string;
@@ -110,7 +110,7 @@ export interface InviteMemberRequest {
 }
 
 export interface InviteMemberResult {
-  /** Verdadeiro quando o e-mail já tinha conta e a pessoa virou membro na hora. */
+  /** True when the e-mail already had an account and the person became a member right away. */
   joinedImmediately: boolean;
   userId: string | null;
   email: string;
@@ -271,18 +271,18 @@ export interface UserResourcePermissions {
 }
 
 /**
- * Role administrável na tela de Roles: as canônicas do sistema e as que o tenant criou.
+ * A role managed on the Roles screen: the system's canonical ones and the ones the tenant created.
  *
- * Não confundir com o enum `TenantRole`, que é o **cargo** administrativo
- * (Owner/Admin/Member). Esta é a "chave de módulo" — o conjunto de acessos.
+ * Not to be confused with the `TenantRole` enum, which is the administrative **position**
+ * (Owner/Admin/Member). This is the "module key" — the set of access rights.
  */
 export interface ManagedRole {
   id: string;
   name: string;
   description?: string;
-  /** Role do sistema: não pode ser excluída nem ter o nome reaproveitado. */
+  /** System role: cannot be deleted or have its name reused. */
   isCanonical: boolean;
-  /** Quantos membros deste tenant carregam a role. */
+  /** How many members of this tenant carry the role. */
   memberCount: number;
 }
 
@@ -322,7 +322,7 @@ export interface AppUserSummary {
   email: string;
   fullName: string;
   roles: string[];
-  /** Role global do Identity — explica a contagem 0 de quem manda em tudo. */
+  /** Global Identity role — explains the 0 count for whoever runs everything. */
   isMasterAdmin?: boolean;
   createdAt?: string;
   lastLoginAt?: string;

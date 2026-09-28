@@ -22,15 +22,15 @@ import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-
     <div class="page-container">
       <div class="page-header">
         <div>
-          <h1>Pagamentos</h1>
-          <p class="subtitle">Histórico de pagamentos de funcionários</p>
+          <h1>Payments</h1>
+          <p class="subtitle">Employee payment history</p>
         </div>
         <div class="button-group">
           <button mat-stroked-button color="accent" (click)="onGeneratePeriod()">
-            <mat-icon>event_note</mat-icon> Gerar Período
+            <mat-icon>event_note</mat-icon> Generate period
           </button>
           <button mat-raised-button color="primary" (click)="onNew()">
-            <mat-icon>add</mat-icon> Novo Pagamento
+            <mat-icon>add</mat-icon> New payment
           </button>
         </div>
       </div>
@@ -38,32 +38,32 @@ import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-
       <mat-card>
         <mat-card-content>
           <div *ngIf="isLoading" class="spinner-wrap"><mat-spinner diameter="48"></mat-spinner></div>
-          <p *ngIf="!isLoading && payments.length === 0" class="no-data">Nenhum pagamento registrado</p>
+          <p *ngIf="!isLoading && payments.length === 0" class="no-data">No payments recorded</p>
           <table mat-table [dataSource]="payments" *ngIf="!isLoading && payments.length > 0" class="full-table">
             <ng-container matColumnDef="employeeName">
-              <th mat-header-cell *matHeaderCellDef>Funcionário</th>
+              <th mat-header-cell *matHeaderCellDef>Employee</th>
               <td mat-cell *matCellDef="let p">{{ p.employeeName }}</td>
             </ng-container>
             <ng-container matColumnDef="paymentDate">
-              <th mat-header-cell *matHeaderCellDef>Data</th>
-              <td mat-cell *matCellDef="let p">{{ p.paymentDate | date:'dd/MM/yyyy' }}</td>
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let p">{{ p.paymentDate | date:'mediumDate' }}</td>
             </ng-container>
             <ng-container matColumnDef="amount">
-              <th mat-header-cell *matHeaderCellDef>Valor</th>
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
               <td mat-cell *matCellDef="let p">R$ {{ p.amount | number:'1.2-2' }}</td>
             </ng-container>
             <ng-container matColumnDef="paymentMethod">
-              <th mat-header-cell *matHeaderCellDef>Método</th>
+              <th mat-header-cell *matHeaderCellDef>Method</th>
               <td mat-cell *matCellDef="let p">{{ p.paymentMethodName }}</td>
             </ng-container>
             <ng-container matColumnDef="paidBy">
-              <th mat-header-cell *matHeaderCellDef>Pago por</th>
+              <th mat-header-cell *matHeaderCellDef>Paid by</th>
               <td mat-cell *matCellDef="let p">{{ p.paidByUserName }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let p">
-                <button mat-icon-button color="warn" (click)="onDelete(p)" title="Excluir">
+                <button mat-icon-button color="warn" (click)="onDelete(p)" title="Delete">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
@@ -121,10 +121,10 @@ export class HrPaymentsComponent implements OnInit {
   }
 
   onDelete(p: HrPayment): void {
-    if (!this.tenantId || !confirm(`Excluir pagamento de R$ ${p.amount} para ${p.employeeName}?\nO período voltará para Pendente.`)) return;
+    if (!this.tenantId || !confirm(`Delete the R$ ${p.amount} payment to ${p.employeeName}?\nThe period will go back to Pending.`)) return;
     this.api.deleteHrPayment(this.tenantId, p.id).subscribe({
       next: () => this.load(),
-      error: (err) => alert(err.error?.message ?? 'Erro ao excluir pagamento.')
+      error: (err) => alert(err.error?.message ?? 'Failed to delete the payment.')
     });
   }
 }

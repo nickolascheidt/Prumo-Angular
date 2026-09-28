@@ -20,16 +20,16 @@ interface HintRow {
     <mat-card class="hints-card">
       <mat-card-header>
         <mat-icon mat-card-avatar>tips_and_updates</mat-icon>
-        <mat-card-title>Contas Recomendadas</mat-card-title>
-        <mat-card-subtitle>Mapeamentos sugeridos para os módulos Financeiro e RH</mat-card-subtitle>
+        <mat-card-title>Recommended accounts</mat-card-title>
+        <mat-card-subtitle>Suggested mappings for the Finance and HR modules</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <table class="hints-table">
           <thead>
             <tr>
-              <th>Código</th>
-              <th>Conta</th>
-              <th>Finalidade</th>
+              <th>Code</th>
+              <th>Account</th>
+              <th>Purpose</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -42,17 +42,17 @@ interface HintRow {
                 <td>
                   @if (row.configured === null) {
                     <span class="status-info">
-                      <mat-icon>info_outline</mat-icon> Informativo
+                      <mat-icon>info_outline</mat-icon> Informational
                     </span>
                   }
                   @if (row.configured === true) {
                     <span class="status-ok">
-                      <mat-icon>check_circle</mat-icon> Configurado
+                      <mat-icon>check_circle</mat-icon> Configured
                     </span>
                   }
                   @if (row.configured === false) {
                     <span class="status-warn">
-                      <mat-icon>warning_amber</mat-icon> Não configurado
+                      <mat-icon>warning_amber</mat-icon> Not configured
                     </span>
                   }
                 </td>
@@ -82,32 +82,32 @@ export class AccountsHintsComponent {
     return [
       {
         code: '1.1.1',
-        name: 'Caixa e Equivalentes',
-        purpose: 'Pagamentos em caixa (Contas a Pagar)',
+        name: 'Cash and Cash Equivalents',
+        purpose: 'Cash payments (Accounts Payable)',
         configured: s ? !!s.defaultCashAccountId : false
       },
       {
         code: '2.1.1',
-        name: 'Fornecedores / Contas a Pagar',
-        purpose: 'Lançamentos de Contas a Pagar',
+        name: 'Suppliers / Accounts Payable',
+        purpose: 'Accounts Payable entries',
         configured: s ? !!s.defaultAccountsPayableAccountId : false
       },
       {
         code: '5.1.4',
-        name: 'Despesas com Fornecedores',
-        purpose: 'Despesas de Contas a Pagar',
+        name: 'Supplier Expenses',
+        purpose: 'Accounts Payable expenses',
         configured: s ? !!s.defaultExpenseAccountId : false
       },
       {
         code: '2.1.3',
-        name: 'Salários a Pagar',
-        purpose: 'Folha de pagamento RH',
+        name: 'Salaries Payable',
+        purpose: 'HR payroll',
         configured: null
       },
       {
         code: '5.1.1',
-        name: 'Despesas com Pessoal',
-        purpose: 'Custos de pessoal RH',
+        name: 'Personnel Expenses',
+        purpose: 'HR personnel costs',
         configured: null
       }
     ];

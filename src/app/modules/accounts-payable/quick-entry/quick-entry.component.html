@@ -1,9 +1,9 @@
 <mat-card class="quick-entry-card">
   <mat-tab-group dynamicHeight>
-    <mat-tab label="Lançamento rápido">
+    <mat-tab label="Quick entry">
       <form [formGroup]="quickForm" (ngSubmit)="submitQuick()" class="quick-form">
         <mat-form-field appearance="outline" class="field--description">
-          <mat-label>Descrição</mat-label>
+          <mat-label>Description</mat-label>
           <input
             matInput
             #descriptionInput
@@ -11,12 +11,12 @@
             autocomplete="off"
             (keydown.enter)="$event.preventDefault(); submitQuick()">
           <mat-error *ngIf="quickForm.get('description')?.hasError('required')">
-            Obrigatório
+            Required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field--amount">
-          <mat-label>Valor</mat-label>
+          <mat-label>Amount</mat-label>
           <input
             matInput
             type="number"
@@ -26,25 +26,25 @@
             inputmode="decimal">
           <span matTextPrefix>R$&nbsp;</span>
           <mat-error *ngIf="quickForm.get('amount')?.hasError('required')">
-            Obrigatório
+            Required
           </mat-error>
           <mat-error *ngIf="quickForm.get('amount')?.hasError('min')">
-            Valor inválido
+            Invalid amount
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field--due">
-          <mat-label>Vencimento</mat-label>
+          <mat-label>Due date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="dueDate">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <mat-error *ngIf="quickForm.get('dueDate')?.hasError('required')">
-            Obrigatório
+            Required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field--category">
-          <mat-label>Categoria</mat-label>
+          <mat-label>Category</mat-label>
           <mat-select formControlName="categoryId">
             <mat-option *ngFor="let c of categories" [value]="c.id">
               {{ c.name }}
@@ -54,22 +54,22 @@
             mat-icon-button
             matSuffix
             type="button"
-            matTooltip="Nova categoria"
+            matTooltip="New category"
             (click)="$event.stopPropagation(); openQuickCreateCategory('quick')">
             <mat-icon>add</mat-icon>
           </button>
           <mat-error *ngIf="quickForm.get('categoryId')?.hasError('required')">
-            Obrigatório
+            Required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field--supplier">
-          <mat-label>Fornecedor (opcional)</mat-label>
+          <mat-label>Supplier (optional)</mat-label>
           <input matInput formControlName="supplierName" autocomplete="off">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field--method">
-          <mat-label>Forma de pagamento</mat-label>
+          <mat-label>Payment method</mat-label>
           <mat-select formControlName="paymentMethod">
             <mat-option [value]="null">—</mat-option>
             <mat-option *ngFor="let m of paymentMethods" [value]="m.value">
@@ -84,23 +84,23 @@
           type="submit"
           class="submit-btn"
           [disabled]="isSaving || quickForm.invalid"
-          matTooltip="Enter para salvar">
+          matTooltip="Enter to save">
           <mat-icon *ngIf="!isSaving">add</mat-icon>
           <mat-spinner *ngIf="isSaving" diameter="18"></mat-spinner>
-          <span>Salvar e próximo</span>
+          <span>Save and next</span>
         </button>
       </form>
       <p class="hint">
         <mat-icon inline>info</mat-icon>
-        Pressione <kbd>Enter</kbd> para salvar e ir ao próximo lançamento.
+        Press <kbd>Enter</kbd> to save and go to the next entry.
       </p>
     </mat-tab>
 
-    <mat-tab label="Lote (colar do caderno)">
+    <mat-tab label="Batch (paste from a notebook)">
       <form [formGroup]="bulkForm" (ngSubmit)="submitBulk()" class="bulk-form">
         <div class="bulk-form__header">
           <mat-form-field appearance="outline">
-            <mat-label>Categoria padrão</mat-label>
+            <mat-label>Default category</mat-label>
             <mat-select formControlName="categoryId">
               <mat-option *ngFor="let c of categories" [value]="c.id">
                 {{ c.name }}
@@ -110,14 +110,14 @@
               mat-icon-button
               matSuffix
               type="button"
-              matTooltip="Nova categoria"
+              matTooltip="New category"
               (click)="$event.stopPropagation(); openQuickCreateCategory('bulk')">
               <mat-icon>add</mat-icon>
             </button>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Forma de pagamento padrão</mat-label>
+            <mat-label>Default payment method</mat-label>
             <mat-select formControlName="paymentMethod">
               <mat-option [value]="null">—</mat-option>
               <mat-option *ngFor="let m of paymentMethods" [value]="m.value">
@@ -128,13 +128,13 @@
         </div>
 
         <mat-form-field appearance="outline" class="bulk-form__lines">
-          <mat-label>Lançamentos (uma linha por entrada)</mat-label>
+          <mat-label>Entries (one per line)</mat-label>
           <textarea
             matInput
             rows="8"
             formControlName="lines"
-            placeholder="dd/mm/aaaa | descrição | valor | fornecedor (opcional)
-ex: 12/05/2026 | Aluguel maio | 1850,00 | Imobiliária Silva"></textarea>
+            placeholder="mm/dd/yyyy | description | amount | supplier (optional)
+e.g.: 05/12/2026 | May rent | 1850.00 | Silva Realty"></textarea>
         </mat-form-field>
 
         <button
@@ -144,7 +144,7 @@ ex: 12/05/2026 | Aluguel maio | 1850,00 | Imobiliária Silva"></textarea>
           [disabled]="isBulkSaving || bulkForm.invalid">
           <mat-icon *ngIf="!isBulkSaving">playlist_add</mat-icon>
           <mat-spinner *ngIf="isBulkSaving" diameter="18"></mat-spinner>
-          <span>Importar lote</span>
+          <span>Import batch</span>
         </button>
       </form>
     </mat-tab>

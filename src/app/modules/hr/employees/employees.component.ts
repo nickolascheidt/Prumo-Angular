@@ -22,11 +22,11 @@ import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
     <div class="page-container">
       <div class="page-header">
         <div>
-          <h1>Funcionários</h1>
-          <p class="subtitle">Gestão de funcionários e contratos</p>
+          <h1>Employees</h1>
+          <p class="subtitle">Employees and contracts</p>
         </div>
         <button mat-raised-button color="primary" (click)="onNew()">
-          <mat-icon>add</mat-icon> Novo Funcionário
+          <mat-icon>add</mat-icon> New employee
         </button>
       </div>
 
@@ -35,10 +35,10 @@ import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
           <div *ngIf="isLoading" class="spinner-wrap">
             <mat-spinner diameter="48"></mat-spinner>
           </div>
-          <p *ngIf="!isLoading && employees.length === 0" class="no-data">Nenhum funcionário cadastrado</p>
+          <p *ngIf="!isLoading && employees.length === 0" class="no-data">No employees registered</p>
           <table mat-table [dataSource]="employees" *ngIf="!isLoading && employees.length > 0" class="full-table">
             <ng-container matColumnDef="fullName">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <th mat-header-cell *matHeaderCellDef>Name</th>
               <td mat-cell *matCellDef="let e">{{ e.fullName }}</td>
             </ng-container>
             <ng-container matColumnDef="cpf">
@@ -46,28 +46,28 @@ import { EmployeeFormDialogComponent } from './employee-form-dialog.component';
               <td mat-cell *matCellDef="let e">{{ e.cpf }}</td>
             </ng-container>
             <ng-container matColumnDef="contractType">
-              <th mat-header-cell *matHeaderCellDef>Contrato</th>
+              <th mat-header-cell *matHeaderCellDef>Contract</th>
               <td mat-cell *matCellDef="let e">{{ e.contractTypeName }}</td>
             </ng-container>
             <ng-container matColumnDef="hourlyRate">
-              <th mat-header-cell *matHeaderCellDef>Taxa/h</th>
+              <th mat-header-cell *matHeaderCellDef>Rate/h</th>
               <td mat-cell *matCellDef="let e">R$ {{ e.hourlyRate | number:'1.2-2' }}</td>
             </ng-container>
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Status</th>
               <td mat-cell *matCellDef="let e">
                 <mat-chip [color]="e.isActive ? 'primary' : 'warn'" highlighted>
-                  {{ e.isActive ? 'Ativo' : 'Inativo' }}
+                  {{ e.isActive ? 'Active' : 'Inactive' }}
                 </mat-chip>
               </td>
             </ng-container>
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let e">
-                <button mat-icon-button color="primary" (click)="onEdit(e)" title="Editar">
+                <button mat-icon-button color="primary" (click)="onEdit(e)" title="Edit">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="onDeactivate(e)" title="Desativar"
+                <button mat-icon-button color="warn" (click)="onDeactivate(e)" title="Deactivate"
                   [disabled]="!e.isActive">
                   <mat-icon>person_off</mat-icon>
                 </button>
@@ -129,10 +129,10 @@ export class EmployeesComponent implements OnInit {
   }
 
   onDeactivate(employee: Employee): void {
-    if (!this.tenantId || !confirm(`Desativar ${employee.fullName}?`)) return;
+    if (!this.tenantId || !confirm(`Deactivate ${employee.fullName}?`)) return;
     this.api.deactivateEmployee(this.tenantId, employee.id).subscribe({
       next: () => this.load(),
-      error: () => alert('Erro ao desativar funcionário.')
+      error: () => alert('Failed to deactivate the employee.')
     });
   }
 }

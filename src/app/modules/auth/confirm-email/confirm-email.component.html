@@ -1,14 +1,14 @@
-<app-auth-shell title="Confirmação de e-mail" subtitle="Prumo ERP" icon="verified">
+<app-auth-shell title="E-mail confirmation" subtitle="Prumo ERP" icon="verified">
   <div class="auth-status" *ngIf="state === 'loading'">
     <mat-spinner diameter="40"></mat-spinner>
-    <p class="auth-note">Confirmando…</p>
+    <p class="auth-note">Confirming…</p>
   </div>
 
   <div class="auth-status auth-status--ok" *ngIf="state === 'ok'">
     <mat-icon>check_circle</mat-icon>
-    <p class="auth-note">E-mail confirmado. Sua conta está pronta.</p>
+    <p class="auth-note">E-mail confirmed. Your account is ready.</p>
     <a mat-flat-button color="primary" class="auth-btn auth-btn--block" routerLink="/auth/login">
-      Entrar
+      Sign in
     </a>
   </div>
 
@@ -16,7 +16,7 @@
     <mat-icon>error_outline</mat-icon>
     <p class="auth-note">{{ message }}</p>
     <a mat-stroked-button class="auth-btn auth-btn--block" routerLink="/auth/check-email">
-      Reenviar confirmação
+      Resend confirmation
     </a>
   </div>
 </app-auth-shell>

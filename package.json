@@ -1,7 +1,7 @@
 {
   "name": "prumo-erp",
   "version": "1.0.0",
-  "description": "ERP Frontend para Prumo - Sistema de Gestão de Funcionários, Horas e Pagamentos",
+  "description": "Prumo ERP frontend: employees, work logs, payments, accounts payable and accounting",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

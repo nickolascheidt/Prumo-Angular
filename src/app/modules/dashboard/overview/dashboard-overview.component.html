@@ -2,7 +2,7 @@
   <section class="hero">
     <div class="hero__text">
       <span class="hero__eyebrow">Dashboard</span>
-      <h1>Bem-vindo, {{ user.fullName }} 👋</h1>
+      <h1>Welcome, {{ user.fullName }} 👋</h1>
       <p>{{ user.email }}</p>
     </div>
     <div class="hero__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</div>
@@ -12,20 +12,20 @@
     <div class="stat">
       <div class="stat__icon stat__icon--primary"><mat-icon>shield</mat-icon></div>
       <div class="stat__body">
-        <span class="stat__label">Roles atribuídas</span>
+        <span class="stat__label">Assigned roles</span>
         <span class="stat__value num">{{ user.roles.length || 0 }}</span>
       </div>
     </div>
 
-    <!-- O quarto card só existe para quem alcança Contas a Pagar: um "0 a vencer"
-         para quem não pode abrir a tela seria um número sem sentido nem destino. -->
+    <!-- The fourth card only exists for whoever reaches Accounts Payable: a "0 due soon"
+         for someone who cannot open the screen would be a number with no meaning or target. -->
     <div class="stat" *ngIf="canSeePayables">
-      <!-- `event`, e não `event_upcoming`: a segunda só existe no Material Symbols,
-           e o app carrega a Material Icons clássica. Ligadura que a fonte não
-           conhece não colapsa — sai desenhada letra a letra e vaza da caixa. -->
+      <!-- `event`, not `event_upcoming`: the latter only exists in Material Symbols, and
+           the app loads classic Material Icons. A ligature the font does not know does not
+           collapse — it is drawn letter by letter and overflows the box. -->
       <div class="stat__icon stat__icon--warn"><mat-icon>event</mat-icon></div>
       <div class="stat__body">
-        <span class="stat__label">A vencer em 30 dias</span>
+        <span class="stat__label">Due in 30 days</span>
         <span class="stat__value num">{{ upcomingCount }}</span>
       </div>
     </div>
@@ -34,14 +34,14 @@
       <div class="stat__icon stat__icon--accent"><mat-icon>verified_user</mat-icon></div>
       <div class="stat__body">
         <span class="stat__label">Status</span>
-        <span class="stat__value">Ativo</span>
+        <span class="stat__value">Active</span>
       </div>
     </div>
 
     <div class="stat">
       <div class="stat__icon stat__icon--info"><mat-icon>schedule</mat-icon></div>
       <div class="stat__body">
-        <span class="stat__label">Sessão</span>
+        <span class="stat__label">Session</span>
         <span class="stat__value">Online</span>
       </div>
     </div>
@@ -50,8 +50,8 @@
   <section class="panels" [class.panels--single]="!canSeePayables || upcomingFailed">
     <mat-card class="panel" *ngIf="canSeePayables && !upcomingFailed">
       <div class="panel__head">
-        <h3>Próximos vencimentos</h3>
-        <a class="panel__more" routerLink="/accounts-payable">Ver todos</a>
+        <h3>Upcoming due dates</h3>
+        <a class="panel__more" routerLink="/accounts-payable">View all</a>
       </div>
 
       <div class="panel__loading" *ngIf="isLoadingUpcoming">
@@ -60,7 +60,7 @@
 
       <ng-container *ngIf="!isLoadingUpcoming">
         <div class="due-row" *ngFor="let entry of upcoming">
-          <span class="due-row__date num">{{ entry.dueDate | date: 'dd/MM/yyyy' }}</span>
+          <span class="due-row__date num">{{ entry.dueDate | date:'mediumDate' }}</span>
           <span class="due-row__desc" [title]="entry.description">{{ entry.description }}</span>
           <span class="due-row__amount num num--value">{{ entry.amount | currency: 'BRL' }}</span>
           <span class="status-chip" [ngClass]="'status-chip--' + statusOf(entry)">
@@ -69,28 +69,28 @@
         </div>
 
         <p class="panel__empty" *ngIf="!upcoming.length">
-          Nada vencendo nos próximos 30 dias.
+          Nothing due in the next 30 days.
         </p>
       </ng-container>
     </mat-card>
 
     <div class="side">
       <mat-card class="panel">
-        <div class="panel__head"><h3>Suas roles</h3></div>
+        <div class="panel__head"><h3>Your roles</h3></div>
         <div class="role-chips" *ngIf="user.roles?.length; else noRoles">
           <span class="role-chip" *ngFor="let role of user.roles">{{ role }}</span>
         </div>
         <ng-template #noRoles>
-          <p class="panel__empty">Nenhuma role atribuída</p>
+          <p class="panel__empty">No role assigned</p>
         </ng-template>
       </mat-card>
 
       <mat-card class="panel" *ngIf="shortcuts.length">
-        <div class="panel__head"><h3>Atalhos</h3></div>
-        <!-- Âncora simples com cara de botão stroked, e não `mat-stroked-button`:
-             o botão do Material embrulha o conteúdo num `.mdc-button__label` que
-             o estilo do componente não alcança, e ícone + rótulo acabariam
-             empilhados. Já quebrou três layouts neste repo. -->
+        <div class="panel__head"><h3>Shortcuts</h3></div>
+        <!-- A plain anchor styled as a stroked button, not `mat-stroked-button`: Material's
+             button wraps the content in a `.mdc-button__label` the component styles
+             cannot reach, and icon + label would end up stacked. It already broke three
+             layouts in this repo. -->
         <div class="shortcuts">
           <a class="shortcut" *ngFor="let s of shortcuts" [routerLink]="s.route">
             <mat-icon>{{ s.icon }}</mat-icon>

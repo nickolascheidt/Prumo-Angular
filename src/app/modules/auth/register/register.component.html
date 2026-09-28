@@ -1,24 +1,24 @@
-<app-auth-shell title="Criar conta" subtitle="Leva menos de um minuto" icon="person_add">
+<app-auth-shell title="Create account" subtitle="Takes less than a minute" icon="person_add">
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
     <mat-form-field appearance="outline">
-      <mat-label>Nome completo</mat-label>
+      <mat-label>Full name</mat-label>
       <mat-icon matPrefix>badge</mat-icon>
       <input matInput formControlName="fullName" autocomplete="name">
-      <mat-error>Informe seu nome (mínimo 3 caracteres)</mat-error>
+      <mat-error>Enter your name (at least 3 characters)</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
       <mat-icon matPrefix>mail_outline</mat-icon>
-      <input matInput formControlName="email" type="email" placeholder="seu@email.com" autocomplete="email">
-      <mat-error>Email inválido</mat-error>
+      <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
+      <mat-error>Invalid e-mail</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Senha</mat-label>
+      <mat-label>Password</mat-label>
       <mat-icon matPrefix>lock_outline</mat-icon>
       <input matInput formControlName="password" type="password" autocomplete="new-password">
-      <mat-error>Mínimo de 6 caracteres</mat-error>
+      <mat-error>At least 6 characters</mat-error>
     </mat-form-field>
 
     <button
@@ -27,11 +27,11 @@
       class="auth-btn"
       [disabled]="isLoading || form.invalid">
       <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-      <span *ngIf="!isLoading">Criar conta</span>
+      <span *ngIf="!isLoading">Create account</span>
     </button>
   </form>
 
   <div class="auth-links">
-    <a routerLink="/auth/login">Já tenho conta</a>
+    <a routerLink="/auth/login">I already have an account</a>
   </div>
 </app-auth-shell>

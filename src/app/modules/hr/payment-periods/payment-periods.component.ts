@@ -28,8 +28,8 @@ import { PaymentPeriodSummary, HrPaymentStatus } from '@core/models';
     <div class="page-container">
       <div class="page-header">
         <div>
-          <h1>Períodos de Pagamento</h1>
-          <p class="subtitle">Todos os períodos gerados para funcionários</p>
+          <h1>Payment Periods</h1>
+          <p class="subtitle">Every period generated for employees</p>
         </div>
       </div>
 
@@ -41,25 +41,25 @@ import { PaymentPeriodSummary, HrPaymentStatus } from '@core/models';
             </div>
           }
           @if (!isLoading && periods.length === 0) {
-            <p class="no-data">Nenhum período gerado.</p>
+            <p class="no-data">No periods generated.</p>
           }
           @if (!isLoading && periods.length > 0) {
             <table mat-table [dataSource]="periods" class="full-table">
 
               <ng-container matColumnDef="employeeName">
-                <th mat-header-cell *matHeaderCellDef>Funcionário</th>
+                <th mat-header-cell *matHeaderCellDef>Employee</th>
                 <td mat-cell *matCellDef="let p">{{ p.employeeName }}</td>
               </ng-container>
 
               <ng-container matColumnDef="period">
-                <th mat-header-cell *matHeaderCellDef>Período</th>
+                <th mat-header-cell *matHeaderCellDef>Period</th>
                 <td mat-cell *matCellDef="let p">
-                  {{ p.startDate | date:'dd/MM/yyyy' }} – {{ p.endDate | date:'dd/MM/yyyy' }}
+                  {{ p.startDate | date:'mediumDate' }} – {{ p.endDate | date:'mediumDate' }}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="totalHours">
-                <th mat-header-cell *matHeaderCellDef>Horas</th>
+                <th mat-header-cell *matHeaderCellDef>Hours</th>
                 <td mat-cell *matCellDef="let p">{{ p.totalHours | number:'1.1-1' }}h</td>
               </ng-container>
 
@@ -76,8 +76,8 @@ import { PaymentPeriodSummary, HrPaymentStatus } from '@core/models';
               </ng-container>
 
               <ng-container matColumnDef="createdAt">
-                <th mat-header-cell *matHeaderCellDef>Criado em</th>
-                <td mat-cell *matCellDef="let p">{{ p.createdAt | date:'dd/MM/yyyy' }}</td>
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let p">{{ p.createdAt | date:'mediumDate' }}</td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -1,28 +1,28 @@
-<h2 mat-dialog-title>Lançamento Contábil</h2>
+<h2 mat-dialog-title>Journal entry</h2>
 
 <mat-dialog-content>
   <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="40" style="margin:24px auto"></mat-progress-spinner>
 
   <div *ngIf="entry && !loading">
-    <p><strong>Data:</strong> {{ entry.date | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Descrição:</strong> {{ entry.description }}</p>
-    <p *ngIf="entry.sourceModule"><strong>Origem:</strong> {{ entry.sourceModule }}</p>
+    <p><strong>Date:</strong> {{ entry.date | date:'mediumDate' }}</p>
+    <p><strong>Description:</strong> {{ entry.description }}</p>
+    <p *ngIf="entry.sourceModule"><strong>Source:</strong> {{ entry.sourceModule }}</p>
 
     <table mat-table [dataSource]="entry.lines" style="width:100%">
       <ng-container matColumnDef="account">
-        <th mat-header-cell *matHeaderCellDef>Conta</th>
+        <th mat-header-cell *matHeaderCellDef>Account</th>
         <td mat-cell *matCellDef="let l">{{ l.accountCode }} – {{ l.accountName }}</td>
         <td mat-footer-cell *matFooterCellDef><strong>Total</strong></td>
       </ng-container>
       <ng-container matColumnDef="debit">
-        <th mat-header-cell *matHeaderCellDef style="text-align:right">Débito</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:right">Debit</th>
         <td mat-cell *matCellDef="let l" style="text-align:right">
           {{ l.entryType === JournalEntryType.Debit ? (l.amount | currency:'BRL') : '' }}
         </td>
         <td mat-footer-cell *matFooterCellDef style="text-align:right"><strong>{{ totalDebit | currency:'BRL' }}</strong></td>
       </ng-container>
       <ng-container matColumnDef="credit">
-        <th mat-header-cell *matHeaderCellDef style="text-align:right">Crédito</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:right">Credit</th>
         <td mat-cell *matCellDef="let l" style="text-align:right">
           {{ l.entryType === JournalEntryType.Credit ? (l.amount | currency:'BRL') : '' }}
         </td>
@@ -37,5 +37,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Fechar</button>
+  <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

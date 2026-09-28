@@ -36,33 +36,33 @@ export interface CategoryQuickCreateDialogData {
     MatSnackBarModule
   ],
   template: `
-    <h2 mat-dialog-title>Nova categoria</h2>
+    <h2 mat-dialog-title>New category</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="quick-create-form">
         <mat-form-field appearance="outline">
-          <mat-label>Nome</mat-label>
+          <mat-label>Name</mat-label>
           <input matInput formControlName="name" autocomplete="off" maxlength="80" cdkFocusInitial>
-          <mat-error *ngIf="form.get('name')?.hasError('required')">Obrigatório</mat-error>
+          <mat-error *ngIf="form.get('name')?.hasError('required')">Required</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Cor (opcional)</mat-label>
-          <!-- token-exempt: exemplo de formato num campo de cor livre, nao cor da UI -->
+          <mat-label>Color (optional)</mat-label>
+          <!-- token-exempt: a format example in a free color field, not a UI color -->
           <input matInput formControlName="color" placeholder="#1b5c86" maxlength="9">
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Descrição (opcional)</mat-label>
+          <mat-label>Description (optional)</mat-label>
           <input matInput formControlName="description" maxlength="200">
         </mat-form-field>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="cancel()" [disabled]="saving">Cancelar</button>
+      <button mat-button (click)="cancel()" [disabled]="saving">Cancel</button>
       <button mat-flat-button color="primary" (click)="save()" [disabled]="saving || form.invalid">
         <mat-icon *ngIf="!saving">save</mat-icon>
         <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
-        <span>Criar</span>
+        <span>Create</span>
       </button>
     </mat-dialog-actions>
   `,
@@ -103,14 +103,14 @@ export class CategoryQuickCreateDialogComponent {
       })
       .subscribe({
         next: cat => {
-          this.snackBar.open('Categoria criada', 'Fechar', { duration: 2500 });
+          this.snackBar.open('Category created', 'Close', { duration: 2500 });
           this.ref.close(cat);
         },
         error: err => {
           this.saving = false;
           this.snackBar.open(
-            err?.error?.message || 'Erro ao criar categoria',
-            'Fechar',
+            err?.error?.message || 'Failed to create the category',
+            'Close',
             { duration: 5000 }
           );
         }

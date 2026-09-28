@@ -41,11 +41,11 @@ export class AccountFormComponent implements OnInit {
   readonly isEdit: boolean;
 
   readonly accountTypes = [
-    { value: AccountType.Asset, label: 'Ativo' },
-    { value: AccountType.Liability, label: 'Passivo' },
-    { value: AccountType.Equity, label: 'Patrimônio Líquido' },
-    { value: AccountType.Revenue, label: 'Receita' },
-    { value: AccountType.Expense, label: 'Despesa' }
+    { value: AccountType.Asset, label: 'Asset' },
+    { value: AccountType.Liability, label: 'Liability' },
+    { value: AccountType.Equity, label: 'Equity' },
+    { value: AccountType.Revenue, label: 'Revenue' },
+    { value: AccountType.Expense, label: 'Expense' }
   ];
 
   get syntheticAccounts(): Account[] {
@@ -90,7 +90,7 @@ export class AccountFormComponent implements OnInit {
       };
       this.api.updateAccount(this.data.tenantId, this.data.account!.id, payload).subscribe({
         next: () => { this.saving = false; this.dialogRef.close(true); },
-        error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Erro ao salvar', 'Fechar', { duration: 5000 }); }
+        error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Failed to save', 'Close', { duration: 5000 }); }
       });
     } else {
       const payload: CreateAccountRequest = {
@@ -102,7 +102,7 @@ export class AccountFormComponent implements OnInit {
       };
       this.api.createAccount(this.data.tenantId, payload).subscribe({
         next: () => { this.saving = false; this.dialogRef.close(true); },
-        error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Erro ao criar conta', 'Fechar', { duration: 5000 }); }
+        error: err => { this.saving = false; this.snackBar.open(err?.error?.message || 'Failed to create the account', 'Close', { duration: 5000 }); }
       });
     }
   }

@@ -46,8 +46,8 @@ export class ForgotPasswordComponent implements OnInit {
     this.isLoading = true;
 
     this.api.forgotPassword(this.form.value.email).subscribe({
-      // A tela mostra a mesma confirmação exista a conta ou não. Dizer "não encontramos
-      // esse e-mail" transformaria esta tela num verificador de quem tem conta aqui.
+      // The screen shows the same confirmation whether the account exists or not. Saying
+      // "we could not find that e-mail" would turn it into a checker of who has an account.
       next: () => {
         this.isLoading = false;
         this.sent = true;

@@ -20,41 +20,41 @@ import { Employee, WorkLog, CreateWorkLogRequest, UpdateWorkLogRequest } from '@
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule,
     MatSelectModule, MatProgressSpinnerModule
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-US' }],
   template: `
-    <h2 mat-dialog-title>{{ isEditing ? 'Editar Registro' : 'Registrar Horas Trabalhadas' }}</h2>
+    <h2 mat-dialog-title>{{ isEditing ? 'Edit work log' : 'Log hours worked' }}</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="worklog-form">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Funcionário *</mat-label>
+          <mat-label>Employee *</mat-label>
           <mat-select formControlName="employeeId" (selectionChange)="onEmployeeChange()">
             <mat-option *ngFor="let e of employees" [value]="e.id">
               {{ e.fullName }} — R$ {{ e.hourlyRate | number:'1.2-2' }}/h
             </mat-option>
           </mat-select>
-          <mat-error>Selecione um funcionário</mat-error>
+          <mat-error>Select an employee</mat-error>
         </mat-form-field>
 
         <div class="info-box" *ngIf="selectedEmployee">
-          <span>Taxa horária: <strong>R$ {{ selectedEmployee.hourlyRate | number:'1.2-2' }}</strong></span>
-          <span *ngIf="calculatedAmount > 0">Valor estimado: <strong class="amount">R$ {{ calculatedAmount | number:'1.2-2' }}</strong></span>
+          <span>Hourly rate: <strong>R$ {{ selectedEmployee.hourlyRate | number:'1.2-2' }}</strong></span>
+          <span *ngIf="calculatedAmount > 0">Estimated amount: <strong class="amount">R$ {{ calculatedAmount | number:'1.2-2' }}</strong></span>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Data *</mat-label>
+          <mat-label>Date *</mat-label>
           <input matInput formControlName="workDate" [matDatepicker]="picker">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error>Data é obrigatória</mat-error>
+          <mat-error>Date is required</mat-error>
         </mat-form-field>
 
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Entrada *</mat-label>
+            <mat-label>Clock in *</mat-label>
             <input matInput formControlName="clockIn" type="time">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Saída *</mat-label>
+            <mat-label>Clock out *</mat-label>
             <input matInput formControlName="clockOut" type="time">
           </mat-form-field>
         </div>
@@ -68,15 +68,15 @@ import { Employee, WorkLog, CreateWorkLogRequest, UpdateWorkLogRequest } from '@
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Observações</mat-label>
+          <mat-label>Notes</mat-label>
           <textarea matInput formControlName="notes" rows="2"></textarea>
         </mat-form-field>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
       <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid || isSaving">
-        {{ isSaving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Registrar') }}
+        {{ isSaving ? 'Saving...' : (isEditing ? 'Update' : 'Log') }}
       </button>
     </mat-dialog-actions>
   `,
@@ -171,7 +171,7 @@ export class WorklogFormDialogComponent implements OnInit {
   onSave(): void {
     if (this.form.invalid || !this.tenantId || !this.selectedEmployee) return;
     const hoursWorked = this.getHoursWorked();
-    if (hoursWorked <= 0) { alert('Horário de saída deve ser após o de entrada.'); return; }
+    if (hoursWorked <= 0) { alert('Clock out must be after clock in.'); return; }
     this.isSaving = true;
     const v = this.form.value;
     const workDate = new Date(v.workDate).toISOString().split('T')[0];
@@ -180,13 +180,13 @@ export class WorklogFormDialogComponent implements OnInit {
       const req: UpdateWorkLogRequest = { workDate, hoursWorked, notes: v.notes || null };
       this.api.updateWorkLog(this.tenantId, this.data!.employeeId, this.data!.id, req).subscribe({
         next: (r) => { this.isSaving = false; this.dialogRef.close(r); },
-        error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Erro ao atualizar.'); }
+        error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Failed to update.'); }
       });
     } else {
       const req: CreateWorkLogRequest = { employeeId: v.employeeId, workDate, hoursWorked, notes: v.notes || null };
       this.api.createWorkLog(this.tenantId, req).subscribe({
         next: (r) => { this.isSaving = false; this.dialogRef.close(r); },
-        error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Erro ao registrar horas.'); }
+        error: (err) => { this.isSaving = false; alert(err.error?.message ?? 'Failed to log the hours.'); }
       });
     }
   }

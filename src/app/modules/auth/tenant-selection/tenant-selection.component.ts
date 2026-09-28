@@ -50,7 +50,7 @@ export class TenantSelectionComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao carregar tenants', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to load tenants', 'Close', { duration: 5000 });
       }
     });
   }
@@ -64,7 +64,7 @@ export class TenantSelectionComponent implements OnInit {
       },
       error: (err) => {
         this.isSelecting = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao selecionar tenant', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to select the tenant', 'Close', { duration: 5000 });
       }
     });
   }

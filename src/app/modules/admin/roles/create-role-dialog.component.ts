@@ -15,40 +15,40 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule, MatInputModule, MatIconModule
   ],
   template: `
-    <h2 mat-dialog-title>Nova role</h2>
+    <h2 mat-dialog-title>New role</h2>
 
     <mat-dialog-content>
       <form [formGroup]="form" class="form">
         <mat-form-field appearance="outline">
-          <mat-label>Nome</mat-label>
-          <input matInput formControlName="name" maxlength="64" placeholder="Leitura" />
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" maxlength="64" placeholder="Viewer" />
           @if (form.controls.name.hasError('required') && form.controls.name.touched) {
-            <mat-error>O nome é obrigatório.</mat-error>
+            <mat-error>The name is required.</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Descrição (opcional)</mat-label>
+          <mat-label>Description (optional)</mat-label>
           <input matInput formControlName="description" maxlength="256"
-                 placeholder="Vê os módulos, mas não altera nada" />
+                 placeholder="Sees the modules but changes nothing" />
         </mat-form-field>
 
         <p class="hint">
           <mat-icon>info</mat-icon>
-          <!-- O texto precisa ser UM flex item, senão o <strong> vira uma coluna
-               própria e a frase quebra em pedaços. -->
+          <!-- The text has to be ONE flex item, otherwise the <strong> becomes a column
+               of its own and the sentence breaks into pieces. -->
           <span>
-            A role nasce <strong>sem acesso nenhum</strong>. Depois de criar, defina o
-            nível dela em cada recurso.
+            The role is born <strong>with no access at all</strong>. After creating it, set
+            its level on each resource.
           </span>
         </p>
       </form>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-button mat-dialog-close>Cancel</button>
       <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">
-        Criar
+        Create
       </button>
     </mat-dialog-actions>
   `,
@@ -58,8 +58,8 @@ import { MatIconModule } from '@angular/material/icon';
       flex-direction: column;
       gap: var(--space-2);
       min-width: 340px;
-      /* O mat-dialog-content corta o topo do primeiro campo sem esta folga:
-         o label flutuante do outline fica na borda do scroll. */
+      /* mat-dialog-content clips the top of the first field without this padding:
+         the outline's floating label sits on the scroll edge. */
       padding-top: var(--space-2);
     }
     .hint {

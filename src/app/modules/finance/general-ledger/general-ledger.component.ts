@@ -61,8 +61,8 @@ export class GeneralLedgerComponent implements OnInit, OnDestroy {
   readonly displayedColumns = ['date', 'description', 'source', 'totalAmount', 'lineCount', 'actions'];
 
   readonly sourceModules = [
-    { value: '', label: 'Todos' },
-    { value: 'AccountsPayable', label: 'Contas a Pagar' },
+    { value: '', label: 'All' },
+    { value: 'AccountsPayable', label: 'Accounts Payable' },
     { value: 'Manual', label: 'Manual' }
   ];
 
@@ -123,7 +123,7 @@ export class GeneralLedgerComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.loading = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao carregar lançamentos', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to load entries', 'Close', { duration: 5000 });
       }
     });
   }

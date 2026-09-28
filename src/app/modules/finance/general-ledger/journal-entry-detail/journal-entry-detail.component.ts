@@ -46,7 +46,7 @@ export class JournalEntryDetailComponent implements OnInit {
       next: entry => { this.entry = entry; this.loading = false; },
       error: err => {
         this.loading = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao carregar lançamento', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to load the entry', 'Close', { duration: 5000 });
         this.dialogRef.close();
       }
     });

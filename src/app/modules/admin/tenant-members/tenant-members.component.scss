@@ -1,4 +1,4 @@
-/* .page-header e .page-header__icon vêm das classes base em styles.scss. */
+/* .page-header and .page-header__icon come from the base classes in styles.scss. */
 
 .members-page { padding: var(--page-padding); }
 
@@ -46,8 +46,8 @@
   &--open { background: var(--color-surface-alt); }
 }
 
-/* A linha de detalhe existe sempre no DOM; o que anima é a altura. Sem isto o
-   mat-table pisca ao expandir, porque a linha entra e sai do layout. */
+/* The detail row is always in the DOM; what animates is the height. Without this the
+   mat-table flickers on expand, because the row enters and leaves the layout. */
 .detail-row { height: 0; }
 
 .detail {
@@ -133,7 +133,7 @@
   mat-icon { color: var(--color-text-subtle); }
 }
 
-/* Convites pendentes: e-mails adicionados que ainda não têm conta no Prumo. */
+/* Pending invitations: added e-mails that do not have a Prumo account yet. */
 .invitations {
   margin-top: 24px;
   padding: 16px 20px;

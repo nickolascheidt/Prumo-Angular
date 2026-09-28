@@ -21,7 +21,7 @@ import {
 } from '@core/models';
 import { CreateRoleDialogComponent } from './create-role-dialog.component';
 
-/** Uma linha da grade: o recurso e o nível que a role selecionada tem nele. */
+/** A grid row: the resource and the level the selected role has on it. */
 interface GridRow {
   resource: Resource;
   level: PermissionLevel;
@@ -41,10 +41,10 @@ interface GridRow {
 export class RolesComponent implements OnInit {
   readonly gridColumns = ['resource', 'level'];
   readonly levels = [
-    { value: PermissionLevel.None, label: 'Nenhum' },
-    { value: PermissionLevel.Read, label: 'Ler' },
-    { value: PermissionLevel.Write, label: 'Escrever' },
-    { value: PermissionLevel.Full, label: 'Total' }
+    { value: PermissionLevel.None, label: 'None' },
+    { value: PermissionLevel.Read, label: 'Read' },
+    { value: PermissionLevel.Write, label: 'Write' },
+    { value: PermissionLevel.Full, label: 'Full' }
   ];
 
   roles: ManagedRole[] = [];
@@ -55,8 +55,8 @@ export class RolesComponent implements OnInit {
   loadingGrid = false;
   savingResourceId: string | null = null;
 
-  // Lido ao vivo: trocar de tenant atualiza o BehaviorSubject, e uma cópia em campo
-  // deixaria a escrita apontando para o tenant anterior.
+  // Read live: switching tenants updates the BehaviorSubject, and a copy in a field
+  // would leave writes pointing at the previous tenant.
   private get tenantId(): string {
     return this.auth.getCurrentTenantId() ?? '';
   }
@@ -72,7 +72,7 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.tenantId) {
-      this.snack.open('Nenhum tenant selecionado.', 'Fechar', { duration: 5000 });
+      this.snack.open('No tenant selected.', 'Close', { duration: 5000 });
       return;
     }
     this.loadRoles();
@@ -87,7 +87,7 @@ export class RolesComponent implements OnInit {
         this.roles = roles;
         this.loadingRoles = false;
 
-        // Mantém a seleção depois de recarregar, senão a grade some a cada escrita.
+        // Keep the selection after reloading, otherwise the grid disappears on every write.
         const stillThere = this.selectedRole
           ? roles.find(r => r.id === this.selectedRole!.id) ?? null
           : null;
@@ -100,7 +100,7 @@ export class RolesComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.loadingRoles = false;
-        this.showError('Não foi possível carregar as roles', error);
+        this.showError('Could not load the roles', error);
       }
     });
   }
@@ -117,13 +117,13 @@ export class RolesComponent implements OnInit {
         if (!data) { return; }
         this.api.createTenantRole(this.tenantId, data).subscribe({
           next: created => {
-            this.snack.open(`Role "${created.name}" criada. Ela ainda não dá acesso a nada — defina os níveis abaixo.`,
+            this.snack.open(`Role "${created.name}" created. It does not grant access to anything yet — set the levels below.`,
               'OK', { duration: 6000 });
             this.loadRoles();
             this.selectRole(created);
           },
           error: (error: HttpErrorResponse) =>
-            this.showError('Não foi possível criar a role', error)
+            this.showError('Could not create the role', error)
         });
       });
   }
@@ -131,13 +131,13 @@ export class RolesComponent implements OnInit {
   deleteRole(role: ManagedRole, event: Event): void {
     event.stopPropagation();
 
-    if (!confirm(`Excluir a role "${role.name}"?\n\nOs níveis de acesso dela serão removidos junto.`)) {
+    if (!confirm(`Delete the role "${role.name}"?\n\nIts access levels will be removed with it.`)) {
       return;
     }
 
     this.api.deleteTenantRole(this.tenantId, role.id).subscribe({
       next: () => {
-        this.snack.open('Role excluída.', 'OK', { duration: 3000 });
+        this.snack.open('Role deleted.', 'OK', { duration: 3000 });
         if (this.selectedRole?.id === role.id) {
           this.selectedRole = null;
           this.grid = [];
@@ -145,11 +145,11 @@ export class RolesComponent implements OnInit {
         this.loadRoles();
       },
       error: (error: HttpErrorResponse) =>
-        this.showError('Não foi possível excluir a role', error)
+        this.showError('Could not delete the role', error)
     });
   }
 
-  // ----- grade -----
+  // ----- grid -----
 
   private loadGrid(): void {
     const role = this.selectedRole;
@@ -160,7 +160,7 @@ export class RolesComponent implements OnInit {
     const buildGrid = () => {
       this.api.getRoleResourcePermissions(role.id).subscribe({
         next: perms => {
-          // O nível chega como string ("Read"); comparar com número dá sempre falso.
+          // The level arrives as a string ("Read"); comparing it with a number is always false.
           const byResource = new Map<string, PermissionLevel>(
             perms.map(p => [p.resourceId, toPermissionLevel(p.level)]));
 
@@ -172,7 +172,7 @@ export class RolesComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           this.loadingGrid = false;
-          this.showError('Não foi possível carregar os níveis desta role', error);
+          this.showError('Could not load this role\'s levels', error);
         }
       });
     };
@@ -190,7 +190,7 @@ export class RolesComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.loadingGrid = false;
-        this.showError('Não foi possível carregar os recursos', error);
+        this.showError('Could not load the resources', error);
       }
     });
   }
@@ -203,12 +203,12 @@ export class RolesComponent implements OnInit {
 
     const done = () => {
       this.savingResourceId = null;
-      // Relê do servidor: a grade não pode divergir do que o gate vai enxergar.
+      // Re-read from the server: the grid must not diverge from what the gate will see.
       this.loadGrid();
     };
 
-    // Tipado como unknown de propósito: os dois ramos devolvem Observables de tipos
-    // diferentes, e a união deles não é chamável. Só interessa se completou.
+    // Typed as unknown on purpose: the two branches return Observables of different
+    // types, and their union is not callable. All that matters is whether it completed.
     const request$: Observable<unknown> = level === PermissionLevel.None
       ? this.api.removeResourcePermission(role.id, row.resource.id)
       : this.api.assignResourcePermission({
@@ -221,7 +221,7 @@ export class RolesComponent implements OnInit {
       next: () => done(),
       error: (error: HttpErrorResponse) => {
         this.savingResourceId = null;
-        this.showError('Não foi possível alterar o nível', error);
+        this.showError('Could not change the level', error);
         this.loadGrid();
       }
     });
@@ -232,10 +232,10 @@ export class RolesComponent implements OnInit {
   }
 
   levelLabel(level: PermissionLevel): string {
-    return this.levels.find(l => l.value === level)?.label ?? 'Nenhum';
+    return this.levels.find(l => l.value === level)?.label ?? 'None';
   }
 
-  /** Quantos recursos esta role alcança — o resumo que evita abrir a grade. */
+  /** How many resources this role reaches — the summary that saves opening the grid. */
   grantedCount(): number {
     return this.grid.filter(r => r.level !== PermissionLevel.None).length;
   }
@@ -245,6 +245,6 @@ export class RolesComponent implements OnInit {
     const detail = typeof body === 'string' && body.trim()
       ? body
       : (typeof body?.message === 'string' && body.message.trim() ? body.message : null);
-    this.snack.open(detail ? `${prefix}: ${detail}` : prefix, 'Fechar', { duration: 6000 });
+    this.snack.open(detail ? `${prefix}: ${detail}` : prefix, 'Close', { duration: 6000 });
   }
 }

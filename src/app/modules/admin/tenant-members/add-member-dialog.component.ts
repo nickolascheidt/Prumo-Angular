@@ -13,12 +13,12 @@ import { ApiService } from '@core/services';
 import { InviteMemberResult } from '@core/models';
 
 /**
- * Adicionar alguém é digitar um e-mail e escolher o cargo. Nada mais.
+ * Adding someone is typing an e-mail and picking the position. Nothing else.
  *
- * Antes do item 8 este diálogo tinha dois modos: buscar uma conta existente ou **criar uma
- * conta com senha digitada pelo admin**. O segundo saiu — fazia a senha inicial de todo
- * membro passar pelo administrador. Agora, e-mail sem conta vira convite pendente, e a
- * própria pessoa escolhe a senha ao se cadastrar.
+ * This dialog used to have two modes: find an existing account, or **create an account
+ * with a password typed by the admin**. The second is gone — it made every member's
+ * initial password pass through the administrator. Now an e-mail without an account
+ * becomes a pending invitation, and the person picks their own password at sign-up.
  */
 @Component({
   selector: 'app-add-member-dialog',
@@ -35,26 +35,26 @@ import { InviteMemberResult } from '@core/models';
     MatProgressSpinnerModule
   ],
   template: `
-    <h2 mat-dialog-title>Adicionar membro</h2>
+    <h2 mat-dialog-title>Add member</h2>
 
     <mat-dialog-content>
       <p class="hint">
-        Se o e-mail já tiver conta no Prumo, a pessoa entra na hora. Se não tiver, o convite
-        fica guardado e se resolve sozinho quando ela se cadastrar com esse endereço.
+        If the e-mail already has a Prumo account, the person joins right away. If not, the
+        invitation is kept and resolves itself when they sign up with that address.
       </p>
 
       <form [formGroup]="form" class="form">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>E-mail</mat-label>
           <mat-icon matPrefix>mail_outline</mat-icon>
-          <input matInput formControlName="email" type="email" placeholder="pessoa@empresa.com">
-          <mat-error>Informe um e-mail válido</mat-error>
+          <input matInput formControlName="email" type="email" placeholder="person@company.com">
+          <mat-error>Enter a valid e-mail</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Cargo</mat-label>
+          <mat-label>Position</mat-label>
           <mat-select formControlName="role">
-            <mat-option [value]="0">Membro</mat-option>
+            <mat-option [value]="0">Member</mat-option>
             <mat-option [value]="1">Admin</mat-option>
           </mat-select>
         </mat-form-field>
@@ -62,14 +62,14 @@ import { InviteMemberResult } from '@core/models';
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
       <button
         mat-flat-button
         color="primary"
         [disabled]="form.invalid || saving"
         (click)="onSubmit()">
         <mat-spinner *ngIf="saving" diameter="18" class="inline-spinner"></mat-spinner>
-        Adicionar
+        Add
       </button>
     </mat-dialog-actions>
   `,
@@ -112,13 +112,13 @@ export class AddMemberDialogComponent {
       next: (result: InviteMemberResult) => {
         this.saving = false;
 
-        // As duas coisas são sucesso, mas são coisas diferentes, e a tela precisa dizer
-        // qual delas aconteceu — senão o admin fica esperando alguém que ainda nem existe.
+        // Both are success, but they are different things, and the screen has to say which
+        // one happened — otherwise the admin waits for someone who does not exist yet.
         this.snack.open(
           result.joinedImmediately
-            ? `${result.email} agora é membro desta empresa.`
-            : `Convite guardado para ${result.email}. Ela entra ao se cadastrar.`,
-          'Fechar',
+            ? `${result.email} is now a member of this company.`
+            : `Invitation saved for ${result.email}. They join when they sign up.`,
+          'Close',
           { duration: 6000 }
         );
 
@@ -127,8 +127,8 @@ export class AddMemberDialogComponent {
       error: (err: { error?: { message?: string } }) => {
         this.saving = false;
         this.snack.open(
-          err?.error?.message || 'Não foi possível adicionar este e-mail.',
-          'Fechar',
+          err?.error?.message || 'Could not add this e-mail.',
+          'Close',
           { duration: 5000, panelClass: 'error-snackbar' }
         );
       }

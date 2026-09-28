@@ -31,29 +31,29 @@ import { AddMemberDialogComponent } from './add-member-dialog.component';
 })
 export class TenantMembersComponent implements OnInit {
   readonly displayedColumns = ['expand', 'name', 'email', 'role', 'joinedAt', 'actions'];
-  // Sem Owner: a API recusa promover a Owner e recusa inserir membro como Owner
-  // (o cargo só nasce com o tenant). Oferecer a opção era convidar para o 400.
+  // No Owner: the API refuses to promote to Owner and refuses to add a member as Owner
+  // (the position is only born with the tenant). Offering the option invited a 400.
   readonly roleOptions = [TenantRole.Member, TenantRole.Admin];
 
   members: TenantMember[] = [];
   filteredMembers: TenantMember[] = [];
-  /** Convites a e-mails que ainda não têm conta. Somem quando a pessoa se cadastra. */
+  /** Invitations to e-mails that do not have an account yet. They go away when the person signs up. */
   pendingInvitations: TenantInvitation[] = [];
   tenant: Tenant | null = null;
   availableRoles: string[] = [];
 
   searchText = '';
   loading = false;
-  /** userId cuja linha está aberta. Uma por vez: duas abertas viram lista ilegível. */
+  /** userId whose row is open. One at a time: two open rows make an unreadable list. */
   expandedUserId: string | null = null;
-  /** userIds com uma escrita de chave em voo, para desabilitar só aquela linha. */
+  /** userIds with a key write in flight, to disable only that row. */
   savingRoleFor = new Set<string>();
 
   currentUserId = '';
   myRole: TenantRole | -1 = -1;
 
-  // Lido ao vivo: trocar de tenant atualiza o BehaviorSubject, e uma cópia em campo
-  // deixaria a escrita apontando para o tenant anterior.
+  // Read live: switching tenants updates the BehaviorSubject, and a copy in a field
+  // would leave writes pointing at the previous tenant.
   private get tenantId(): string {
     return this.auth.getCurrentTenantId() ?? '';
   }
@@ -68,7 +68,7 @@ export class TenantMembersComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserId = this.auth.getCurrentUser()?.id ?? '';
     if (!this.tenantId) {
-      this.snack.open('Nenhum tenant selecionado.', 'Fechar', { duration: 5000 });
+      this.snack.open('No tenant selected.', 'Close', { duration: 5000 });
       return;
     }
     this.loadTenant();
@@ -77,13 +77,13 @@ export class TenantMembersComponent implements OnInit {
     this.loadInvitations();
   }
 
-  // ----- carregamento -----
+  // ----- loading -----
 
   loadMembers(): void {
     this.loading = true;
     this.api.getTenantMembers(this.tenantId).subscribe({
       next: members => {
-        // Normaliza na fronteira: daqui para dentro role é sempre o enum numérico.
+        // Normalize at the boundary: from here on, role is always the numeric enum.
         this.members = members.map(m => ({ ...m, role: toTenantRole(m.role) }));
         this.myRole = this.members.find(m => m.userId === this.currentUserId)?.role ?? -1;
         this.applyFilter();
@@ -91,7 +91,7 @@ export class TenantMembersComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.loading = false;
-        this.showError('Não foi possível carregar os membros', error);
+        this.showError('Could not load the members', error);
       }
     });
   }
@@ -101,8 +101,8 @@ export class TenantMembersComponent implements OnInit {
       next: invitations => this.pendingInvitations = invitations.map(
         i => ({ ...i, role: toTenantRole(i.role) })
       ),
-      // Convite pendente é informação acessória: falhar em carregá-la não deve estragar a
-      // tela de membros, que é o que a pessoa veio ver.
+      // Pending invitations are secondary information: failing to load them must not
+      // spoil the members screen, which is what the person came to see.
       error: () => this.pendingInvitations = []
     });
   }
@@ -110,11 +110,11 @@ export class TenantMembersComponent implements OnInit {
   cancelInvitation(invitation: TenantInvitation): void {
     this.api.cancelInvitation(this.tenantId, invitation.id).subscribe({
       next: () => {
-        this.snack.open(`Convite para ${invitation.email} cancelado.`, 'Fechar', { duration: 4000 });
+        this.snack.open(`Invitation for ${invitation.email} cancelled.`, 'Close', { duration: 4000 });
         this.loadInvitations();
       },
       error: (error: HttpErrorResponse) =>
-        this.showError('Não foi possível cancelar o convite', error)
+        this.showError('Could not cancel the invitation', error)
     });
   }
 
@@ -130,12 +130,12 @@ export class TenantMembersComponent implements OnInit {
       next: roles => this.availableRoles = roles,
       error: (error: HttpErrorResponse) => {
         this.availableRoles = [];
-        this.showError('Não foi possível carregar as roles atribuíveis', error);
+        this.showError('Could not load the assignable roles', error);
       }
     });
   }
 
-  // ----- busca e expansão -----
+  // ----- search and expansion -----
 
   onSearchInput(event: Event): void {
     this.searchText = (event.target as HTMLInputElement)?.value ?? '';
@@ -159,17 +159,18 @@ export class TenantMembersComponent implements OnInit {
     this.expandedUserId = this.isExpanded(member) ? null : member.userId;
   }
 
-  // ----- regras de exibição -----
+  // ----- display rules -----
 
   roleLabel(role: TenantRole): string {
     return tenantRoleLabel(role);
   }
 
   /**
-   * Quem pode mexer no cargo e nas chaves de outro membro.
-   * Owner é intocável pela tela (só o backend transfere ownership), e ninguém
-   * edita o próprio cargo — seria o caminho mais curto para se auto-promover.
-   * A API é a autoridade e nega com 403; isto evita a tela convidar para o erro.
+   * Who can change another member's position and keys.
+   * An Owner cannot be touched from the screen (only the backend transfers ownership),
+   * and nobody edits their own position — that would be the shortest path to promoting
+   * yourself. The API is the authority and denies with 403; this keeps the screen from
+   * inviting the error.
    */
   canManage(member: TenantMember): boolean {
     const iAmAdmin = this.myRole === TenantRole.Admin || this.myRole === TenantRole.Owner;
@@ -186,20 +187,20 @@ export class TenantMembersComponent implements OnInit {
     return this.savingRoleFor.has(member.userId);
   }
 
-  // ----- escrita -----
+  // ----- writes -----
 
   onRoleChange(member: TenantMember, newRole: TenantRole): void {
     const previous = member.role;
     if (previous === newRole) {
       return;
     }
-    member.role = newRole; // otimista, revertido no erro
+    member.role = newRole; // optimistic, reverted on error
     this.api.updateMemberRole(this.tenantId, member.userId, { role: newRole }).subscribe({
       next: () => this.snack.open(
-        `${this.displayName(member)} agora é ${this.roleLabel(newRole)}.`, 'OK', { duration: 3000 }),
+        `${this.displayName(member)} is now ${this.roleLabel(newRole)}.`, 'OK', { duration: 3000 }),
       error: (error: HttpErrorResponse) => {
         member.role = previous;
-        this.showError('Não foi possível alterar o cargo', error);
+        this.showError('Could not change the position', error);
       }
     });
   }
@@ -214,16 +215,16 @@ export class TenantMembersComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.savingRoleFor.delete(member.userId);
-        // Relê do servidor em vez de confiar no otimismo: a lista de chaves do
-        // membro é o que o token vai carregar, e divergir aqui foi o bug do item 4.
+        // Re-read from the server instead of trusting the optimistic update: the member's
+        // key list is what the token will carry, and diverging here was a real bug.
         this.refreshMemberRoles(member);
       },
       error: (error: HttpErrorResponse) => {
         this.savingRoleFor.delete(member.userId);
         this.showError(
-          granted ? 'Não foi possível conceder a chave' : 'Não foi possível revogar a chave',
+          granted ? 'Could not grant the key' : 'Could not revoke the key',
           error);
-        // A checkbox já virou na tela; a releitura desfaz o que não foi gravado.
+        // The checkbox already flipped on screen; the re-read undoes what was not saved.
         this.refreshMemberRoles(member);
       }
     });
@@ -236,7 +237,7 @@ export class TenantMembersComponent implements OnInit {
         this.applyFilter();
       },
       error: (error: HttpErrorResponse) =>
-        this.showError('As chaves podem estar desatualizadas', error)
+        this.showError('The keys may be out of date', error)
     });
   }
 
@@ -246,8 +247,8 @@ export class TenantMembersComponent implements OnInit {
       data: { tenantId: this.tenantId }
     }).afterClosed().subscribe(added => {
       if (!added) return;
-      // Recarrega as duas listas: o e-mail pode ter virado membro (se já tinha conta) ou
-      // convite pendente (se não tinha), e o diálogo não diz qual à tela.
+      // Reload both lists: the e-mail may have become a member (if it had an account) or a
+      // pending invitation (if it did not), and the dialog does not tell the screen which.
       this.loadMembers();
       this.loadInvitations();
     });
@@ -255,21 +256,21 @@ export class TenantMembersComponent implements OnInit {
 
   removeMember(member: TenantMember): void {
     const confirmed = confirm(
-      `Remover ${this.displayName(member)} deste tenant?\n\n` +
-      `A conta continua existindo — a pessoa só perde acesso a este tenant.`);
+      `Remove ${this.displayName(member)} from this tenant?\n\n` +
+      `The account keeps existing — the person only loses access to this tenant.`);
     if (!confirmed) {
       return;
     }
     this.api.removeTenantMember(this.tenantId, member.userId).subscribe({
       next: () => {
-        this.snack.open('Membro removido deste tenant.', 'OK', { duration: 3000 });
+        this.snack.open('Member removed from this tenant.', 'OK', { duration: 3000 });
         if (this.expandedUserId === member.userId) {
           this.expandedUserId = null;
         }
         this.loadMembers();
       },
       error: (error: HttpErrorResponse) =>
-        this.showError('Não foi possível remover o membro', error)
+        this.showError('Could not remove the member', error)
     });
   }
 
@@ -282,6 +283,6 @@ export class TenantMembersComponent implements OnInit {
     const detail = typeof body === 'string' && body.trim()
       ? body
       : (typeof body?.message === 'string' && body.message.trim() ? body.message : null);
-    this.snack.open(detail ? `${prefix}: ${detail}` : prefix, 'Fechar', { duration: 5000 });
+    this.snack.open(detail ? `${prefix}: ${detail}` : prefix, 'Close', { duration: 5000 });
   }
 }

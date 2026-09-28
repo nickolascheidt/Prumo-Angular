@@ -42,19 +42,19 @@ import {
 import { AccountsPayableQuickEntryComponent } from '../quick-entry/quick-entry.component';
 
 const STATUSES: { value: AccountsPayableStatus; label: string }[] = [
-  { value: 'Pending', label: 'Pendente' },
-  { value: 'Paid', label: 'Pago' },
-  { value: 'Cancelled', label: 'Cancelado' }
+  { value: 'Pending', label: 'Pending' },
+  { value: 'Paid', label: 'Paid' },
+  { value: 'Cancelled', label: 'Cancelled' }
 ];
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: 'Cash', label: 'Dinheiro' },
-  { value: 'BankTransfer', label: 'Transferência' },
-  { value: 'CreditCard', label: 'Cartão de Crédito' },
-  { value: 'DebitCard', label: 'Cartão de Débito' },
+  { value: 'Cash', label: 'Cash' },
+  { value: 'BankTransfer', label: 'Bank transfer' },
+  { value: 'CreditCard', label: 'Credit card' },
+  { value: 'DebitCard', label: 'Debit card' },
   { value: 'Pix', label: 'Pix' },
   { value: 'Boleto', label: 'Boleto' },
-  { value: 'Other', label: 'Outro' }
+  { value: 'Other', label: 'Other' }
 ];
 
 @Component({
@@ -129,7 +129,7 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tenantId = this.auth.getCurrentTenantId();
     if (!this.tenantId) {
-      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      this.snackBar.open('No tenant selected', 'Close', { duration: 5000 });
       this.router.navigate(['/auth/select-tenant']);
       return;
     }
@@ -169,8 +169,8 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
       next: cats => (this.categories = cats),
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao carregar categorias',
-          'Fechar',
+          err?.error?.message || 'Failed to load categories',
+          'Close',
           { duration: 5000 }
         )
     });
@@ -194,8 +194,8 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
       error: err => {
         this.loadingEntries = false;
         this.snackBar.open(
-          err?.error?.message || 'Erro ao carregar lançamentos',
-          'Fechar',
+          err?.error?.message || 'Failed to load entries',
+          'Close',
           { duration: 5000 }
         );
       },
@@ -234,8 +234,8 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
     if (!this.tenantId) return;
     if (!entry.paymentMethod) {
       this.snackBar.open(
-        'Defina a forma de pagamento antes de marcar como pago',
-        'Fechar',
+        'Set the payment method before marking as paid',
+        'Close',
         { duration: 5000 }
       );
       return;
@@ -248,13 +248,13 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: () => {
-          this.snackBar.open('Marcado como pago', 'Fechar', { duration: 2500 });
+          this.snackBar.open('Marked as paid', 'Close', { duration: 2500 });
           this.reload();
         },
         error: err =>
           this.snackBar.open(
-            err?.error?.message || 'Erro ao marcar como pago',
-            'Fechar',
+            err?.error?.message || 'Failed to mark as paid',
+            'Close',
             { duration: 5000 }
           )
       });
@@ -262,23 +262,23 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
 
   cancel(entry: AccountsPayableEntry): void {
     if (!this.tenantId) return;
-    const reasonInput = prompt(`Motivo do cancelamento de "${entry.description}":`);
+    const reasonInput = prompt(`Reason for cancelling "${entry.description}":`);
     if (reasonInput === null) return;
     const reason = reasonInput.trim();
     if (!reason) {
-      this.snackBar.open('Informe o motivo do cancelamento', 'Fechar', { duration: 4000 });
+      this.snackBar.open('Enter the cancellation reason', 'Close', { duration: 4000 });
       return;
     }
 
     this.api.cancelAccountsPayableEntry(this.tenantId, entry.id, { reason }).subscribe({
       next: () => {
-        this.snackBar.open('Lançamento cancelado', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Entry cancelled', 'Close', { duration: 2500 });
         this.reload();
       },
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao cancelar',
-          'Fechar',
+          err?.error?.message || 'Failed to cancel',
+          'Close',
           { duration: 5000 }
         )
     });
@@ -303,8 +303,8 @@ export class AccountsPayableListComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.snackBar.open(
-          err?.error?.message || 'Erro ao exportar CSV',
-          'Fechar',
+          err?.error?.message || 'Failed to export CSV',
+          'Close',
           { duration: 5000 }
         );
       },

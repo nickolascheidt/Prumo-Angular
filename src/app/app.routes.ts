@@ -46,8 +46,8 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      // Sem guard: são os destinos dos links de e-mail, e quem os abre ainda não tem
-      // sessão. O que protege cada um é o token na URL, checado pela API.
+      // No guard: these are the targets of e-mail links, and whoever opens them has no
+      // session yet. What protects each one is the token in the URL, checked by the API.
       { path: 'check-email', component: CheckEmailComponent },
       { path: 'confirm-email', component: ConfirmEmailComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
@@ -101,14 +101,14 @@ export const routes: Routes = [
         canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
       { path: 'admin/roles', component: RolesComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'Role.Management', requiredLevel: PermissionLevel.Read } },
-      // A tela de permissões virou a tela de roles: criar a role e definir o que ela
-      // alcança são o mesmo trabalho.
+      // The permissions screen became the roles screen: creating a role and defining
+      // what it reaches are the same job.
       { path: 'admin/permissions', redirectTo: 'admin/roles', pathMatch: 'full' },
       { path: 'admin/members', component: TenantMembersComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
-      // As duas telas antigas foram fundidas em /admin/members. O redirect existe só
-      // para não quebrar link salvo; /admin/tenant era a única rota admin sem guard,
-      // e o destino tem.
+      // The two old screens were merged into /admin/members. The redirect only exists so
+      // saved links do not break; /admin/tenant was the only admin route without a guard,
+      // and the target has one.
       { path: 'admin/users-roles', redirectTo: 'admin/members', pathMatch: 'full' },
       { path: 'admin/tenant', redirectTo: 'admin/members', pathMatch: 'full' },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent,

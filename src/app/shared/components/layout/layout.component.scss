@@ -14,8 +14,8 @@
 .sidenav-toggle { margin-right: 12px; color: var(--color-text-inverse); }
 
 .brand { display: flex; align-items: center; gap: 10px; }
-/* O selo ja e um quadrado solido: nao precisa da caixa clara que o
-   <mat-icon>hub</mat-icon> precisava para se destacar da toolbar. */
+/* The mark is already a solid square: it does not need the light box that
+   <mat-icon>hub</mat-icon> needed to stand out from the toolbar. */
 .brand__title {
   font-size: 17px;
   font-weight: var(--font-medium);
@@ -50,7 +50,7 @@
 
 .user-trigger__avatar {
   width: 34px; height: 34px;
-  /* Sem isto o avatar encolhe quando o nome é longo, virando uma elipse. */
+  /* Without this the avatar shrinks when the name is long, turning into an ellipse. */
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--gradient-accent);
@@ -60,8 +60,8 @@
   font-size: 14px;
 }
 
-/* Só o nome no chip; o e-mail vive no cabeçalho do menu. Trunca em vez de esticar
-   o botão pela toolbar. */
+/* Only the name in the chip; the e-mail lives in the menu header. Truncates instead of
+   stretching the button across the toolbar. */
 .user-trigger__name {
   font-size: 13px;
   font-weight: 500;
@@ -80,8 +80,8 @@
   .user-trigger__name { display: none; }
 }
 
-/* Cabeçalho do menu: onde o e-mail cabe. `disabled` no item deixa o texto apagado,
-   então a cor é reafirmada. */
+/* Menu header: where the e-mail fits. `disabled` on the item greys the text out,
+   so the color is set again. */
 .user-menu__header {
   display: flex;
   flex-direction: column;

@@ -3,8 +3,8 @@
     <mat-icon>menu</mat-icon>
   </button>
 
-  <!-- `inverse`: a toolbar e o quadrado do selo padrão saem do mesmo token
-       (--color-primary-700), então sobre ela o selo some e sobra um P solto. -->
+  <!-- `inverse`: the toolbar and the default mark's square come from the same token
+       (--color-primary-700), so on the toolbar the mark disappears and leaves a loose P. -->
   <div class="brand">
     <app-prumo-mark [size]="30" variant="inverse" label=""></app-prumo-mark>
     <span class="brand__title">Prumo</span>
@@ -13,38 +13,38 @@
   <span class="spacer"></span>
 
   <ng-container *ngIf="currentUser$ | async as user">
-    <!-- Botão nativo em vez de mat-button: o mat-button embrulha o conteúdo num
-         .mdc-button__label que o estilo do componente não alcança, e avatar, nome e
-         chevron acabavam empilhados e sobrepostos. -->
+    <!-- A native button instead of mat-button: mat-button wraps the content in a
+         .mdc-button__label the component styles cannot reach, and the avatar, name and
+         chevron ended up stacked and overlapping. -->
     <button type="button" [matMenuTriggerFor]="userMenu" class="user-trigger"
-            [attr.aria-label]="'Menu de ' + (user.fullName || user.email)">
+            [attr.aria-label]="'Menu for ' + (user.fullName || user.email)">
       <span class="user-trigger__avatar">{{ (user.fullName || user.email)[0] | uppercase }}</span>
-      <!-- Só o nome aqui. O e-mail desce para o cabeçalho do menu: duas linhas de texto
-           num chip da altura da toolbar ficam apertadas, e o e-mail é longo. -->
+      <!-- Only the name here. The e-mail goes down to the menu header: two lines of text
+           in a toolbar-height chip get cramped, and the e-mail is long. -->
       <span class="user-trigger__name">{{ user.fullName || user.email }}</span>
       <mat-icon class="user-trigger__chev">expand_more</mat-icon>
     </button>
   </ng-container>
 
   <mat-menu #userMenu="matMenu" xPosition="before">
-    <!-- O e-mail vive aqui, onde há largura para ele, em vez de espremido no chip.
-         Sem `mat-menu-item`: aquele atributo impõe layout de item clicável (linha única,
-         altura fixa) e cola o e-mail no nome. Isto é só um cabeçalho. -->
+    <!-- The e-mail lives here, where there is room for it, instead of squeezed into the chip.
+         No `mat-menu-item`: that attribute imposes a clickable item layout (single line,
+         fixed height) and glues the e-mail to the name. This is only a header. -->
     <div class="user-menu__header" *ngIf="currentUser$ | async as user">
       <span class="user-menu__name">{{ user.fullName }}</span>
       <span class="user-menu__email">{{ user.email }}</span>
     </div>
     <mat-divider></mat-divider>
 
-    <!-- "Configurações" ficou oculto: era um mat-menu-item sem (click), que não fazia
-         nada. Decisão do backlog (item 6): ocultar em vez de inventar uma tela no MVP. -->
+    <!-- There is no "Settings" item: it used to be a mat-menu-item with no (click) that
+         did nothing, and hiding it beat inventing a screen. -->
     <button mat-menu-item (click)="switchTenant()">
       <mat-icon>swap_horiz</mat-icon>
-      <span>Trocar Tenant</span>
+      <span>Switch tenant</span>
     </button>
     <button mat-menu-item (click)="logout()">
       <mat-icon>logout</mat-icon>
-      <span>Sair</span>
+      <span>Sign out</span>
     </button>
   </mat-menu>
 </mat-toolbar>

@@ -48,8 +48,8 @@
   padding: var(--space-3) var(--space-2);
   border-radius: var(--radius-md);
 
-  /* O botão do Material tem 36px mais um touch target de 48px. Sem altura mínima que
-     acomode o alvo, a linha aperta e o botão aparece cortado ao pé. */
+  /* Material's button is 36px plus a 48px touch target. Without a minimum height that
+     fits the target, the row gets tight and the button looks cut off at the bottom. */
   min-height: 56px;
 
   &:hover { background: var(--color-surface-alt); }

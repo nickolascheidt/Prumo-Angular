@@ -35,13 +35,13 @@ import {
 } from '@core/models';
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: 'Cash', label: 'Dinheiro' },
-  { value: 'BankTransfer', label: 'Transferência' },
-  { value: 'CreditCard', label: 'Cartão de Crédito' },
-  { value: 'DebitCard', label: 'Cartão de Débito' },
+  { value: 'Cash', label: 'Cash' },
+  { value: 'BankTransfer', label: 'Bank transfer' },
+  { value: 'CreditCard', label: 'Credit card' },
+  { value: 'DebitCard', label: 'Debit card' },
   { value: 'Pix', label: 'Pix' },
   { value: 'Boleto', label: 'Boleto' },
-  { value: 'Other', label: 'Outro' }
+  { value: 'Other', label: 'Other' }
 ];
 
 @Component({
@@ -93,7 +93,7 @@ export class AccountsPayableFormComponent implements OnInit {
   ngOnInit(): void {
     this.tenantId = this.auth.getCurrentTenantId();
     if (!this.tenantId) {
-      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      this.snackBar.open('No tenant selected', 'Close', { duration: 5000 });
       this.router.navigate(['/auth/select-tenant']);
       return;
     }
@@ -123,8 +123,8 @@ export class AccountsPayableFormComponent implements OnInit {
       next: cats => (this.categories = cats),
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao carregar categorias',
-          'Fechar',
+          err?.error?.message || 'Failed to load categories',
+          'Close',
           { duration: 5000 }
         )
     });
@@ -148,8 +148,8 @@ export class AccountsPayableFormComponent implements OnInit {
       },
       error: err => {
         this.snackBar.open(
-          err?.error?.message || 'Erro ao carregar lançamento',
-          'Fechar',
+          err?.error?.message || 'Failed to load the entry',
+          'Close',
           { duration: 5000 }
         );
         this.router.navigate(['/accounts-payable']);
@@ -184,14 +184,14 @@ export class AccountsPayableFormComponent implements OnInit {
         .subscribe({
           next: updated => {
             this.entry = updated;
-            this.snackBar.open('Lançamento atualizado', 'Fechar', { duration: 3000 });
+            this.snackBar.open('Entry updated', 'Close', { duration: 3000 });
             this.router.navigate(['/accounts-payable']);
           },
           error: err => {
             this.saving = false;
             this.snackBar.open(
-              err?.error?.message || 'Erro ao atualizar',
-              'Fechar',
+              err?.error?.message || 'Failed to update',
+              'Close',
               { duration: 5000 }
             );
           },
@@ -211,14 +211,14 @@ export class AccountsPayableFormComponent implements OnInit {
       };
       this.api.createAccountsPayableEntry(this.tenantId, payload).subscribe({
         next: () => {
-          this.snackBar.open('Lançamento criado', 'Fechar', { duration: 3000 });
+          this.snackBar.open('Entry created', 'Close', { duration: 3000 });
           this.router.navigate(['/accounts-payable']);
         },
         error: err => {
           this.saving = false;
           this.snackBar.open(
-            err?.error?.message || 'Erro ao criar lançamento',
-            'Fechar',
+            err?.error?.message || 'Failed to create the entry',
+            'Close',
             { duration: 5000 }
           );
         },
@@ -234,8 +234,8 @@ export class AccountsPayableFormComponent implements OnInit {
     const method = this.form.get('paymentMethod')?.value as PaymentMethod | null;
     if (!method) {
       this.snackBar.open(
-        'Selecione a forma de pagamento antes de marcar como pago',
-        'Fechar',
+        'Select the payment method before marking as paid',
+        'Close',
         { duration: 5000 }
       );
       return;
@@ -249,12 +249,12 @@ export class AccountsPayableFormComponent implements OnInit {
       .subscribe({
         next: updated => {
           this.entry = updated;
-          this.snackBar.open('Marcado como pago', 'Fechar', { duration: 2500 });
+          this.snackBar.open('Marked as paid', 'Close', { duration: 2500 });
         },
         error: err =>
           this.snackBar.open(
-            err?.error?.message || 'Erro ao marcar como pago',
-            'Fechar',
+            err?.error?.message || 'Failed to mark as paid',
+            'Close',
             { duration: 5000 }
           )
       });
@@ -262,23 +262,23 @@ export class AccountsPayableFormComponent implements OnInit {
 
   cancelEntry(): void {
     if (!this.tenantId || !this.entry) return;
-    const reasonInput = prompt('Informe o motivo do cancelamento:');
+    const reasonInput = prompt('Enter the cancellation reason:');
     if (reasonInput === null) return;
     const reason = reasonInput.trim();
     if (!reason) {
-      this.snackBar.open('Informe o motivo do cancelamento', 'Fechar', { duration: 4000 });
+      this.snackBar.open('Enter the cancellation reason', 'Close', { duration: 4000 });
       return;
     }
 
     this.api.cancelAccountsPayableEntry(this.tenantId, this.entry.id, { reason }).subscribe({
       next: updated => {
         this.entry = updated;
-        this.snackBar.open('Lançamento cancelado', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Entry cancelled', 'Close', { duration: 2500 });
       },
       error: err =>
         this.snackBar.open(
-          err?.error?.message || 'Erro ao cancelar',
-          'Fechar',
+          err?.error?.message || 'Failed to cancel',
+          'Close',
           { duration: 5000 }
         )
     });

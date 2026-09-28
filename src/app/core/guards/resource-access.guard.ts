@@ -37,11 +37,11 @@ export class ResourceAccessGuard {
     }
 
     // Access denied - redirect to dashboard.
-    // O aviso é diagnóstico de desenvolvimento: em produção ele só contaria a
-    // estranhos o que existe e o que faz falta para alcançar.
+    // The warning is a development diagnostic: in production it would only tell
+    // strangers what exists and what is missing to reach it.
     if (!environment.production) {
       console.warn(
-        `Acesso negado ao recurso: ${resourceCode} (nível exigido: ${requiredLevel})`
+        `Access denied to resource: ${resourceCode} (required level: ${requiredLevel})`
       );
     }
     this.router.navigate(['/dashboard']);
@@ -88,10 +88,10 @@ export const resourceAccessGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Access denied - redirect to dashboard. Ver a nota no guard de classe acima.
+  // Access denied - redirect to dashboard. See the note in the class guard above.
   if (!environment.production) {
     console.warn(
-      `Acesso negado ao recurso: ${resourceCode} (nível exigido: ${requiredLevel})`
+      `Access denied to resource: ${resourceCode} (required level: ${requiredLevel})`
     );
   }
   router.navigate(['/dashboard']);

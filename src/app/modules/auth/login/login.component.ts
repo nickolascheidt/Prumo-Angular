@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         // Token already bound to a tenant — go straight in.
         if (response.tenantId) {
-          this.snackBar.open('Login realizado com sucesso!', 'Fechar', { duration: 3000 });
+          this.snackBar.open('Signed in', 'Close', { duration: 3000 });
           this.router.navigate(['/dashboard']);
           return;
         }
@@ -72,8 +72,8 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
 
-        // A senha está certa e o e-mail nunca foi confirmado. A API manda um `code`
-        // próprio justamente para esta tela não tratar o caso como senha errada.
+        // The password is right and the e-mail was never confirmed. The API sends its own
+        // `code` precisely so this screen does not treat the case as a wrong password.
         if (error?.error?.code === 'email_not_confirmed') {
           this.router.navigate(['/auth/check-email'], {
             queryParams: { email: this.loginForm.value.email }
@@ -81,8 +81,8 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        const message = error?.error?.message || 'Erro ao realizar login';
-        this.snackBar.open(message, 'Fechar', { duration: 5000, panelClass: 'error-snackbar' });
+        const message = error?.error?.message || 'Sign-in failed';
+        this.snackBar.open(message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
       }
     });
   }
@@ -98,9 +98,9 @@ export class LoginComponent implements OnInit {
       next: (memberships) => {
         if (memberships.length === 0) {
           this.isLoading = false;
-          // Não é erro de credencial: a conta está certa e só falta alguém adicioná-la a
-          // uma empresa. Antes isto era um snackbar vermelho seguido de logout, que lia
-          // como falha de senha.
+          // Not a credentials error: the account is fine and someone just has to add it
+          // to a company. This used to be a red snackbar followed by a logout, which read
+          // like a wrong password.
           this.router.navigate(['/auth/awaiting-invitation']);
           return;
         }
@@ -109,13 +109,13 @@ export class LoginComponent implements OnInit {
           this.authService.selectTenant(memberships[0].tenantId).subscribe({
             next: () => {
               this.isLoading = false;
-              this.snackBar.open('Login realizado com sucesso!', 'Fechar', { duration: 3000 });
+              this.snackBar.open('Signed in', 'Close', { duration: 3000 });
               this.router.navigate(['/dashboard']);
             },
             error: (error) => {
               this.isLoading = false;
-              const message = error?.error?.message || 'Erro ao selecionar tenant';
-              this.snackBar.open(message, 'Fechar', { duration: 5000, panelClass: 'error-snackbar' });
+              const message = error?.error?.message || 'Failed to select the tenant';
+              this.snackBar.open(message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
             }
           });
           return;
@@ -126,8 +126,8 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        const message = error?.error?.message || 'Erro ao carregar tenants';
-        this.snackBar.open(message, 'Fechar', { duration: 5000, panelClass: 'error-snackbar' });
+        const message = error?.error?.message || 'Failed to load tenants';
+        this.snackBar.open(message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
       }
     });
   }

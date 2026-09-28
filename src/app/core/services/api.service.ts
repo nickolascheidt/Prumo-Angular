@@ -86,8 +86,8 @@ export class ApiService {
   }
 
   /**
-   * Responde 202 e **não** devolve sessão: a conta nasce sem e-mail confirmado, e
-   * confirmar é pré-requisito para entrar.
+   * Answers 202 and does **not** return a session: the account is born without a
+   * confirmed e-mail, and confirming is a prerequisite for signing in.
    */
   register(data: RegisterRequest): Observable<RegistrationResult> {
     return this.http.post<RegistrationResult>(`${this.apiUrl}/auth/register`, data);
@@ -105,7 +105,7 @@ export class ApiService {
     return this.http.post<void>(`${this.apiUrl}/auth/resend-confirmation`, { email });
   }
 
-  /** Sempre 202, exista o e-mail ou não — a resposta não pode revelar quais contas existem. */
+  /** Always 202, whether the e-mail exists or not — the answer must not reveal which accounts exist. */
   forgotPassword(email: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/auth/forgot-password`, { email });
   }
@@ -249,8 +249,8 @@ export class ApiService {
   }
 
   /**
-   * Adiciona pelo e-mail. Conta existente entra na hora; e-mail sem conta vira convite
-   * pendente. Substituiu `createTenantUser`, em que o admin escolhia a senha do membro.
+   * Adds by e-mail. An existing account joins right away; an e-mail without an account
+   * becomes a pending invitation.
    */
   inviteMember(tenantId: string, data: InviteMemberRequest): Observable<InviteMemberResult> {
     return this.http.post<InviteMemberResult>(

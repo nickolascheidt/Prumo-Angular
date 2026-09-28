@@ -1,12 +1,12 @@
 {
   "name": "Prumo ERP",
   "short_name": "Prumo",
-  "description": "Sistema de gestão: contas a pagar, contabilidade e pessoas.",
+  "description": "Management system: accounts payable, accounting and people.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "lang": "pt-BR",
+  "lang": "en",
   "background_color": "#f2f6f9",
   "theme_color": "#10314a",
   "icons": [

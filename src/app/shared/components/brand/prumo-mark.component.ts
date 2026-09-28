@@ -1,18 +1,18 @@
 import { Component, Input } from '@angular/core';
 
 /**
- * O selo do Prumo: quadrado sólido com um P recortado, cuja haste é a vertical
- * do prumo. Substituiu o `<mat-icon>hub</mat-icon>` no rebranding.
+ * The Prumo mark: a solid square with a P cut out of it, whose stem is the plumb line
+ * ("prumo" in Portuguese).
  *
- * SVG inline e não `<img src="assets/...">` por dois motivos: o selo aparece na
- * toolbar de todas as rotas e no login, e uma requisição a mais para 341 bytes
- * não se paga; e inline o desenho responde a `currentColor` se um dia a marca
- * precisar acompanhar o tema.
+ * Inline SVG rather than `<img src="assets/...">` for two reasons: the mark shows on
+ * the toolbar of every route and on the login screen, and one more request for 341
+ * bytes does not pay for itself; and inline, the drawing responds to `currentColor`
+ * if the brand ever needs to follow the theme.
  *
- * As duas faces existem porque o quadrado é opaco. `default` (quadrado escuro,
- * símbolo menta) só se lê sobre fundo claro; a toolbar e o login são pintados
- * com o mesmo `--color-primary-700` do quadrado, então ali o selo padrão some e
- * sobra um P solto — por isso as duas telas usam `inverse`.
+ * The two faces exist because the square is opaque. `default` (dark square, mint
+ * glyph) only reads on a light background; the toolbar and the login screen are
+ * painted with the same `--color-primary-700` as the square, so there the default
+ * mark disappears and leaves a loose P — which is why both screens use `inverse`.
  */
 @Component({
   selector: 'app-prumo-mark',
@@ -37,13 +37,13 @@ import { Component, Input } from '@angular/core';
   `]
 })
 export class PrumoMarkComponent {
-  /** Lado do selo em px. O desenho é geometria pura: aguenta 16px sem ajuste. */
+  /** Side of the mark in px. The drawing is pure geometry: it holds up at 16px without tweaks. */
   @Input() size = 32;
 
-  /** `inverse` = quadrado menta sobre símbolo escuro, para fundo escuro. */
+  /** `inverse` = mint square over a dark glyph, for dark backgrounds. */
   @Input() variant: 'default' | 'inverse' = 'default';
 
-  /** Vazio quando o selo vem acompanhado do wordmark: senão o leitor de tela lê "Prumo" duas vezes. */
+  /** Empty when the mark comes with the wordmark: otherwise screen readers read "Prumo" twice. */
   @Input() label = 'Prumo';
 
   get squareFill(): string {

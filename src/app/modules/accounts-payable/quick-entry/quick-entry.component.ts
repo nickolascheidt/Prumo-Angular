@@ -43,13 +43,13 @@ import {
 } from '@core/models';
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: 'Cash', label: 'Dinheiro' },
-  { value: 'BankTransfer', label: 'Transferência' },
-  { value: 'CreditCard', label: 'Cartão de Crédito' },
-  { value: 'DebitCard', label: 'Cartão de Débito' },
+  { value: 'Cash', label: 'Cash' },
+  { value: 'BankTransfer', label: 'Bank transfer' },
+  { value: 'CreditCard', label: 'Credit card' },
+  { value: 'DebitCard', label: 'Debit card' },
   { value: 'Pix', label: 'Pix' },
   { value: 'Boleto', label: 'Boleto' },
-  { value: 'Other', label: 'Outro' }
+  { value: 'Other', label: 'Other' }
 ];
 
 @Component({
@@ -127,7 +127,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
 
     const tenantId = this.auth.getCurrentTenantId();
     if (!tenantId) {
-      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      this.snackBar.open('No tenant selected', 'Close', { duration: 5000 });
       return;
     }
 
@@ -144,7 +144,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     this.isSaving = true;
     this.api.createAccountsPayableEntry(tenantId, payload).subscribe({
       next: entry => {
-        this.snackBar.open('Lançamento adicionado', 'Fechar', { duration: 2500 });
+        this.snackBar.open('Entry added', 'Close', { duration: 2500 });
         this.entryCreated.emit(entry);
         this.resetQuickForm(raw.categoryId, raw.dueDate);
         this.focusDescription();
@@ -152,8 +152,8 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
       error: err => {
         this.isSaving = false;
         this.snackBar.open(
-          err?.error?.message || 'Erro ao salvar lançamento',
-          'Fechar',
+          err?.error?.message || 'Failed to save the entry',
+          'Close',
           { duration: 5000 }
         );
       },
@@ -171,7 +171,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
 
     const tenantId = this.auth.getCurrentTenantId();
     if (!tenantId) {
-      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      this.snackBar.open('No tenant selected', 'Close', { duration: 5000 });
       return;
     }
 
@@ -185,8 +185,8 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     const errors = parsed.filter(p => p.error);
     if (errors.length) {
       this.snackBar.open(
-        `Linha(s) inválida(s): ${errors.map(e => e.lineNumber).join(', ')}`,
-        'Fechar',
+        `Invalid line(s): ${errors.map(e => e.lineNumber).join(', ')}`,
+        'Close',
         { duration: 5000 }
       );
       return;
@@ -199,17 +199,17 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
       })
       .subscribe({
         next: resp => {
-          const msg = `${resp.successCount} lançamento(s) criado(s)` +
-            (resp.failedCount > 0 ? `, ${resp.failedCount} falharam` : '');
-          this.snackBar.open(msg, 'Fechar', { duration: 4000 });
+          const msg = `${resp.successCount} entr${resp.successCount === 1 ? 'y' : 'ies'} created` +
+            (resp.failedCount > 0 ? `, ${resp.failedCount} failed` : '');
+          this.snackBar.open(msg, 'Close', { duration: 4000 });
           this.bulkForm.patchValue({ lines: '' });
           this.entriesBulkCreated.emit();
         },
         error: err => {
           this.isBulkSaving = false;
           this.snackBar.open(
-            err?.error?.message || 'Erro ao processar lote',
-            'Fechar',
+            err?.error?.message || 'Failed to process the batch',
+            'Close',
             { duration: 5000 }
           );
         },
@@ -226,7 +226,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
   ): { lineNumber: number; entry?: BulkEntryLine; error?: string } {
     const parts = line.split('|').map(p => p.trim());
     if (parts.length < 3) {
-      return { lineNumber: 0, error: 'formato' };
+      return { lineNumber: 0, error: 'format' };
     }
 
     const [dueDateRaw, description, amountRaw, supplier] = parts;
@@ -234,7 +234,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
     const amount = Number(String(amountRaw).replace(',', '.'));
 
     if (!dueDate || !description || !isFinite(amount) || amount <= 0) {
-      return { lineNumber: 0, error: 'campos' };
+      return { lineNumber: 0, error: 'fields' };
     }
 
     return {
@@ -292,7 +292,7 @@ export class AccountsPayableQuickEntryComponent implements OnInit, AfterViewInit
   openQuickCreateCategory(target: 'quick' | 'bulk'): void {
     const tenantId = this.auth.getCurrentTenantId();
     if (!tenantId) {
-      this.snackBar.open('Nenhum tenant selecionado', 'Fechar', { duration: 5000 });
+      this.snackBar.open('No tenant selected', 'Close', { duration: 5000 });
       return;
     }
     const ref = this.dialog.open(CategoryQuickCreateDialogComponent, {

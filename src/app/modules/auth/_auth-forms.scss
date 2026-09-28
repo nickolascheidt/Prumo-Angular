@@ -1,8 +1,9 @@
-// Estilos de formulário compartilhados pelas telas de autenticação.
+// Form styles shared by the authentication screens.
 //
-// Ficam num partial e não no `auth-shell` porque o conteúdo é projetado por
-// `<ng-content>`: a encapsulação do Angular aplica o SCSS do shell só ao template dele,
-// não ao que vem de fora. Um partial dá reúso sem `::ng-deep` e sem classe global nova.
+// They live in a partial and not in `auth-shell` because the content is projected
+// through `<ng-content>`: Angular's encapsulation applies the shell's SCSS only to its
+// own template, not to what comes from outside. A partial gives reuse without
+// `::ng-deep` and without a new global class.
 
 .auth-form {
   display: flex;

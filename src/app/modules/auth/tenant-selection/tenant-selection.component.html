@@ -2,17 +2,17 @@
   <mat-card class="tenant-card">
     <div class="tenant-card__brand">
       <mat-icon>business</mat-icon>
-      <h1>Selecionar Tenant</h1>
-      <p>Escolha um tenant para continuar.</p>
+      <h1>Select a tenant</h1>
+      <p>Choose a tenant to continue.</p>
     </div>
 
     <div *ngIf="isLoading" class="loading">
       <mat-spinner diameter="36"></mat-spinner>
     </div>
 
-    <!-- Lista simples em vez de mat-list: o mat-list-item aninha o conteúdo em dois
-         wrappers próprios (__content > __primary-text) que o estilo do componente não
-         alcança, e o botão acabava empilhado sob o nome do tenant. -->
+    <!-- A plain list instead of mat-list: mat-list-item nests the content in two wrappers
+         of its own (__content > __primary-text) the component styles cannot reach, and
+         the button ended up stacked under the tenant name. -->
     <div class="tenant-list" *ngIf="!isLoading && memberships.length">
       <div class="tenant-item" *ngFor="let m of memberships">
         <div class="tenant-item__info">
@@ -22,19 +22,19 @@
         <button mat-flat-button color="primary"
                 [disabled]="isSelecting"
                 (click)="select(m.tenantId)">
-          Entrar
+          Enter
         </button>
       </div>
     </div>
 
     <p *ngIf="!isLoading && !memberships.length" class="empty-msg">
-      Sua conta não tem acesso a nenhum tenant. Contate um administrador.
+      Your account has no access to any tenant. Contact an administrator.
     </p>
 
     <mat-divider></mat-divider>
 
     <button mat-button class="logout-btn" (click)="logout()">
-      <mat-icon>logout</mat-icon> Sair
+      <mat-icon>logout</mat-icon> Sign out
     </button>
   </mat-card>
 </div>

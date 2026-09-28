@@ -81,7 +81,7 @@ export class AccountStatementComponent implements OnInit {
       next: stmt => { this.statement = stmt; this.loading = false; },
       error: err => {
         this.loading = false;
-        this.snackBar.open(err?.error?.message || 'Erro ao carregar extrato', 'Fechar', { duration: 5000 });
+        this.snackBar.open(err?.error?.message || 'Failed to load the statement', 'Close', { duration: 5000 });
       }
     });
   }

@@ -56,13 +56,13 @@ export class RegisterComponent implements OnInit {
 
     this.api.register({ fullName, email, password, phoneNumber: null }).subscribe({
       next: () => {
-        // Nenhuma sessão é criada aqui: a próxima tela pede a confirmação do e-mail.
+        // No session is created here: the next screen asks for e-mail confirmation.
         this.router.navigate(['/auth/check-email'], { queryParams: { email } });
       },
       error: (error) => {
         this.isLoading = false;
-        const message = error?.error?.message || 'Não foi possível criar a conta.';
-        this.snackBar.open(message, 'Fechar', { duration: 5000, panelClass: 'error-snackbar' });
+        const message = error?.error?.message || 'Could not create the account.';
+        this.snackBar.open(message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
       }
     });
   }

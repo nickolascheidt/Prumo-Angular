@@ -17,7 +17,7 @@ Angular 18 SPA for Prumo — a multi-tenant ERP with accounts payable, financial
 ## Prerequisites
 
 - [Node.js 20+](https://nodejs.org/)
-- Backend API running at `http://localhost:5201` ([SaaSBasePlatform](https://github.com/nickolascheidt/SaaSBasePlatform))
+- Backend API running at `http://localhost:5201` ([Prumo](https://github.com/nickolascheidt/Prumo))
 
 ## Getting Started
 
@@ -122,4 +122,4 @@ Backend errors use the envelope `{ "message": "..." }`.
 
 ## Related Repository
 
-Backend: [SaaSBasePlatform](https://github.com/nickolascheidt/SaaSBasePlatform) — .NET 10 / ASP.NET Core API.
+Backend: [Prumo](https://github.com/nickolascheidt/Prumo) — .NET 10 / ASP.NET Core API.

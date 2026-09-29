@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -158,7 +157,7 @@ export class RolesComponent implements OnInit {
     this.loadingGrid = true;
 
     const buildGrid = () => {
-      this.api.getRoleResourcePermissions(role.id).subscribe({
+      this.api.getTenantRolePermissions(this.tenantId, role.id).subscribe({
         next: perms => {
           // The level arrives as a string ("Read"); comparing it with a number is always false.
           const byResource = new Map<string, PermissionLevel>(
@@ -182,7 +181,7 @@ export class RolesComponent implements OnInit {
       return;
     }
 
-    this.api.getResources().subscribe({
+    this.api.getTenantResources(this.tenantId).subscribe({
       next: resources => {
         this.resources = [...resources].sort((a, b) =>
           a.displayOrder - b.displayOrder || a.name.localeCompare(b.name));
@@ -207,17 +206,8 @@ export class RolesComponent implements OnInit {
       this.loadGrid();
     };
 
-    // Typed as unknown on purpose: the two branches return Observables of different
-    // types, and their union is not callable. All that matters is whether it completed.
-    const request$: Observable<unknown> = level === PermissionLevel.None
-      ? this.api.removeResourcePermission(role.id, row.resource.id)
-      : this.api.assignResourcePermission({
-          roleId: role.id,
-          resourceId: row.resource.id,
-          level
-        });
-
-    request$.subscribe({
+    // One call for granting and revoking: level None revokes.
+    this.api.setTenantRolePermission(this.tenantId, role.id, row.resource.id, level).subscribe({
       next: () => done(),
       error: (error: HttpErrorResponse) => {
         this.savingResourceId = null;

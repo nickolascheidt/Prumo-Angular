@@ -16,7 +16,6 @@ import {
   Resource,
   ResourcePermission,
   UserResourcePermissions,
-  AssignResourcePermissionRequest,
   ManagedRole,
   CreateTenantRoleRequest,
   CreateResourceRequest,
@@ -191,15 +190,7 @@ export class ApiService {
     return this.http.get<UserResourcePermissions>(`${this.apiUrl}/resources/user/${encodeURIComponent(userId)}`);
   }
 
-  getRoleResourcePermissions(roleId: string): Observable<ResourcePermission[]> {
-    return this.http.get<ResourcePermission[]>(`${this.apiUrl}/resources/role/${encodeURIComponent(roleId)}`);
-  }
-
-  assignResourcePermission(data: AssignResourcePermissionRequest): Observable<PermissionActionResponse> {
-    return this.http.post<PermissionActionResponse>(`${this.apiUrl}/resources/assign`, data);
-  }
-
-  // ----- Roles do tenant -----
+  // ----- Tenant roles -----
 
   getTenantRoles(tenantId: string): Observable<ManagedRole[]> {
     return this.http.get<ManagedRole[]>(
@@ -216,11 +207,25 @@ export class ApiService {
       `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles/${encodeURIComponent(roleId)}`);
   }
 
-  removeResourcePermission(roleId: string, resourceId: string): Observable<void> {
-    const params = new HttpParams()
-      .set('roleId', roleId)
-      .set('resourceId', resourceId);
-    return this.http.delete<void>(`${this.apiUrl}/resources/remove`, { params });
+  /** The tenant's resources: the rows of the level grid on the Roles screen. */
+  getTenantResources(tenantId: string): Observable<Resource[]> {
+    return this.http.get<Resource[]>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles/resources`);
+  }
+
+  getTenantRolePermissions(tenantId: string, roleId: string): Observable<ResourcePermission[]> {
+    return this.http.get<ResourcePermission[]>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles/${encodeURIComponent(roleId)}/permissions`);
+  }
+
+  /** Sets the role's level on a resource of the tenant. `None` revokes. */
+  setTenantRolePermission(
+    tenantId: string, roleId: string, resourceId: string, level: PermissionLevel
+  ): Observable<void> {
+    return this.http.put<void>(
+      `${this.apiUrl}/tenants/${encodeURIComponent(tenantId)}/roles/${encodeURIComponent(roleId)}` +
+      `/permissions/${encodeURIComponent(resourceId)}`,
+      { level });
   }
 
   // Tenant Endpoints

@@ -291,12 +291,6 @@ export interface CreateTenantRoleRequest {
   description?: string;
 }
 
-export interface AssignResourcePermissionRequest {
-  roleId: string;
-  resourceId: string;
-  level: PermissionLevel;
-}
-
 export interface CreateResourceRequest {
   code: string;
   name: string;

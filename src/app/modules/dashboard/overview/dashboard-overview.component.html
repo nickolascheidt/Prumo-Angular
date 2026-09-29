@@ -60,7 +60,7 @@
 
       <ng-container *ngIf="!isLoadingUpcoming">
         <div class="due-row" *ngFor="let entry of upcoming">
-          <span class="due-row__date num">{{ entry.dueDate | date:'mediumDate' }}</span>
+          <span class="due-row__date num">{{ entry.dueDate | date:'mediumDate':'UTC' }}</span>
           <span class="due-row__desc" [title]="entry.description">{{ entry.description }}</span>
           <span class="due-row__amount num num--value">{{ entry.amount | currency: 'BRL' }}</span>
           <span class="status-chip" [ngClass]="'status-chip--' + statusOf(entry)">

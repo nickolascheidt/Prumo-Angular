@@ -46,7 +46,7 @@ import { GeneratePaymentPeriodDialogComponent } from './generate-payment-period-
             </ng-container>
             <ng-container matColumnDef="paymentDate">
               <th mat-header-cell *matHeaderCellDef>Date</th>
-              <td mat-cell *matCellDef="let p">{{ p.paymentDate | date:'mediumDate' }}</td>
+              <td mat-cell *matCellDef="let p">{{ p.paymentDate | date:'mediumDate':'UTC' }}</td>
             </ng-container>
             <ng-container matColumnDef="amount">
               <th mat-header-cell *matHeaderCellDef>Amount</th>

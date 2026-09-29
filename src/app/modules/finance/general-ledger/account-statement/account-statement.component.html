@@ -36,7 +36,7 @@
     <table mat-table [dataSource]="statement.lines" style="width:100%">
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let l" class="num">{{ l.date | date:'mediumDate' }}</td>
+        <td mat-cell *matCellDef="let l" class="num">{{ l.date | date:'mediumDate':'UTC' }}</td>
       </ng-container>
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Description</th>

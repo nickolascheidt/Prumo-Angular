@@ -38,7 +38,7 @@
                 <mat-icon matListItemIcon>person</mat-icon>
                 <span matListItemTitle>{{ p.employeeName }}</span>
                 <span matListItemLine>
-                  {{ p.amount | currency:'BRL':'symbol':'1.2-2' }} · {{ p.paymentDate | date:'mediumDate' }}
+                  {{ p.amount | currency:'BRL':'symbol':'1.2-2' }} · {{ p.paymentDate | date:'mediumDate':'UTC' }}
                 </span>
               </mat-list-item>
             }

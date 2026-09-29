@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService, AuthService } from '@core/services';
 import { Employee, PaymentPeriodSummary, HrPaymentMethod, HrPaymentStatus, CreateHrPaymentRequest } from '@core/models';
+import { toDateOnly } from '@core/utils/date-only';
 
 @Component({
   selector: 'app-payment-form-dialog',
@@ -44,7 +45,7 @@ import { Employee, PaymentPeriodSummary, HrPaymentMethod, HrPaymentStatus, Creat
           <mat-label>Payment period *</mat-label>
           <mat-select formControlName="paymentPeriodId" (selectionChange)="onPeriodChange()">
             <mat-option *ngFor="let p of pendingPeriods" [value]="p.id">
-              {{ p.startDate | date:'mediumDate' }} → {{ p.endDate | date:'mediumDate' }}
+              {{ p.startDate | date:'mediumDate':'UTC' }} → {{ p.endDate | date:'mediumDate':'UTC' }}
               — R$ {{ p.totalAmount | number:'1.2-2' }}
             </mat-option>
           </mat-select>
@@ -167,7 +168,7 @@ export class PaymentFormDialogComponent implements OnInit {
     const v = this.form.value;
     const req: CreateHrPaymentRequest = {
       paymentPeriodId: v.paymentPeriodId,
-      paymentDate: new Date(v.paymentDate).toISOString(),
+      paymentDate: toDateOnly(v.paymentDate),
       paymentMethod: v.paymentMethod,
       notes: v.notes || null
     };

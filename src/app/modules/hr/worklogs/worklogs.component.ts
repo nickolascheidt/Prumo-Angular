@@ -56,7 +56,7 @@ import { WorklogFormDialogComponent } from './worklog-form-dialog.component';
             </ng-container>
             <ng-container matColumnDef="workDate">
               <th mat-header-cell *matHeaderCellDef>Date</th>
-              <td mat-cell *matCellDef="let w">{{ w.workDate | date:'mediumDate' }}</td>
+              <td mat-cell *matCellDef="let w">{{ w.workDate | date:'mediumDate':'UTC' }}</td>
             </ng-container>
             <ng-container matColumnDef="hoursWorked">
               <th mat-header-cell *matHeaderCellDef>Hours</th>

@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService, AuthService } from '@core/services';
 import { Employee, GeneratePaymentPeriodRequest, PaymentPeriodSummary } from '@core/models';
+import { toDateOnly } from '@core/utils/date-only';
 
 @Component({
   selector: 'app-generate-payment-period-dialog',
@@ -122,8 +123,8 @@ export class GeneratePaymentPeriodDialogComponent implements OnInit {
     const v = this.form.value;
     const req: GeneratePaymentPeriodRequest = {
       employeeId: v.employeeId,
-      startDate: new Date(v.startDate).toISOString().split('T')[0],
-      endDate: new Date(v.endDate).toISOString().split('T')[0]
+      startDate: toDateOnly(v.startDate),
+      endDate: toDateOnly(v.endDate)
     };
     this.api.generatePaymentPeriod(this.tenantId, req).subscribe({
       next: (result: PaymentPeriodSummary) => {

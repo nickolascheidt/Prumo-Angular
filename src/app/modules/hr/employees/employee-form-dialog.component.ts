@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService, AuthService } from '@core/services';
 import { Employee, ContractType, HrPaymentMethod, CreateEmployeeRequest, UpdateEmployeeRequest } from '@core/models';
+import { fromDateOnly, toDateOnly } from '@core/utils/date-only';
 
 @Component({
   selector: 'app-employee-form-dialog',
@@ -149,7 +150,7 @@ export class EmployeeFormDialogComponent implements OnInit {
       cpf: [{ value: this.data?.cpf ?? '', disabled: this.isEditing }, Validators.required],
       email: [this.data?.email ?? ''],
       phone: [this.data?.phone ?? ''],
-      hireDate: [this.data ? new Date(this.data.hireDate) : new Date(), Validators.required],
+      hireDate: [this.data ? fromDateOnly(this.data.hireDate) : new Date(), Validators.required],
       contractType: [this.data?.contractType ?? ContractType.CLT, Validators.required],
       hourlyRate: [this.data?.hourlyRate ?? 0, [Validators.required, Validators.min(0.01)]],
       preferredPaymentMethod: [this.data?.preferredPaymentMethod ?? HrPaymentMethod.BankTransfer, Validators.required],
@@ -193,7 +194,7 @@ export class EmployeeFormDialogComponent implements OnInit {
         cpf: v.cpf,
         email: v.email || null,
         phone: v.phone || null,
-        hireDate: new Date(v.hireDate).toISOString(),
+        hireDate: toDateOnly(v.hireDate),
         contractType: v.contractType,
         hourlyRate: v.hourlyRate,
         preferredPaymentMethod: v.preferredPaymentMethod,

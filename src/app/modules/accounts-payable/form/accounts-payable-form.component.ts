@@ -33,6 +33,7 @@ import {
   PaymentMethod,
   UpdateAccountsPayableEntryRequest
 } from '@core/models';
+import { fromDateOnly } from '@core/utils/date-only';
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: 'Cash', label: 'Cash' },
@@ -139,7 +140,7 @@ export class AccountsPayableFormComponent implements OnInit {
         this.form.patchValue({
           description: entry.description,
           amount: entry.amount,
-          dueDate: new Date(entry.dueDate),
+          dueDate: fromDateOnly(entry.dueDate),
           categoryId: entry.categoryId,
           supplierName: entry.supplierName ?? '',
           paymentMethod: entry.paymentMethod ?? null,

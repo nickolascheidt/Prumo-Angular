@@ -54,7 +54,7 @@ import { PaymentPeriodSummary, HrPaymentStatus } from '@core/models';
               <ng-container matColumnDef="period">
                 <th mat-header-cell *matHeaderCellDef>Period</th>
                 <td mat-cell *matCellDef="let p">
-                  {{ p.startDate | date:'mediumDate' }} – {{ p.endDate | date:'mediumDate' }}
+                  {{ p.startDate | date:'mediumDate':'UTC' }} – {{ p.endDate | date:'mediumDate':'UTC' }}
                 </td>
               </ng-container>
 

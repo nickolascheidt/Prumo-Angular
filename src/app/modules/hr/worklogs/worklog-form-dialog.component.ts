@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService, AuthService } from '@core/services';
 import { Employee, WorkLog, CreateWorkLogRequest, UpdateWorkLogRequest } from '@core/models';
+import { fromDateOnly, toDateOnly } from '@core/utils/date-only';
 
 @Component({
   selector: 'app-worklog-form-dialog',
@@ -122,7 +123,7 @@ export class WorklogFormDialogComponent implements OnInit {
 
     this.form = this.fb.group({
       employeeId: [this.data?.employeeId ?? '', Validators.required],
-      workDate: [this.data ? new Date(this.data.workDate) : new Date(), Validators.required],
+      workDate: [this.data ? fromDateOnly(this.data.workDate) : new Date(), Validators.required],
       clockIn: ['08:00', Validators.required],
       clockOut: ['17:00', Validators.required],
       notes: [this.data?.notes ?? '']
@@ -174,7 +175,7 @@ export class WorklogFormDialogComponent implements OnInit {
     if (hoursWorked <= 0) { alert('Clock out must be after clock in.'); return; }
     this.isSaving = true;
     const v = this.form.value;
-    const workDate = new Date(v.workDate).toISOString().split('T')[0];
+    const workDate = toDateOnly(v.workDate);
 
     if (this.isEditing) {
       const req: UpdateWorkLogRequest = { workDate, hoursWorked, notes: v.notes || null };

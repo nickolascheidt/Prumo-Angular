@@ -4,7 +4,7 @@
   <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="40" style="margin:24px auto"></mat-progress-spinner>
 
   <div *ngIf="entry && !loading">
-    <p><strong>Date:</strong> {{ entry.date | date:'mediumDate' }}</p>
+    <p><strong>Date:</strong> {{ entry.date | date:'mediumDate':'UTC' }}</p>
     <p><strong>Description:</strong> {{ entry.description }}</p>
     <p *ngIf="entry.sourceModule"><strong>Source:</strong> {{ entry.sourceModule }}</p>
 

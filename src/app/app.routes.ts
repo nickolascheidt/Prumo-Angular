@@ -101,16 +101,8 @@ export const routes: Routes = [
         canActivate: [resourceAccessGuard], data: { resource: 'AccountsPayable.Entries', requiredLevel: PermissionLevel.Write } },
       { path: 'admin/roles', component: RolesComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'Role.Management', requiredLevel: PermissionLevel.Read } },
-      // The permissions screen became the roles screen: creating a role and defining
-      // what it reaches are the same job.
-      { path: 'admin/permissions', redirectTo: 'admin/roles', pathMatch: 'full' },
       { path: 'admin/members', component: TenantMembersComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'User.Management', requiredLevel: PermissionLevel.Read } },
-      // The two old screens were merged into /admin/members. The redirect only exists so
-      // saved links do not break; /admin/tenant was the only admin route without a guard,
-      // and the target has one.
-      { path: 'admin/users-roles', redirectTo: 'admin/members', pathMatch: 'full' },
-      { path: 'admin/tenant', redirectTo: 'admin/members', pathMatch: 'full' },
       { path: 'finance/chart-of-accounts', component: ChartOfAccountsComponent,
         canActivate: [resourceAccessGuard], data: { resource: 'ChartOfAccounts.Management', requiredLevel: PermissionLevel.Read } },
       { path: 'finance/general-ledger', component: GeneralLedgerComponent,

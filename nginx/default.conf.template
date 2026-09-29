@@ -5,10 +5,9 @@ server {
     index index.html;
 
     location /api/ {
-        # proxy_pass with the env-substituted URL as a LITERAL (no nginx variable)
-        # so nginx resolves the API host once at startup via the container's normal
-        # OS resolver (/etc/resolv.conf). Avoids the `resolver` directive, whose
-        # hardcoded Azure DNS (168.63.129.16) is unreachable inside Container Apps.
+        # proxy_pass with the env-substituted URL as a LITERAL (no nginx variable), so
+        # nginx resolves the API host once at startup through the container's normal
+        # resolver, with no `resolver` directive to keep in sync with the platform.
         # No URI on proxy_pass: the original request path (/api/...) is forwarded as-is.
         proxy_pass ${API_URL};
         proxy_http_version 1.1;
